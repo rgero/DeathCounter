@@ -10,6 +10,7 @@ var increaseCount = "105";           // Numpad 9
 var decreaseCount = "103";           // Numpad 7
 var toggleCounting = "101";          // Numpad 5
 var dumpCount = "104";               // Numpad 8
+var exitKey = '109';
 var donationMultiplier = 0.22;
 var desiredFolder = "Stream_Files";
 var deathFilePath =   path.join(desiredFolder,'Deaths.txt');
@@ -56,9 +57,13 @@ ioHook.on("keydown", event => {
     lastDeathDump = deaths;
     console.log("Deaths dumped : " + diffDeath.toString());
     var dumpString = diffDeath.toString() + "\n";
-    fs.appendFile(deathDumpPath, dumpString, (err)=> {
-      if (err) throw err;
-    })
+    fs.appendFileSync(deathDumpPath, dumpString);
+  }
+
+  if (keyChar == exitKey)
+  {
+    ioHook.stop();
+    process.exit();
   }
 
 });
