@@ -26,7 +26,7 @@ var deaths = PastDataLoader(deathFilePath);
 var lastDeathDump = deaths;
 var currCounting = false;
 
-ioHook.on("keydown", event => {
+ioHook.on("keyup", event => {
   var keyChar = event["rawcode"];
 
   if (currCounting){
