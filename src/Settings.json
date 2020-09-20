@@ -1,0 +1,16 @@
+{
+  "donationMultipler ": 0.22,
+  "keybindings": {
+    "increase": "105",
+    "decrease": "103",
+    "toggle" : "101",
+    "dump" : "104",
+    "exit" : "109"
+  },
+  "targetFolder" : "Stream_Files",
+  "filePaths": {
+    "deaths" : "Deaths.txt",
+    "donation": "Donation.txt",
+    "deathDump": "DeathDump.txt"
+  }
+}

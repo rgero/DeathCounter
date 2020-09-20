@@ -2,10 +2,10 @@
   "name": "deathcounter",
   "version": "1.0.0",
   "description": "A simple counter to be used to record the numbers of times you die in a video game",
-  "main": "src\\DeathCount.js",
+  "main": "src\\main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src\\Deathcount.js"
+    "start": "node src\\main.js"
   },
   "repository": {
     "type": "git",
