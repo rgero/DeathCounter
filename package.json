@@ -4,12 +4,12 @@
   "description": "A simple counter to be used to record the numbers of times you die in a video game",
   "main": "src\\main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src\\main.js"
+    "start": "node src\\main.js",
+    "test": "jest --watchAll"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rgero/DeathCounter.git"
+    "url": "https://github.com/rgero/DeathCounter.git"
   },
   "keywords": [
     "death",
@@ -23,5 +23,8 @@
   "homepage": "https://github.com/rgero/DeathCounter#readme",
   "dependencies": {
     "iohook": "^0.6.6"
+  },
+  "devDependencies": {
+    "jest": "^26.4.2"
   }
 }

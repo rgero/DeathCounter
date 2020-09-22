@@ -7,7 +7,7 @@
     "dump" : "104",
     "exit" : "109"
   },
-  "targetFolder" : "Stream_Files",
+  "targetFolder" : "./Stream_Files",
   "filePaths": {
     "deaths" : "Deaths.txt",
     "donation": "Donation.txt",

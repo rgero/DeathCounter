@@ -3,34 +3,30 @@ const path = require('path');
 
 class DeathCounter
 {
-  constructor()
-  {
-    this.fileProcessor = new FileProcessor();
-    this.currentlyCounting = false;
-    this.deaths = 0;
-    this.lastDeathDump = 0;
+  fileProcessor = new FileProcessor();
+  currentlyCounting = false;
+  deaths = 0;
+  lastDeathDump = 0;
 
-    // These codes are from here - https://css-tricks.com/snippets/javascript/javascript-keycodes/
-    this.keybindings = {
-      "increase": "105",
-      "decrease": "103",
-      "toggle" : "101",
-      "dump" : "104",
-      "exit" : "109"
-    }
-    this.desiredFolder = "Stream_Files";
-    this.filePaths = {
-      "deaths" : path.join(this.desiredFolder, "Deaths.txt"),
-      "donation" : path.join(this.desiredFolder, "Donation.txt"),
-      "deathDump" : path.join(this.desiredFolder, "DeathDump.txt")
-    }
-    this.donationMultiplier = 0.22;
-    
+  // These codes are from here - https://css-tricks.com/snippets/javascript/javascript-keycodes/
+  keybindings = {
+    "increase": "105",
+    "decrease": "103",
+    "toggle" : "101",
+    "dump" : "104",
+    "exit" : "109"
   }
+  desiredFolder = "./Stream_Files";
+  filePaths = {
+    "deaths" : path.join(this.desiredFolder, "Deaths.txt"),
+    "donation" : path.join(this.desiredFolder, "Donation.txt"),
+    "deathDump" : path.join(this.desiredFolder, "DeathDump.txt")
+  }
+  donationMultiplier = 0.22;
 
-  loadSettings(filePath)
+  loadSettings = (filePath) =>
   {
-    var settings = this.fileProcessor.loadSettingsFile(filePath);
+    let settings = this.fileProcessor.loadSettingsFile(filePath);
 
     // Process Keys
     if (settings["keybindings"])
@@ -72,56 +68,50 @@ class DeathCounter
     this.fileProcessor.checkDirectory(this.desiredFolder);
   }
 
-  loadPastData()
-  {
+  loadPastData = () => {
     this.deaths = this.fileProcessor.loadDeathData(this.filePaths["deaths"])
     this.lastDeathDump = this.deaths;
   }
 
-  increase()
-  {
+  increase = () => {
     if(!this.currentlyCounting) {return};
     console.log("Death logged");
     this.deaths++;
     this.processFile();
   }
 
-  decrease()
-  {
+  decrease = () => {
     if(!this.currentlyCounting) {return};
     console.log("Death removed.");
     this.deaths--;
     this.processFile();
   }
 
-  toggle()
-  {
-    console.log("Counting Toggled - " + this.currentlyCounting ? "Started" : "Stopped");
+  toggle = () => {
+    console.log("Counting Toggled - %s", this.currentlyCounting ? "Stopped" : "Started");
     this.currentlyCounting = !this.currentlyCounting;
   }
 
-  dumpDeaths()
-  {
-    var diffDeath = this.deaths - this.lastDeathDump;
+  dumpDeaths = () => {
+
+    let diffDeath = this.deaths - this.lastDeathDump;
     this.lastDeathDump = this.deaths;
     console.log("Deaths dumped : " + diffDeath.toString());
-    var dumpString = diffDeath.toString() + "\n";
+    let dumpString = diffDeath.toString() + "\n";
     this.fileProcessor.appendToFile(this.filePaths["deathDump"], dumpString);
   }
 
-  processFile()
-  {
-    var donation = "$" + Math.floor(this.deaths * this.donationMultiplier);
+  processFile = () => {
+    let donation = "$" + Math.floor(this.deaths * this.donationMultiplier);
     this.fileProcessor.writeToFile(this.filePaths["deaths"], "Deaths", this.deaths);
     this.fileProcessor.writeToFile(this.filePaths["donation"], "Donation", donation);
   }
 
-  exit()
-  {
+  exit = () => {
     process.exit();
   }
 
-  processKey(inputKey)
+  processKey = (inputKey) =>
   {
     switch(inputKey)
     {
