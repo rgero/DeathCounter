@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 pynput = "*"
 websockets = "*"
+flask = "*"
+flask-cors = "*"
+flask-socketio = "*"
 
 [dev-packages]
 
