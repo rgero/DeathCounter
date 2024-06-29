@@ -1,38 +1,38 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 
 import DeathEntity from './DeathEntity';
 import DeathEntityForm from './DeathEntityForm';
-import React from "react";
+import DeathListHeader from './DeathListHeader';
+import { useLocalStorageState } from '../../hooks/useLocalStorage';
 
 const DeathList = () => {
-  const [deathList, setDeathList] = React.useState([]);
+  const [deathList, setDeathList] = useLocalStorageState([])
 
   const addToList = (name, deaths) => {
     const newItem = {name: name, deaths: deaths};
     setDeathList( (prev) => [...prev, newItem]);
   }
- 
+  
+  const clearItems = () => {
+    setDeathList([])
+  }
+
   return (
     <>
-      <Typography>
-        Total Deaths: {deathList.reduce((total, currentItem) => total + currentItem.deaths, 0)}
-      </Typography>
-      <Grid container direction="column" spacing={3}>
-        <Grid container item direction="column" alignItems={"center"}>
-        {
-          deathList.map( (item, index) => (
-            <Grid item key={index}>
-              <DeathEntity>{item}</DeathEntity>
-            </Grid>
-          ))
-        }
-        </Grid>
-        <Grid item>
-          <DeathEntityForm submitFn={addToList}/>
-        </Grid>
+      <DeathListHeader deaths={deathList} clear={clearItems}/>
+      {deathList.length > 0 ? (
+        <Container sx={{marginBottom: 5}}>
+            {
+              deathList.map( (item, index) => (
+                <DeathEntity key={index}>{item}</DeathEntity>
+              ))
+            }
+        </Container>
+      ) : (null)}
+      <Grid item>
+        <DeathEntityForm submitFn={addToList}/>
       </Grid>
     </>
-
   )
 }
 

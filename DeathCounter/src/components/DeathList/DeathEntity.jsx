@@ -9,8 +9,12 @@ const styles = {
 }
 
 const DeathEntity = ({children}) => {
+  const handleClick = () => {
+    alert(`Hello ${children.name}`)
+  }
+  
   return (
-    <Grid container spacing={5} onClick={()=> alert(`Hello ${children.name}`)} sx={styles.gridItem}>
+    <Grid container direction="row" columnGap={5} onClick={handleClick} justifyContent="center" sx={styles.gridItem} border={1}>
       <Grid item>
         <Typography variant="h5">
           {children.name}

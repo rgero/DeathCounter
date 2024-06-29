@@ -6,7 +6,6 @@ const DeathPage = () => {
   return (
     <Container>
       <Typography variant="h3">The Death Count</Typography>
-      <hr/>
       <DeathList/>
     </Container>
   )
