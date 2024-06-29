@@ -34,26 +34,35 @@ const DeathEntityForm = ({submitFn}) => {
     setError("");
   }
 
+  const processNumber = (num) => {
+    if( /^\d*$/.test(num) )
+    {
+      setDeaths(Number(num))
+    }
+  }
+
   return (
-    <Grid container justifyContent={"center"} alignItems={"center"} spacing={5}>
+    <Grid container justifyContent={"center"} alignItems={"center"} spacing={3}>
       <Grid item>
         <TextField 
           label="Name"
           value={name}
-          error={error}
+          error={error ? true : false}
           helperText={error}
           onChange={(e) => {
             setName(e.target.value);
           }}
         />
       </Grid>
-      <Grid item>
-        <Typography variant="h4">
-          {deaths}
-        </Typography>
+      <Grid item sm={1.5}>
+        <TextField
+          label="Deaths"
+          value={deaths}
+          onChange={(e) => { processNumber(e.target.value) }}
+        />
       </Grid>
       <Grid item>
-        <Button onClick={processSubmit}>Submit</Button>
+        <Button onClick={processSubmit}>Add</Button>
       </Grid>
     </Grid>
   )
