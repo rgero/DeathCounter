@@ -6,6 +6,7 @@ import {useSocket} from '../../hooks/useWebSocket';
 const DeathEntityForm = ({submitFn}) => {
   const socket = useSocket();
   const [name, setName] = React.useState("");
+  const [error, setError] = React.useState("");
   const [deaths, setDeaths] = React.useState(0);
 
   const processIncrement = () => {
@@ -21,9 +22,16 @@ const DeathEntityForm = ({submitFn}) => {
   })
 
   const processSubmit = () => {
+    if (name == "")
+    {
+      setError("Name must be filled out");
+      return;
+    }
+
     submitFn(name, deaths);
     setName("");
     setDeaths(0);
+    setError("");
   }
 
   return (
@@ -32,6 +40,8 @@ const DeathEntityForm = ({submitFn}) => {
         <TextField 
           label="Name"
           value={name}
+          error={error}
+          helperText={error}
           onChange={(e) => {
             setName(e.target.value);
           }}

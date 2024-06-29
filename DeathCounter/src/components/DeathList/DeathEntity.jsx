@@ -1,13 +1,17 @@
-import { Grid } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 
 const DeathEntity = ({children}) => {
   return (
-    <Grid container>
+    <Grid container spacing={5}>
       <Grid item>
-        {children.name}  
+        <Typography variant="h5">
+          {children.name}
+        </Typography>
       </Grid>
       <Grid item>
-        {children.deaths}
+        <Typography variant="h5">
+          {children.deaths}
+        </Typography>
       </Grid>
     </Grid>
   )
