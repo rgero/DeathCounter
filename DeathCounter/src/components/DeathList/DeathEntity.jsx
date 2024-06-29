@@ -14,7 +14,7 @@ const DeathEntity = ({children}) => {
   }
   
   return (
-    <Grid container direction="row" columnGap={5} onClick={handleClick} justifyContent="center" sx={styles.gridItem} border={1}>
+    <Grid item container direction="row" columnGap={5} onClick={handleClick} justifyContent="space-between" sx={styles.gridItem}>
       <Grid item>
         <Typography variant="h5">
           {children.name}

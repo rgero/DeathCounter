@@ -1,4 +1,4 @@
-import { Container, Grid } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
 
 import DeathEntity from './DeathEntity';
 import DeathEntityForm from './DeathEntityForm';
@@ -21,12 +21,14 @@ const DeathList = () => {
     <>
       <DeathListHeader deaths={deathList} clear={clearItems}/>
       {deathList.length > 0 ? (
-        <Container sx={{marginBottom: 5}}>
+        <Container sx={{marginBottom: 5, width: 500}}>
+            <Grid container justifyContent="center">
             {
               deathList.map( (item, index) => (
                 <DeathEntity key={index}>{item}</DeathEntity>
               ))
             }
+            </Grid>
         </Container>
       ) : (null)}
       <Grid item>
