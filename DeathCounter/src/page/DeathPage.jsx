@@ -1,26 +1,11 @@
-import React from "react";
-import { useSocket } from "../hooks/useWebSocket";
+import { Container } from "@mui/material";
+import DeathList from "../components/DeathList/DeathList";
 
 const DeathPage = () => {
-  const socket = useSocket();
-  const [deaths, setDeaths] = React.useState(0);
-
-  const processIncrement = () => {
-    setDeaths( (deaths) => deaths+1 );
-  }
-
-  React.useEffect( () => {
-    socket.on("Death", processIncrement);
-
-    return () => {
-      socket.off("Death", processIncrement);
-    }
-  })
-
   return (
-    <div>
-      {deaths}
-    </div>
+    <Container>
+      <DeathList/>
+    </Container>
   )
 }
 
