@@ -1,5 +1,4 @@
-import { Grid, Modal, Typography } from "@mui/material"
-import DeathEntityModal from "./DeathEntityModal";
+import { Grid, Typography } from "@mui/material"
 import React from "react";
 
 const styles = {
@@ -10,20 +9,14 @@ const styles = {
   }
 }
 
-const DeathEntity = ({data, editFn}) => {
-  const [isOpen, setModalOpen] = React.useState(false);
+const DeathEntity = ({data, processClick}) => {
 
   const handleClick = () => {
-    setModalOpen(true);
+    processClick(data);
   }
 
-  const closeModal = () => {
-    setModalOpen(false);
-  }
-  
   return (
-    <>
-      <DeathEntityModal editFn={editFn} closeFn={closeModal} isOpen={isOpen} targetItem={data}/>     
+    <>   
       <Grid item container direction="row" columnGap={5} onClick={handleClick} justifyContent="space-between" sx={styles.gridItem}>
         <Grid item>
           <Typography variant="h5">

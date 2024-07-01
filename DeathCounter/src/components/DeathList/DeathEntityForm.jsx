@@ -3,8 +3,9 @@ import { Button, Grid, TextField } from "@mui/material"
 import React from "react"
 import {useSocket} from '../../hooks/useWebSocket';
 
-const DeathEntityForm = ({submitFn, data={}}) => {
+const DeathEntityForm = ({submitFn, deleteFn, data={}}) => {
   const socket = useSocket();
+  const [id, setID] = React.useState(data.id ? data.id : null);
   const [name, setName] = React.useState(data.name ? data.name : "");
   const [deaths, setDeaths] = React.useState(data.deaths ? data.deaths : 0);
   const [error, setError] = React.useState(data.error ? data.error : "");
@@ -21,6 +22,12 @@ const DeathEntityForm = ({submitFn, data={}}) => {
     }
   })
 
+  React.useEffect( () => {
+    setID(data.id ? data.id : -1 );
+    setName(data.name ? data.name: "");
+    setDeaths(data.deaths ? data.deaths : 0);
+  }, [data])
+
   const processSubmit = () => {
     if (name == "")
     {
@@ -28,7 +35,13 @@ const DeathEntityForm = ({submitFn, data={}}) => {
       return;
     }
 
-    submitFn(name, deaths);
+    let itemToSubmit = {name: name, deaths: deaths};
+    if (id != -1)
+    {
+      itemToSubmit.id = id;
+    }
+    submitFn(itemToSubmit);
+    setID(-1);
     setName("");
     setDeaths(0);
     setError("");
@@ -62,7 +75,7 @@ const DeathEntityForm = ({submitFn, data={}}) => {
         />
       </Grid>
       <Grid item>
-        <Button onClick={processSubmit}>Add</Button>
+        <Button onClick={processSubmit}>{id > 0 ? "Edit" : "Add"}</Button>
       </Grid>
     </Grid>
   )
