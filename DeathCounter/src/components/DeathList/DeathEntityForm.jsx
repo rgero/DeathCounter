@@ -3,11 +3,11 @@ import { Button, Grid, TextField } from "@mui/material"
 import React from "react"
 import {useSocket} from '../../hooks/useWebSocket';
 
-const DeathEntityForm = ({submitFn}) => {
+const DeathEntityForm = ({submitFn, data={}}) => {
   const socket = useSocket();
-  const [name, setName] = React.useState("");
-  const [error, setError] = React.useState("");
-  const [deaths, setDeaths] = React.useState(0);
+  const [name, setName] = React.useState(data.name ? data.name : "");
+  const [deaths, setDeaths] = React.useState(data.deaths ? data.deaths : 0);
+  const [error, setError] = React.useState(data.error ? data.error : "");
 
   const processIncrement = () => {
     setDeaths( (deaths) => deaths+1 );

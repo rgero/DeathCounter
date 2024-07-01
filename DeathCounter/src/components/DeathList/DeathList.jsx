@@ -9,7 +9,7 @@ const DeathList = () => {
   const [deathList, setDeathList] = useLocalStorageState([])
 
   const addToList = (name, deaths) => {
-    const newItem = {name: name, deaths: deaths};
+    const newItem = {id: deathList.length, name: name, deaths: deaths};
     setDeathList( (prev) => [...prev, newItem]);
   }
   
@@ -24,8 +24,8 @@ const DeathList = () => {
         <Container sx={{marginBottom: 5, width: 500}}>
             <Grid container justifyContent="center">
             {
-              deathList.map( (item, index) => (
-                <DeathEntity key={index}>{item}</DeathEntity>
+              deathList.map( (item) => (
+                <DeathEntity key={item.id} data={item} />
               ))
             }
             </Grid>
