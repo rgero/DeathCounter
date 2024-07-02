@@ -1,4 +1,5 @@
 import { Grid, Typography } from "@mui/material"
+
 import React from "react";
 
 const styles = {
@@ -19,12 +20,12 @@ const DeathEntity = ({data, processClick}) => {
     <>   
       <Grid item container direction="row" columnGap={5} onClick={handleClick} justifyContent="space-between" sx={styles.gridItem}>
         <Grid item>
-          <Typography variant="h5">
+          <Typography>
             {data.name}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="h5">
+          <Typography>
             {data.deaths}
           </Typography>
         </Grid>

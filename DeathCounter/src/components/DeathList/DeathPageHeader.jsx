@@ -1,6 +1,6 @@
 import { Button, Container, Grid, Typography } from "@mui/material"
 
-const DeathListHeader = ({deaths, clear}) => {
+const DeathPageHeader = ({deaths, clear}) => {
   return (
     <Container sx={{paddingBottom: 2}}>
       <Grid container alignItems="center" justifyContent="space-around">
@@ -17,4 +17,4 @@ const DeathListHeader = ({deaths, clear}) => {
   )
 }
 
-export default DeathListHeader
+export default DeathPageHeader
