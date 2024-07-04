@@ -2,7 +2,7 @@ import { Button, Container, Grid, Typography } from "@mui/material"
 
 const DeathPageHeader = ({deaths, clear}) => {
   return (
-    <Container sx={{paddingBottom: 2}}>
+    <Container sx={{paddingBottom: 2, paddingX: 2}}>
       <Grid container alignItems="center" justifyContent="space-around">
         <Grid item>
           <Typography>

@@ -1,12 +1,11 @@
 import { Grid, Typography } from "@mui/material"
 
-import React from "react";
-
 const styles = {
   gridItem: {
     '&:hover': {
-      background: "#f00",
-    }
+      background: "#ac3232",
+    },
+    paddingX: 2
   }
 }
 
