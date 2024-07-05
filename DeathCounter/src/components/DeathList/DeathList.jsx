@@ -4,28 +4,11 @@ import DeathEntity from './DeathEntity';
 import DeathEntityForm from './DeathEntityForm';
 import DeathPageHeader from './DeathPageHeader';
 import React from 'react';
-import { useLocalStorageState } from '../../hooks/useLocalStorage';
+import { useDeathTracker } from '../../context/DeathTrackerContext';
 
 const DeathList = () => {
-  const [deathList, setDeathList] = useLocalStorageState([])
+  const { deathList, addToList, clearItems } = useDeathTracker();
   const [currentlySelected, setSelected] = React.useState({});
-
-  const addToList = (newItem) => {
-    if (newItem.id)
-    {
-      let index = deathList.findIndex(boss => boss.id === newItem.id);
-      let newDeathList = deathList;
-      newDeathList[index] = newItem;
-      setDeathList( [...newDeathList]);
-    } else {
-      newItem.id = deathList.length + 1;
-      setDeathList( (prev) => [...prev, newItem]);
-    }
-  }
-  
-  const clearItems = () => {
-    setDeathList([])
-  }
 
   const processCurrentlySelected = (item) => {
     setSelected(item);

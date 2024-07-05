@@ -3,6 +3,7 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material"
 
 import AppLayout from "./components/AppLayout";
 import DeathPage from "./page/DeathPage"
+import { DeathTrackerProvider } from "./context/DeathTrackerContext";
 import { SocketProvider } from "./context/WebSocketContext"
 
 function App() {
@@ -15,15 +16,17 @@ function App() {
   return (
     <SocketProvider>
       <ThemeProvider theme={darkTheme}>
-        <CssBaseline/>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<AppLayout/>}>
-              <Route index element={<DeathPage/>}/>
-            </Route>
+        <DeathTrackerProvider>
+          <CssBaseline/>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<AppLayout/>}>
+                <Route index element={<DeathPage/>}/>
+              </Route>
 
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+        </DeathTrackerProvider>
       </ThemeProvider>
     </SocketProvider>
   )
