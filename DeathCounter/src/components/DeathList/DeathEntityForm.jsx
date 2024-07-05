@@ -3,7 +3,7 @@ import { Button, Grid, TextField } from "@mui/material"
 import React from "react"
 import {useSocket} from '../../hooks/useWebSocket';
 
-const DeathEntityForm = ({submitFn, deleteFn, data={}}) => {
+const DeathEntityForm = ({submitFn, data={}}) => {
   const socket = useSocket();
   const [id, setID] = React.useState(data.id ? data.id : null);
   const [name, setName] = React.useState(data.name ? data.name : "");
