@@ -10,6 +10,11 @@ const Stats = () => {
   const totalDeaths = deathList.reduce((total, currentItem) => total + currentItem.deaths, 0);
   const averagePerBoss = Math.round(totalDeaths / deathList.length * 100, 2)/100;
 
+  if (deathList.length == 0)
+  {
+    return;
+  }
+
   return (
     <Container sx={{paddingTop: 5}}>
         <Typography variant="h4">Stats</Typography>
