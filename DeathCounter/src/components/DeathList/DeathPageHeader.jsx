@@ -2,6 +2,7 @@ import { Container, Grid, Typography } from "@mui/material"
 
 import ClearButton from "../Buttons/ClearButton"
 import ExportButton from "../Buttons/ExportButton"
+import ImportButton from "../Buttons/ImportButton"
 
 const DeathPageHeader = ({deaths}) => {
   return (
@@ -14,6 +15,7 @@ const DeathPageHeader = ({deaths}) => {
         </Grid>
         <Grid item>
           <ClearButton/>
+          <ImportButton/>
           <ExportButton/>
         </Grid>
       </Grid>
