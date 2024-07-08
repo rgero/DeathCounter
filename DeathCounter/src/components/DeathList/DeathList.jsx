@@ -17,7 +17,7 @@ const DeathList = () => {
   return (
     <>
       <DeathPageHeader deaths={deathList}/>
-      {deathList.length > 0 ? (
+      {deathList.sort((a,b) => a.id - b.id).length > 0 ? (
         <Container sx={{marginBottom: 5, width: 500}}>
             <Grid container justifyContent="center">
               <Grid container item direction="row" justifyContent="space-between">
