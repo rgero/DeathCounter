@@ -7,7 +7,7 @@ import React from 'react';
 import { useDeathTracker } from '../../context/DeathTrackerContext';
 
 const DeathList = () => {
-  const { deathList, addToList, clearItems } = useDeathTracker();
+  const { deathList, addToList} = useDeathTracker();
   const [currentlySelected, setSelected] = React.useState({});
 
   const processCurrentlySelected = (item) => {
@@ -16,7 +16,7 @@ const DeathList = () => {
 
   return (
     <>
-      <DeathPageHeader deaths={deathList} clear={clearItems}/>
+      <DeathPageHeader deaths={deathList}/>
       {deathList.length > 0 ? (
         <Container sx={{marginBottom: 5, width: 500}}>
             <Grid container justifyContent="center">

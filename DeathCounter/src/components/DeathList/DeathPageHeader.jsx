@@ -1,6 +1,9 @@
-import { Button, Container, Grid, Typography } from "@mui/material"
+import { Container, Grid, Typography } from "@mui/material"
 
-const DeathPageHeader = ({deaths, clear}) => {
+import ClearButton from "../Buttons/ClearButton"
+import ExportButton from "../Buttons/ExportButton"
+
+const DeathPageHeader = ({deaths}) => {
   return (
     <Container sx={{paddingBottom: 2, paddingX: 2}}>
       <Grid container alignItems="center" justifyContent="space-around">
@@ -10,7 +13,8 @@ const DeathPageHeader = ({deaths, clear}) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button onClick={clear}>Clear Deaths</Button>
+          <ClearButton/>
+          <ExportButton/>
         </Grid>
       </Grid>
     </Container>

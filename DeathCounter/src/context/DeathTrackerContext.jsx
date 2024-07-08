@@ -26,8 +26,13 @@ const DeathTrackerProvider = ({ children }) => {
     setDeathList([])
   }
 
+  const setItems = (newData) => {
+    // I definitely should be verifying the data here.
+    setDeathList([...newData])
+  }
+
   return (
-    <DeathTrackerContext.Provider value={{ deathList, addToList, clearItems }}>
+    <DeathTrackerContext.Provider value={{ deathList, addToList, setItems, clearItems }}>
       {children}
     </DeathTrackerContext.Provider>
   );
