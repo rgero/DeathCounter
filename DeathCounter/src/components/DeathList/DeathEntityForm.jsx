@@ -1,8 +1,9 @@
-import { Button, Grid, TextField } from "@mui/material"
+import { Button, FormControl, FormHelperText, Grid, TextField } from "@mui/material"
 
 import React from "react"
 import { useDeathTracker } from "../../context/DeathTrackerContext";
 import {useSocket} from '../../hooks/useWebSocket';
+import DeleteButton from "../Buttons/DeleteButton";
 
 const DeathEntityForm = ({data={}}) => {
   const socket = useSocket();
@@ -25,9 +26,10 @@ const DeathEntityForm = ({data={}}) => {
   })
 
   React.useEffect( () => {
-    setID(data.id ? data.id : -1 );
+    setID(data.id ? data.id : null );
     setName(data.name ? data.name: "");
     setDeaths(data.deaths ? data.deaths : 0);
+    setError("");
   }, [data])
 
   const processSubmit = () => {
@@ -43,7 +45,7 @@ const DeathEntityForm = ({data={}}) => {
       itemToSubmit.id = id;
     }
     addToList(itemToSubmit);
-    setID(-1);
+    setID(null)
     setName("");
     setDeaths(0);
     setError("");
@@ -57,29 +59,42 @@ const DeathEntityForm = ({data={}}) => {
   }
 
   return (
-    <Grid container justifyContent={"center"} alignItems={"center"} spacing={3}>
-      <Grid item>
-        <TextField 
-          label="Name"
-          value={name}
-          error={error ? true : false}
-          helperText={error}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-        />
+    <FormControl fullWidth error={Boolean(error)}>
+      <Grid container justifyContent={"center"} alignItems={"center"} spacing={3}>
+        <Grid item>
+          <TextField 
+            label="Name"
+            value={name}
+            error={error ? true : false}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
+        </Grid>
+        <Grid item sm={1.5}>
+          <TextField
+            label="Deaths"
+            value={deaths}
+            onChange={(e) => { processNumber(e.target.value) }}
+          />
+        </Grid>
+        <Grid item>
+          <Button onClick={processSubmit}>{id ? "Edit" : "Add"}</Button>
+        </Grid>
+        <Grid item>
+          {id ? (
+            <DeleteButton target={ data }/>
+          ) : (
+            null
+          )}
+        </Grid>
       </Grid>
-      <Grid item sm={1.5}>
-        <TextField
-          label="Deaths"
-          value={deaths}
-          onChange={(e) => { processNumber(e.target.value) }}
-        />
+      <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2} >
+        <Grid item>
+          <FormHelperText>{error}</FormHelperText>
+        </Grid>
       </Grid>
-      <Grid item>
-        <Button onClick={processSubmit}>{id > 0 ? "Edit" : "Add"}</Button>
-      </Grid>
-    </Grid>
+    </FormControl>
   )
 }
 
