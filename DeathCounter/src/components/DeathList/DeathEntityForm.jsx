@@ -1,10 +1,12 @@
 import { Button, Grid, TextField } from "@mui/material"
 
 import React from "react"
+import { useDeathTracker } from "../../context/DeathTrackerContext";
 import {useSocket} from '../../hooks/useWebSocket';
 
-const DeathEntityForm = ({submitFn, data={}}) => {
+const DeathEntityForm = ({data={}}) => {
   const socket = useSocket();
+  const {addToList} = useDeathTracker();
   const [id, setID] = React.useState(data.id ? data.id : null);
   const [name, setName] = React.useState(data.name ? data.name : "");
   const [deaths, setDeaths] = React.useState(data.deaths ? data.deaths : 0);
@@ -40,7 +42,7 @@ const DeathEntityForm = ({submitFn, data={}}) => {
     {
       itemToSubmit.id = id;
     }
-    submitFn(itemToSubmit);
+    addToList(itemToSubmit);
     setID(-1);
     setName("");
     setDeaths(0);
