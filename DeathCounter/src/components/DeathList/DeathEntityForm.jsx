@@ -3,15 +3,14 @@ import { Button, FormControl, FormHelperText, Grid, TextField } from "@mui/mater
 import React from "react"
 import { useDeathTracker } from "../../context/DeathTrackerContext";
 import {useSocket} from '../../hooks/useWebSocket';
-import DeleteButton from "../Buttons/DeleteButton";
 
-const DeathEntityForm = ({data={}}) => {
+const DeathEntityForm = () => {
   const socket = useSocket();
-  const {addToList} = useDeathTracker();
-  const [id, setID] = React.useState(data.id ? data.id : null);
-  const [name, setName] = React.useState(data.name ? data.name : "");
-  const [deaths, setDeaths] = React.useState(data.deaths ? data.deaths : 0);
-  const [error, setError] = React.useState(data.error ? data.error : "");
+  const {addToList, currentlySelected} = useDeathTracker();
+  const [id, setID] = React.useState(null);
+  const [name, setName] = React.useState("");
+  const [deaths, setDeaths] = React.useState(0);
+  const [error, setError] = React.useState("");
 
   const processIncrement = () => {
     setDeaths( (deaths) => deaths+1 );
@@ -26,11 +25,26 @@ const DeathEntityForm = ({data={}}) => {
   })
 
   React.useEffect( () => {
-    setID(data.id ? data.id : null );
-    setName(data.name ? data.name: "");
-    setDeaths(data.deaths ? data.deaths : 0);
+    if (!currentlySelected) { 
+      if (id)
+      {
+        clearForm();
+      }
+      return;
+    }
+
+    setID(currentlySelected.id);
+    setName(currentlySelected.name);
+    setDeaths(currentlySelected.deaths);
     setError("");
-  }, [data])
+  }, [currentlySelected])
+
+  const clearForm = () => {
+    setID(null)
+    setName("");
+    setDeaths(0);
+    setError("");
+  }
 
   const processSubmit = () => {
     if (name == "")
@@ -45,10 +59,7 @@ const DeathEntityForm = ({data={}}) => {
       itemToSubmit.id = id;
     }
     addToList(itemToSubmit);
-    setID(null)
-    setName("");
-    setDeaths(0);
-    setError("");
+    clearForm();
   }
 
   const processNumber = (num) => {
@@ -80,13 +91,6 @@ const DeathEntityForm = ({data={}}) => {
         </Grid>
         <Grid item>
           <Button onClick={processSubmit}>{id ? "Edit" : "Add"}</Button>
-        </Grid>
-        <Grid item>
-          {id ? (
-            <DeleteButton target={ data }/>
-          ) : (
-            null
-          )}
         </Grid>
       </Grid>
       <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2} >

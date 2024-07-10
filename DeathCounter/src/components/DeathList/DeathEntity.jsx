@@ -1,5 +1,7 @@
 import { Grid, Typography } from "@mui/material"
 
+import { useDeathTracker } from "../../context/DeathTrackerContext"
+
 const styles = {
   gridItem: {
     '&:hover': {
@@ -9,10 +11,12 @@ const styles = {
   }
 }
 
-const DeathEntity = ({data, processClick}) => {
+const DeathEntity = ({data}) => {
+  const {setCurrentlySelected} = useDeathTracker();
 
-  const handleClick = () => {
-    processClick(data);
+  const handleClick = (e) => {
+    if (!data) { return; }
+    setCurrentlySelected(data)
   }
 
   return (

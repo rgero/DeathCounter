@@ -7,7 +7,8 @@ const ExportButton = () => {
   const {deathList} = useDeathTracker();
 
   const processDownload = () => {
-    const jsonString = JSON.stringify(deathList);
+    const sortedList = deathList.sort( (a,b) => a.id - b.id);
+    const jsonString = JSON.stringify(sortedList);
 
     // Create a Blob from the JSON string
     const blob = new Blob([jsonString], { type: 'application/json' });

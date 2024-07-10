@@ -23,6 +23,8 @@ const DeleteModal = ({open, handleClose, target}) => {
     handleClose();
   }
 
+  if (!target) { return; }
+
   return (
     <Modal
       open={open}

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 
 import { useLocalStorageState } from "../hooks/useLocalStorage";
 
@@ -8,6 +8,7 @@ const DeathTrackerContext = createContext();
 
 const DeathTrackerProvider = ({ children }) => {
   const [deathList, setDeathList] = useLocalStorageState([])
+  const [currentlySelected, setCurrentlySelected] = useState(null);
 
   const addToList = (newItem) => {
     if (newItem.id)
@@ -17,7 +18,11 @@ const DeathTrackerProvider = ({ children }) => {
       newDeathList[index] = newItem;
       setDeathList( [...newDeathList]);
     } else {
-      newItem.id = deathList.length + 1;
+
+      // Get highest item
+      const highestIDObject = deathList.reduce((max, obj) => (obj.id > max.id ? obj : max));
+
+      newItem.id = highestIDObject.id + 1;
       setDeathList( (prev) => [...prev, newItem]);
     }
   }
@@ -28,6 +33,7 @@ const DeathTrackerProvider = ({ children }) => {
 
   const deleteItem = (id) => {
     setDeathList( (prev) => prev.filter(item => item.id !== id) );
+    setCurrentlySelected(null);
   }
 
   const setItems = (newData) => {
@@ -36,7 +42,7 @@ const DeathTrackerProvider = ({ children }) => {
   }
 
   return (
-    <DeathTrackerContext.Provider value={{ deathList, addToList, clearItems, deleteItem, setItems }}>
+    <DeathTrackerContext.Provider value={{ deathList, currentlySelected, addToList, clearItems, deleteItem, setItems, setCurrentlySelected }}>
       {children}
     </DeathTrackerContext.Provider>
   );

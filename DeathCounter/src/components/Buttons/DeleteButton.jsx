@@ -1,18 +1,29 @@
 import { IconButton, Tooltip } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteModal from '../Modals/DeleteModal';
-import { useState } from 'react';
+import { useDeathTracker } from '../../context/DeathTrackerContext';
 
-const DeleteButton = ({target}) => {
+const DeleteButton = () => {
   const [isOpen, setOpen] = useState(false);
+  const {currentlySelected} = useDeathTracker();
+  const [current, setCurrent] = useState();
+
+  useEffect( () => {
+    setCurrent( currentlySelected );
+  }, [currentlySelected])
+
+
   return (
     <>
-      <DeleteModal open={isOpen} handleClose={() => setOpen(false)} target={target}/>
-      <Tooltip title="Delete Item">
-        <IconButton onClick={() => setOpen(true)}>
-          <DeleteIcon/>
-        </IconButton>
+      <DeleteModal open={isOpen} handleClose={() => setOpen(false)} target={current}/>
+      <Tooltip disabled={!current} title="Delete Item">
+        <span>
+          <IconButton onClick={() => setOpen(true)} disabled={!current}>
+            <DeleteIcon/>
+          </IconButton>
+        </span>
       </Tooltip>
     </>
   )

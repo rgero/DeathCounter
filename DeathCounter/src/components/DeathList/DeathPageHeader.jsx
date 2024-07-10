@@ -1,6 +1,7 @@
 import { Container, Grid, Typography } from "@mui/material"
 
 import ClearButton from "../Buttons/ClearButton"
+import DeleteButton from "../Buttons/DeleteButton"
 import ExportButton from "../Buttons/ExportButton"
 import ImportButton from "../Buttons/ImportButton"
 
@@ -14,6 +15,7 @@ const DeathPageHeader = ({deaths}) => {
           </Typography>
         </Grid>
         <Grid item>
+          <DeleteButton/>
           <ClearButton/>
           <ImportButton/>
           <ExportButton/>
