@@ -20,6 +20,7 @@ const Stats = () => {
         <Typography variant="h4">Stats</Typography>
         <Grid container direction="row" alignItems="center" justifyContent="space-around">
           <Grid item>
+            <Typography>Total Bosses: {deathList.length}</Typography>
             <Typography>Average Per Boss: {averagePerBoss}</Typography>
             <Typography>Most Deaths: {sortedList[0].name} - {sortedList[0].deaths}</Typography>
           </Grid>
