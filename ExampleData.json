@@ -1,0 +1,112 @@
+[
+  {
+    "id": 0,
+    "name": "Blackgaol Knight",
+    "deaths": 10
+  },
+  {
+    "name": "Logur",
+    "deaths": 5,
+    "id": 1
+  },
+  {
+    "id": 5,
+    "name": "Divine Beast Dancing Lion",
+    "deaths": 9
+  },
+  {
+    "name": "Rellana, Twin Moon Knight",
+    "deaths": 18,
+    "id": 6
+  },
+  {
+    "name": "Ralva",
+    "deaths": 0,
+    "id": 7
+  },
+  {
+    "name": "Golden Hippo",
+    "deaths": 1,
+    "id": 8
+  },
+  {
+    "name": "Messmer the Impaler",
+    "deaths": 15,
+    "id": 10
+  },
+  {
+    "name": "Rakshasa",
+    "deaths": 9,
+    "id": 11
+  },
+  {
+    "name": "Jori, Elder Inquistor",
+    "deaths": 4,
+    "id": 12
+  },
+  {
+    "name": "Midra, Lord of the Frenzied Flame",
+    "deaths": 1,
+    "id": 13
+  },
+  {
+    "name": "Black Knight Edredd",
+    "deaths": 0,
+    "id": 14
+  },
+  {
+    "name": "Scadrutree Avatar",
+    "deaths": 18,
+    "id": 15
+  },
+  {
+    "name": "Ghostflame Dragon",
+    "deaths": 0,
+    "id": 16
+  },
+  {
+    "name": "Putrescent Knight",
+    "deaths": 3,
+    "id": 17
+  },
+  {
+    "name": "Commander Gaius",
+    "deaths": 6,
+    "id": 18
+  },
+  {
+    "name": "Metyr, Mother of Fingers",
+    "deaths": 0,
+    "id": 19
+  },
+  {
+    "name": "Ymir, Mother of Fingers",
+    "deaths": 0,
+    "id": 20
+  },
+  {
+    "name": "Romina, Saint of the Bud",
+    "deaths": 1,
+    "id": 21
+  },
+  {
+    "name": "Demi-Human Swordmaster Onze",
+    "deaths": 0,
+    "id": 22
+  },
+  {
+    "name": "Ancient Dragon-Man",
+    "deaths": 1,
+    "id": 23
+  },
+  {
+    "name": "Ancient Dragon Senessax",
+    "deaths": 2,
+    "id": 24
+  },
+  {
+    "name": "Bayle the Dread",
+    "deaths": 12,
+    "id": 25
+  }
+]
