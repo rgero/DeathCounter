@@ -17,8 +17,10 @@ const Stats = () => {
 
   return (
     <Container sx={{paddingTop: 5}}>
-        <Typography variant="h4">Stats</Typography>
-        <Grid container direction="row" alignItems="center" justifyContent="space-around">
+        <Grid container direction="column" spacing={4} alignItems="center" justifyContent="space-around">
+          <Grid item>
+          <Typography variant="h4" justifyContent="flex-start">Stats</Typography>
+          </Grid>
           <Grid item>
             <Typography>Total Bosses: {deathList.length}</Typography>
             <Typography>Average Per Boss: {averagePerBoss}</Typography>

@@ -6,11 +6,11 @@ import { useDeathTracker } from "../../context/DeathTrackerContext";
 const DeathPieChart = () => {
   const { deathList } = useDeathTracker();
 
-  const dimension = 250;
+  const dimension = 350;
   const filteredItems = deathList.filter(item => item.deaths !== 0);
 
 
-  const renderLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value, index}) => {
+  const renderLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, index}) => {
     const RADIAN = Math.PI / 180;
     const radius = 25 + innerRadius + (outerRadius - innerRadius);
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -30,14 +30,14 @@ const DeathPieChart = () => {
   }
 
   return (
-    <Box display="flex" justifyContent="center">
+    <Box display="flex" justifyContent="center" paddingBottom={10}>
       <PieChart width={dimension*2} height={dimension}>
         <Pie
           dataKey="deaths"
           data={filteredItems}
           cx="50%"
           cy="50%"
-          outerRadius={80}
+          outerRadius={125}
           fill="#ac3232"
           label={renderLabel}
         />
