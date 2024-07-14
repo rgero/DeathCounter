@@ -16,7 +16,7 @@ const DeathList = () => {
 
   useEffect( () => {
     setFilteredList( filterList(searchParams.get('filter')) );
-  }, [searchParams])
+  }, [deathList, searchParams])
 
   
   const processCurrentlySelected = (item) => {
