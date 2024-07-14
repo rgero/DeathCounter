@@ -41,8 +41,13 @@ const DeathTrackerProvider = ({ children }) => {
     setDeathList([...newData])
   }
 
+  const filterList = (term) => {
+    if (!term) { return deathList; }
+    return deathList.filter( item => item.name.toUpperCase().includes(term.toUpperCase()) );
+  }
+
   return (
-    <DeathTrackerContext.Provider value={{ deathList, currentlySelected, addToList, clearItems, deleteItem, setItems, setCurrentlySelected }}>
+    <DeathTrackerContext.Provider value={{ deathList, currentlySelected, addToList, clearItems, deleteItem, filterList, setItems, setCurrentlySelected }}>
       {children}
     </DeathTrackerContext.Provider>
   );

@@ -1,15 +1,23 @@
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Grid } from '@mui/material';
+import React, { useEffect } from 'react';
 
 import DeathEntity from './DeathEntity';
 import DeathEntityForm from './DeathEntityForm';
 import DeathListHeader from './DeathListHeader';
 import DeathPageHeader from './DeathPageHeader';
-import React from 'react';
 import { useDeathTracker } from '../../context/DeathTrackerContext';
+import { useSearchParams } from 'react-router-dom';
 
 const DeathList = () => {
-  const { deathList} = useDeathTracker();
+  const { deathList, filterList } = useDeathTracker();
+  const [filteredList, setFilteredList] = React.useState( filterList() );
   const [currentlySelected, setSelected] = React.useState({});
+  const [searchParams] = useSearchParams();
+
+  useEffect( () => {
+    setFilteredList( filterList(searchParams.get('filter')) );
+  }, [searchParams])
+
   
   const processCurrentlySelected = (item) => {
     setSelected(item);
@@ -18,12 +26,12 @@ const DeathList = () => {
   return (
     <>
       <DeathPageHeader deaths={deathList}/>
-      {deathList.sort((a,b) => a.id - b.id).length > 0 ? (
+      {filteredList.sort((a,b) => a.id - b.id).length > 0 ? (
         <Container sx={{marginBottom: 5, width: 500}}>
             <Grid container justifyContent="center">
             <DeathListHeader/>
             {
-              deathList.map( (item) => (
+              filteredList.map( (item) => (
                 <DeathEntity key={item.id} data={item} processClick={processCurrentlySelected} />
               ))
             }
