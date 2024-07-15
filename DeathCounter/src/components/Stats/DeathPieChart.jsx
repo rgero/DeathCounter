@@ -1,14 +1,18 @@
 import { Pie, PieChart } from "recharts";
+import { useEffect, useState } from "react";
 
 import { Box } from "@mui/material";
 import { useDeathTracker } from "../../context/DeathTrackerContext";
 
 const DeathPieChart = () => {
+  const dimension = 350;
   const { deathList } = useDeathTracker();
 
-  const dimension = 350;
-  const filteredItems = deathList.filter(item => item.deaths !== 0);
+  const [filteredItems, setFilteredItems] = useState(deathList.filter(item => item.deaths !== 0));
 
+  useEffect(() => {
+    setFilteredItems([...deathList.filter(item => item.deaths !== 0)])
+  }, [deathList])
 
   const renderLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, index}) => {
     const RADIAN = Math.PI / 180;
@@ -24,7 +28,7 @@ const DeathPieChart = () => {
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {deathList[index].name}
+        {filteredItems[index].name}
       </text>
     );
   }
