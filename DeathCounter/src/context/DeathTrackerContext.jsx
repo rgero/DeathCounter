@@ -19,10 +19,12 @@ const DeathTrackerProvider = ({ children }) => {
       setDeathList( [...newDeathList]);
     } else {
 
-      // Get highest item
-      const highestIDObject = deathList.reduce((max, obj) => (obj.id > max.id ? obj : max));
-
-      newItem.id = highestIDObject.id + 1;
+      newItem.id = 1;
+      if (deathList.length > 0)
+      {
+        const highestIDObject = deathList.reduce((max, obj) => (obj.id > max.id ? obj : max));
+        newItem.id = highestIDObject.id + 1;
+      }
       setDeathList( (prev) => [...prev, newItem]);
     }
   }
