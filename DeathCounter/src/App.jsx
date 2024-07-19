@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material"
 
-import AppLayout from "./components/AppLayout";
+import AppLayout from "./components/ui/AppLayout";
 import DeathPage from "./page/DeathPage"
 import { DeathTrackerProvider } from "./context/DeathTrackerContext";
 import { SocketProvider } from "./context/WebSocketContext"
