@@ -4,11 +4,13 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useDeathTracker } from "../../context/DeathTrackerContext";
 
 const ExportButton = () => {
-  const {deathList} = useDeathTracker();
+  const {gameName, deathList} = useDeathTracker();
 
   const processDownload = () => {
+    let exportObject = {gameName: gameName}
     const sortedList = deathList.sort( (a,b) => a.id - b.id);
-    const jsonString = JSON.stringify(sortedList);
+    exportObject.deathList = sortedList;
+    const jsonString = JSON.stringify(exportObject);
 
     // Create a Blob from the JSON string
     const blob = new Blob([jsonString], { type: 'application/json' });

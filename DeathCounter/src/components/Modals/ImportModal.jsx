@@ -19,7 +19,7 @@ const style = {
 };
 
 const ImportModal = ({open, handleClose}) => {
-  const {setItems, clearItems} = useDeathTracker();
+  const {setItems, setGameName, clearItems} = useDeathTracker();
   const [file, setFile] = useState(null);
   const [fileData, setFileContent] = useState([]);
 
@@ -41,16 +41,27 @@ const ImportModal = ({open, handleClose}) => {
 
   const processUpload = () => {
     if (fileData)
-    {
-      // There definitely needs to be validation of the data.
+    {    
+      try {
+        clearItems();
 
-      clearItems();
-      setItems(fileData);
+        if (fileData.gameName)
+        {
+          setGameName(fileData.gameName);
+        }
 
-      // Clear the data
-      setFile(null);
-      setFileContent([]);
-      handleClose();
+        if (fileData.deathList)
+        {
+          setItems(fileData.deathList);
+        }
+
+        // Clear the data
+        setFile(null);
+        setFileContent([]);
+        handleClose();
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
