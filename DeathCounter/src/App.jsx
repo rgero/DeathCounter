@@ -23,7 +23,6 @@ function App() {
               <Route element={<AppLayout/>}>
                 <Route index element={<DeathPage/>}/>
               </Route>
-
             </Routes>
           </BrowserRouter>
         </DeathTrackerProvider>
