@@ -7,8 +7,11 @@ import { useLocalStorageState } from "../hooks/useLocalStorage";
 const DeathTrackerContext = createContext();
 
 const DeathTrackerProvider = ({ children }) => {
-  const [deathList, setDeathList] = useLocalStorageState([])
+
+  const [deathList, setDeathList] = useLocalStorageState([], "deathList")
+  const [gameName, setGameName] = useLocalStorageState("", "gameName");
   const [currentlySelected, setCurrentlySelected] = useState(null);
+
 
   const addToList = (newItem) => {
     if (newItem.id)
@@ -31,6 +34,7 @@ const DeathTrackerProvider = ({ children }) => {
   
   const clearItems = () => {
     setDeathList([])
+    setGameName("")
   }
 
   const deleteItem = (id) => {
@@ -49,7 +53,7 @@ const DeathTrackerProvider = ({ children }) => {
   }
 
   return (
-    <DeathTrackerContext.Provider value={{ deathList, currentlySelected, addToList, clearItems, deleteItem, filterList, setItems, setCurrentlySelected }}>
+    <DeathTrackerContext.Provider value={{ gameName, setGameName, deathList, currentlySelected, addToList, clearItems, deleteItem, filterList, setItems, setCurrentlySelected }}>
       {children}
     </DeathTrackerContext.Provider>
   );
