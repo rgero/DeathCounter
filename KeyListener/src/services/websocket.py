@@ -1,6 +1,6 @@
 from flask_socketio import SocketIO, send, disconnect
 
-socketio = SocketIO(cors_allowed_origins=["http://localhost:5173"])
+socketio = SocketIO(cors_allowed_origins=["http://localhost:6200"])
 
 # Track clients connected to the websocket:
 connected_clients = {}
