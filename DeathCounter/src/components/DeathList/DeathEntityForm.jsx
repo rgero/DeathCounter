@@ -18,9 +18,11 @@ const DeathEntityForm = () => {
 
   React.useEffect( () => {
     socket.on("Death", processIncrement);
+    socket.on("Submit", processSubmit);
 
     return () => {
       socket.off("Death", processIncrement);
+      socket.off("Submit", processSubmit);
     }
   })
 
