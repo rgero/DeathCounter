@@ -1,4 +1,4 @@
-import { Pie, PieChart } from "recharts";
+import { Cell, Pie, PieChart } from "recharts";
 import { useEffect, useState } from "react";
 
 import { Box } from "@mui/material";
@@ -8,13 +8,25 @@ const DeathPieChart = () => {
   const dimension = 350;
   const { deathList } = useDeathTracker();
 
-  const [filteredItems, setFilteredItems] = useState(deathList.filter(item => item.deaths !== 0));
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [colors, setColors] = useState([]);
+
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
 
   useEffect(() => {
-    setFilteredItems([...deathList.filter(item => item.deaths !== 0)])
-  }, [deathList])
+    const filtered = deathList.filter(item => item.deaths !== 0);
+    setFilteredItems(filtered);
+    setColors(filtered.map(() => getRandomColor()));
+  }, [deathList]);
 
-  const renderLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, index}) => {
+  const renderLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, index }) => {
     const RADIAN = Math.PI / 180;
     const radius = 25 + innerRadius + (outerRadius - innerRadius);
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -24,18 +36,18 @@ const DeathPieChart = () => {
       <text
         x={x}
         y={y}
-        fill="#ac3232"
+        fill={colors[index]}
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
         {filteredItems[index].name}
       </text>
     );
-  }
+  };
 
   return (
     <Box display="flex" justifyContent="center" paddingBottom={10}>
-      <PieChart width={dimension*2} height={dimension}>
+      <PieChart width={dimension * 2} height={dimension}>
         <Pie
           dataKey="deaths"
           data={filteredItems}
@@ -44,10 +56,15 @@ const DeathPieChart = () => {
           outerRadius={125}
           fill="#ac3232"
           label={renderLabel}
-        />
+          labelLine={false}
+        >
+          {filteredItems.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={colors[index]} />
+          ))}
+        </Pie>
       </PieChart>
     </Box>
-  )
-}
+  );
+};
 
-export default DeathPieChart
+export default DeathPieChart;
