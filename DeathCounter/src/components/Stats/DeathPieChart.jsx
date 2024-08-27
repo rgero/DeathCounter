@@ -1,7 +1,7 @@
-import { Cell, Pie, PieChart } from "recharts";
+import { Box, Typography } from "@mui/material";
+import { Cell, Pie, PieChart, Tooltip } from "recharts";
 import { useEffect, useState } from "react";
 
-import { Box } from "@mui/material";
 import { useDeathTracker } from "../../context/DeathTrackerContext";
 
 const DeathPieChart = () => {
@@ -10,6 +10,7 @@ const DeathPieChart = () => {
 
   const [filteredItems, setFilteredItems] = useState([]);
   const [colors, setColors] = useState([]);
+  const [showNames, setShowNames] = useState(true);
 
   const getRandomColor = () => {
     const letters = '0123456789ABCDEF';
@@ -40,14 +41,15 @@ const DeathPieChart = () => {
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {filteredItems[index].name}
+        {showNames ? filteredItems[index].name : filteredItems[index].deaths}
       </text>
     );
   };
 
   return (
-    <Box display="flex" justifyContent="center" paddingBottom={10}>
+    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" paddingBottom={10}>
       <PieChart width={dimension * 2} height={dimension}>
+        <Tooltip/>
         <Pie
           dataKey="deaths"
           data={filteredItems}
@@ -57,12 +59,14 @@ const DeathPieChart = () => {
           fill="#ac3232"
           label={renderLabel}
           labelLine={false}
+          onClick={() => setShowNames(!showNames)}
         >
           {filteredItems.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={colors[index]} />
           ))}
         </Pie>
       </PieChart>
+      <Typography variant="subtitle2">Click to toggle names</Typography>
     </Box>
   );
 };

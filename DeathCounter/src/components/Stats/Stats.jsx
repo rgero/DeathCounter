@@ -29,6 +29,7 @@ const Stats = () => {
           </Grid>
           <Grid item>
             <Typography>Total Bosses: {deathList.length}</Typography>
+            <Typography>Total Deaths: {totalDeaths}</Typography>
             <Typography>Average Per Boss: {averagePerBoss}</Typography>
             <Typography>Most Deaths: {sortedList[0].name} - {sortedList[0].deaths} {percentage && `(${percentage}%)`}</Typography>
           </Grid>
