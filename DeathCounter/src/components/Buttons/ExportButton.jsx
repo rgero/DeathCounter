@@ -4,34 +4,42 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useDeathTracker } from "../../context/DeathTrackerContext";
 
 const ExportButton = () => {
-  const {gameName, deathList} = useDeathTracker();
+  const { gameName, deathList } = useDeathTracker();
 
-  const processDownload = () => {
-    let exportObject = {gameName: gameName}
-    const sortedList = deathList.sort( (a,b) => a.id - b.id);
-    exportObject.deathList = sortedList;
-    const jsonString = JSON.stringify(exportObject);
+  const createExportObject = () => {
+    const sortedList = deathList.sort((a, b) => a.id - b.id);
+    return { gameName, deathList: sortedList };
+  };
 
-    // Create a Blob from the JSON string
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    
-    // Create a link to download the Blob
+  const createBlob = (data) => {
+    const jsonString = JSON.stringify(data);
+    return new Blob([jsonString], { type: 'application/json' });
+  };
+
+  const createDownloadLink = (blob, fileName) => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'Deaths.json');
+    link.setAttribute('download', fileName);
     document.body.appendChild(link);
     link.click();
     link.remove();
-  }
+  };
+
+  const processDownload = () => {
+    const exportObject = createExportObject();
+    const blob = createBlob(exportObject);
+    const fileName = gameName ? `${gameName}.json` : 'Deaths.json';
+    createDownloadLink(blob, fileName);
+  };
 
   return (
     <Tooltip title="Download data">
       <IconButton onClick={processDownload}>
-        <FileDownloadIcon/>
+        <FileDownloadIcon />
       </IconButton>
     </Tooltip>
-  )
-}
+  );
+};
 
-export default ExportButton
+export default ExportButton;
