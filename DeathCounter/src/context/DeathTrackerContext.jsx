@@ -52,8 +52,24 @@ const DeathTrackerProvider = ({ children }) => {
     return deathList.filter( item => item.name.toUpperCase().includes(term.toUpperCase()) );
   }
 
+  const incrementGenericDeath = () => {
+    let newDeathList = deathList.map(item => {
+      if (item.name === "General Deaths") {
+        return { ...item, deaths: item.deaths + 1 };
+      }
+      return item;
+    });
+
+    // If the item does not exist, add it to the list
+    if (!newDeathList.some(item => item.name === "General Deaths")) {
+      newDeathList.push({ name: "General Deaths", deaths: 1 });
+    }
+
+    setDeathList(newDeathList);
+  }
+
   return (
-    <DeathTrackerContext.Provider value={{ gameName, setGameName, deathList, currentlySelected, addToList, clearItems, deleteItem, filterList, setItems, setCurrentlySelected }}>
+    <DeathTrackerContext.Provider value={{ gameName, setGameName, incrementGenericDeath, deathList, currentlySelected, addToList, clearItems, deleteItem, filterList, setItems, setCurrentlySelected }}>
       {children}
     </DeathTrackerContext.Provider>
   );
