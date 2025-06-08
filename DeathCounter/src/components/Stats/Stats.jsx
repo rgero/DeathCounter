@@ -1,6 +1,7 @@
 import { Container, Grid, Typography } from "@mui/material";
 
 import DeathPieChart from "./DeathPieChart";
+import { isMobile } from "../../utils/isMobile";
 import { useDeathTracker } from "../../context/DeathTrackerContext";
 
 const Stats = () => {
@@ -25,7 +26,7 @@ const Stats = () => {
     <Container sx={{paddingTop: 5}}>
         <Grid container direction="column" spacing={4} alignItems="center" justifyContent="space-around">
           <Grid item>
-          <Typography variant="h4" justifyContent="flex-start">Stats</Typography>
+            <Typography variant="h4" justifyContent="flex-start">Stats</Typography>
           </Grid>
           <Grid item>
             <Typography>Total Bosses: {deathList.length}</Typography>
@@ -33,11 +34,8 @@ const Stats = () => {
             <Typography>Average Per Boss: {averagePerBoss}</Typography>
             <Typography>Most Deaths: {sortedList[0].name} - {sortedList[0].deaths} {percentage && `(${percentage}%)`}</Typography>
           </Grid>
-          <Grid item>
-            <DeathPieChart/>
-          </Grid>
         </Grid>
-
+        {!isMobile() && <DeathPieChart data={deathList}/>}
     </Container>
   )
 }

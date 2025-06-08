@@ -1,6 +1,7 @@
-import { Button, FormControl, FormHelperText, Grid, TextField } from "@mui/material"
+import { Button, FormControl, FormHelperText, Grid, Paper, TextField } from "@mui/material"
 
 import React from "react"
+import { isMobile } from "../../utils/isMobile";
 import { useDeathTracker } from "../../context/DeathTrackerContext";
 import {useSocket} from '../../hooks/useWebSocket';
 
@@ -72,35 +73,35 @@ const DeathEntityForm = () => {
   }
 
   return (
-    <FormControl fullWidth error={Boolean(error)}>
-      <Grid container justifyContent={"center"} alignItems={"center"} spacing={3}>
-        <Grid item>
-          <TextField 
-            label="Name"
-            value={name}
-            error={error ? true : false}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
+    <Paper sx={{padding: 2, borderRadius: 5, width: isMobile() ? "90%" : "500px", mx: "auto"}}>
+      <FormControl fullWidth error={Boolean(error)}>
+        <Grid container justifyContent="center" alignItems="center" spacing={3} direction={isMobile() ? "column" : "row"} sx={{paddingBottom: 2}}>
+          <Grid item>
+            <TextField 
+              label="Name"
+              value={name}
+              error={error ? true : false}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              label="Deaths"
+              value={deaths}
+              onChange={(e) => { processNumber(e.target.value) }}
+            />
+          </Grid>
         </Grid>
-        <Grid item sm={1.5}>
-          <TextField
-            label="Deaths"
-            value={deaths}
-            onChange={(e) => { processNumber(e.target.value) }}
-          />
+        <Button variant="outlined" onClick={processSubmit}>{id ? "Edit" : "Add"}</Button>
+        <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2} >
+          <Grid item>
+            <FormHelperText>{error}</FormHelperText>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Button onClick={processSubmit}>{id ? "Edit" : "Add"}</Button>
-        </Grid>
-      </Grid>
-      <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2} >
-        <Grid item>
-          <FormHelperText>{error}</FormHelperText>
-        </Grid>
-      </Grid>
-    </FormControl>
+      </FormControl>
+    </Paper>
   )
 }
 
