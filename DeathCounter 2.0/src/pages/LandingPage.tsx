@@ -1,7 +1,9 @@
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 
-const LandingPage = () => {
+import { useAuthenticationContext } from "../context/AuthenticationContext";
 
+const LandingPage = () => {
+  const {loginWithGoogle} = useAuthenticationContext();
   return (
     <Grid
       container
@@ -21,7 +23,7 @@ const LandingPage = () => {
               <Typography>Want to keep track of how often you die in games? Use this!</Typography>
             </Grid>
             <Grid container justifyContent="flex-end">
-              <Button variant="contained" color="primary" onClick={()=>{}}>Login</Button>
+              <Button variant="contained" color="primary" onClick={loginWithGoogle}>Login</Button>
             </Grid>
           </Grid>
         </CardContent>
