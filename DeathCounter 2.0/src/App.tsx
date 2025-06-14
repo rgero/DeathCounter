@@ -6,6 +6,7 @@ import AppLayout from "./components/ui/AppLayout";
 import AuthenticatedRoute from "./components/AuthenicatedRoute";
 import { AuthenticationProvider } from "./context/AuthenticationContext";
 import DashboardPage from "./pages/DashboardPage";
+import { DeathListProvider } from "./context/DeathCounterContext";
 import LandingPage from "./pages/LandingPage";
 import PageNotFound from "./pages/PageNotFound";
 
@@ -34,23 +35,25 @@ const App = () => {
         <CssBaseline/>
         <QueryClientProvider client={queryClient}>
           <AuthenticationProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route
-                  element={
-                    <AuthenticatedRoute>
-                      <AppLayout />
-                    </AuthenticatedRoute>
-                  }
-                >
-                  <Route index element={<DashboardPage/>}/>
-                </Route>
-                <Route path='landing' element={<LandingPage/>} />
-                <Route element={<AppLayout/>}>
-                  <Route path="*" element={<PageNotFound />} />
-                </Route>
-              </Routes>
-            </BrowserRouter>
+            <DeathListProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route
+                    element={
+                      <AuthenticatedRoute>
+                        <AppLayout />
+                      </AuthenticatedRoute>
+                    }
+                  >
+                    <Route index element={<DashboardPage/>}/>
+                  </Route>
+                  <Route path='landing' element={<LandingPage/>} />
+                  <Route element={<AppLayout/>}>
+                    <Route path="*" element={<PageNotFound />} />
+                  </Route>
+                </Routes>
+              </BrowserRouter>
+            </DeathListProvider>
           </AuthenticationProvider>
         </QueryClientProvider>
       </ThemeProvider>
