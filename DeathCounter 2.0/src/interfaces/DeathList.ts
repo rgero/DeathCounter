@@ -5,5 +5,6 @@ export interface DeathList {
   id?: number;
   owner_id?: string;
   game: Game;
+  currentlyActive: boolean;
   entityList: Entity[];
 }

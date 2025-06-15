@@ -48,3 +48,17 @@ export const createDeathList = async (deathList: DeathList) => {
 
   return decryptData(data as DeathList);
 };
+
+export const updateActiveDeathList = async (id: number, currentlyActive: boolean) => {
+  const { error } = await supabase
+    .from("death_counters")
+    .update({ currentlyActive })
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to update Death List status");
+  }
+}

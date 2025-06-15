@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { createDeathList, getDeathLists } from "../services/apiDeathCounter";
+import { createDeathList, getDeathLists, updateActiveDeathList } from "../services/apiDeathCounter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DeathList } from "../interfaces/DeathList";
@@ -9,8 +9,8 @@ import { useAuthenticationContext } from "./AuthenticationContext";
 interface DeathListContextType {
   deathLists: DeathList[];
   addDeathList: (deathList: DeathList) => void;
-  selectedGame: number | undefined;
-  setSelectedGame: (gameId: string | null) => void;
+  updateActiveStatus: (id: number) => void;
+  getCurrentlyActiveDeathList: () => DeathList | undefined;
   // removeDeathList: (id: string) => void;
   // updateDeathList: (id: string, updatedDeathList: DeathList) => void;
   // clearDeathLists: () => void;
@@ -22,9 +22,9 @@ interface DeathListContextType {
 
 const DeathListContext = React.createContext<DeathListContextType>({
   deathLists: [],
-  selectedGame: null,
-  setSelectedGame: () => {},
   addDeathList: () => {},
+  updateActiveStatus: () => {},
+  getCurrentlyActiveDeathList: () => undefined,
   // removeDeathList: () => {},
   // updateDeathList: () => {},
   // clearDeathLists: () => {},
@@ -37,7 +37,6 @@ const DeathListContext = React.createContext<DeathListContextType>({
 export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = useQueryClient();
   const {user} = useAuthenticationContext();
-  const [selectedGame, setSelectedGame] = React.useState<string | null>(null);
 
   const { data: deathLists = [], error, isLoading, refetch } = useQuery({
     queryKey: ["death_counters"],
@@ -58,19 +57,38 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     },
   });
 
-  React.useEffect(() => {
-    if (!selectedGame && deathLists.length > 0) {
-      setSelectedGame(deathLists[0].id?.toString() ?? null);
-    }
-  }, [deathLists, selectedGame]);
+  const getCurrentlyActiveDeathList = () => {
+    return deathLists.find((deathList) => deathList.currentlyActive);
+  }
+
+  const { mutateAsync: updateActiveStatus } = useMutation({
+    mutationFn: async (id: number) => {
+      const currentlyActiveDeathList = getCurrentlyActiveDeathList();
+
+      if (currentlyActiveDeathList) {
+        if (currentlyActiveDeathList.id)
+        {
+          await updateActiveDeathList(currentlyActiveDeathList.id, false);
+        }
+      }
+      await updateActiveDeathList(id, true);
+    },
+    onSuccess: () => {
+      toast.success("Death List status updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["death_counters"] });
+      refetch();
+    },
+  })
+
+
 
   return (
     <DeathListContext.Provider
       value={{
         deathLists,
-        selectedGame,
-        setSelectedGame,
         addDeathList: addNewDeathList,
+        getCurrentlyActiveDeathList,
+        updateActiveStatus,
         isLoading,
         error
       }}

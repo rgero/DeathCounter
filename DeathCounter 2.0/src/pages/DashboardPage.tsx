@@ -6,14 +6,14 @@ import { useDeathLists } from "../context/DeathCounterContext";
 
 const DashboardPage = () => {
 
-  const {deathLists, isLoading, selectedGame, error} = useDeathLists();
+  const {deathLists, isLoading} = useDeathLists();
 
   if (isLoading) {
     return <Loading/>
   }
 
   const selectedDeathList = deathLists.find((deathList) => {
-    return deathList.id?.toString() === selectedGame;
+    return deathList.currentlyActive;
   });
 
   return (
