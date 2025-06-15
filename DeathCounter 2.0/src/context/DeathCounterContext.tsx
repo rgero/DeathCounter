@@ -9,6 +9,8 @@ import { useAuthenticationContext } from "./AuthenticationContext";
 interface DeathListContextType {
   deathLists: DeathList[];
   addDeathList: (deathList: DeathList) => void;
+  selectedGame: number | undefined;
+  setSelectedGame: (gameId: string | null) => void;
   // removeDeathList: (id: string) => void;
   // updateDeathList: (id: string, updatedDeathList: DeathList) => void;
   // clearDeathLists: () => void;
@@ -20,6 +22,8 @@ interface DeathListContextType {
 
 const DeathListContext = React.createContext<DeathListContextType>({
   deathLists: [],
+  selectedGame: null,
+  setSelectedGame: () => {},
   addDeathList: () => {},
   // removeDeathList: () => {},
   // updateDeathList: () => {},
@@ -33,6 +37,7 @@ const DeathListContext = React.createContext<DeathListContextType>({
 export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = useQueryClient();
   const {user} = useAuthenticationContext();
+  const [selectedGame, setSelectedGame] = React.useState<string | null>(null);
 
   const { data: deathLists = [], error, isLoading, refetch } = useQuery({
     queryKey: ["death_counters"],
@@ -53,10 +58,18 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     },
   });
 
+  React.useEffect(() => {
+    if (!selectedGame && deathLists.length > 0) {
+      setSelectedGame(deathLists[0].id?.toString() ?? null);
+    }
+  }, [deathLists, selectedGame]);
+
   return (
     <DeathListContext.Provider
       value={{
         deathLists,
+        selectedGame,
+        setSelectedGame,
         addDeathList: addNewDeathList,
         isLoading,
         error

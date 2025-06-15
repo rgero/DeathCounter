@@ -1,29 +1,37 @@
 import { Container, Typography } from "@mui/material"
 
+import GameSelector from "../components/game/GameSelector";
 import Loading from "../components/ui/Loading";
 import { useDeathLists } from "../context/DeathCounterContext";
 
 const DashboardPage = () => {
 
-  const {deathLists, isLoading, error} = useDeathLists();
+  const {deathLists, isLoading, selectedGame, error} = useDeathLists();
 
   if (isLoading) {
     return <Loading/>
   }
 
+  const selectedDeathList = deathLists.find((deathList) => {
+    return deathList.id?.toString() === selectedGame;
+  });
+
   return (
     <Container>
+      <GameSelector/>
       <Typography variant="h4">User Authenicated</Typography>
-      {deathLists.map((deathList) => (
+      {selectedDeathList ? (
         <>
-          <Typography key={deathList.id} variant="body1">
-            {deathList.game.name}
+          <Typography variant="body1">
+            {selectedDeathList.game.name}
           </Typography>
           <Typography>
-            {deathList.entityList.map(entity => entity.name).join(", ")}
+            {selectedDeathList.entityList.map((entity) => entity.name).join(", ")}
           </Typography>
         </>
-      ))}
+      ) : (
+        <Typography>No game selected.</Typography>
+      )}
     </Container>
   )
 }
