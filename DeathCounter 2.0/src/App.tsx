@@ -9,6 +9,7 @@ import DashboardPage from "./pages/DashboardPage";
 import { DeathListProvider } from "./context/DeathCounterContext";
 import LandingPage from "./pages/LandingPage";
 import PageNotFound from "./pages/PageNotFound";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,6 +56,7 @@ const App = () => {
               </BrowserRouter>
             </DeathListProvider>
           </AuthenticationProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </ThemeProvider>
   )
