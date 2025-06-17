@@ -1,4 +1,4 @@
-import { AppBar, Box, Grid, Typography } from "@mui/material"
+import { AppBar, Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material"
 
 import GameSelector from "../game/GameSelector";
 import { Link } from "react-router-dom"
@@ -7,6 +7,9 @@ import { useAuthenticationContext } from "../../context/AuthenticationContext";
 
 const HeaderBar = () => {
   const {user} = useAuthenticationContext();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <AppBar position="static" 
@@ -34,9 +37,9 @@ const HeaderBar = () => {
         </Grid>
         {user && (
           <Grid container alignItems="center" justifyContent="flex-end" spacing={2}>
-            <Grid>
+            {!isMobile && (<Grid>
               <GameSelector/>
-            </Grid>
+            </Grid>)}
             <Grid>
               <UserAvatar />
             </Grid>
