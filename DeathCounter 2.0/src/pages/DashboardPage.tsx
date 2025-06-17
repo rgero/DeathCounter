@@ -1,6 +1,5 @@
 import { Container, Typography } from "@mui/material"
 
-import GameSelector from "../components/game/GameSelector";
 import Loading from "../components/ui/Loading";
 import { useDeathLists } from "../context/DeathCounterContext";
 
@@ -18,8 +17,6 @@ const DashboardPage = () => {
 
   return (
     <Container>
-      <GameSelector/>
-      <Typography variant="h4">User Authenicated</Typography>
       {selectedDeathList ? (
         <>
           <Typography variant="body1">

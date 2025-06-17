@@ -1,4 +1,4 @@
-import { MenuItem, Select, SelectChangeEvent } from "@mui/material"
+import { InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 
 import { useDeathLists } from "../../context/DeathCounterContext";
 
@@ -17,11 +17,11 @@ const GameSelector = () => {
 
   return (
     <Select
-      labelId="game-selector"
       id="game-selector"
       value={getCurrentlyActiveDeathList() ? String(getCurrentlyActiveDeathList()!.id) : ""}
-      label="Game"
       onChange={handleChange}
+      inputProps= {{ color: "red"}}
+      size="small"
     >
       {games.map(game => (
         <MenuItem key={game.id} value={game.id}>{game.name}</MenuItem>

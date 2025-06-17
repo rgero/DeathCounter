@@ -1,27 +1,19 @@
-import { Container, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Container } from "@mui/material"
 
+import HeaderBar from "../header/HeaderBar"
 import { Outlet } from "react-router-dom"
 
 const AppLayout = () => {
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
-
   return (
-    <Container disableGutters
-      maxWidth={false}
-      sx={{
-        backgroundImage: `url('Header.svg')`,
-        backgroundRepeat: 'repeat-x',
-        paddingBottom: isMobile ? 4 : 2
-      }}
-    >
-      <Container>
-        <Typography variant={isMobile ? "h4" : "h3"}>The Death Count</Typography>
-      </Container>
-      <Outlet/>
-    </Container>
-  )
+    <Box display="flex" flexDirection="column" height="calc(var(--vh, 1vh) * 100)">
+      <HeaderBar/>
+      <Box flexGrow={1} overflow="auto" display="flex" justifyContent="center" sx={{ mt: "1rem" }}>
+        <Container disableGutters sx={{ width: { xs: "95%", md: "90%" } }}>
+          <Outlet />
+        </Container>
+      </Box>
+    </Box>
+)
 }
 
 export default AppLayout
