@@ -10,6 +10,7 @@ import { DeathListProvider } from "./context/DeathCounterContext";
 import LandingPage from "./pages/LandingPage";
 import PageNotFound from "./pages/PageNotFound";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { SocketProvider } from "./context/WebSocketContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,29 +33,32 @@ const App = () => {
   });
 
   return (
+    
       <ThemeProvider theme={darkTheme}>
         <CssBaseline/>
         <QueryClientProvider client={queryClient}>
           <AuthenticationProvider>
-            <DeathListProvider>
-              <BrowserRouter>
-                <Routes>
-                  <Route
-                    element={
-                      <AuthenticatedRoute>
-                        <AppLayout />
-                      </AuthenticatedRoute>
-                    }
-                  >
-                    <Route index element={<DashboardPage/>}/>
-                  </Route>
-                  <Route path='landing' element={<LandingPage/>} />
-                  <Route element={<AppLayout/>}>
-                    <Route path="*" element={<PageNotFound />} />
-                  </Route>
-                </Routes>
-              </BrowserRouter>
-            </DeathListProvider>
+            <SocketProvider>
+              <DeathListProvider>
+                <BrowserRouter>
+                  <Routes>
+                    <Route
+                      element={
+                        <AuthenticatedRoute>
+                          <AppLayout />
+                        </AuthenticatedRoute>
+                      }
+                    >
+                      <Route index element={<DashboardPage/>}/>
+                    </Route>
+                    <Route path='landing' element={<LandingPage/>} />
+                    <Route element={<AppLayout/>}>
+                      <Route path="*" element={<PageNotFound />} />
+                    </Route>
+                  </Routes>
+                </BrowserRouter>
+              </DeathListProvider>
+            </SocketProvider>
           </AuthenticationProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
