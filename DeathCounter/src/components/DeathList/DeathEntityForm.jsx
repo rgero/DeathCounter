@@ -1,4 +1,5 @@
-import { Button, FormControl, FormHelperText, Grid, Paper, TextField } from "@mui/material"
+import { Add, Remove } from "@mui/icons-material";
+import { Button, FormControl, FormHelperText, Grid, IconButton, Paper, TextField } from "@mui/material"
 
 import React from "react"
 import { isMobile } from "../../utils/isMobile";
@@ -12,9 +13,31 @@ const DeathEntityForm = () => {
   const [name, setName] = React.useState("");
   const [deaths, setDeaths] = React.useState(0);
   const [error, setError] = React.useState("");
+  const [lastClick, setLastClick] = React.useState(new Date());
+  const timeDelay = 500;
+
+  const canProcess = () => {
+    const now = new Date();
+    if ((now - lastClick) > timeDelay)
+    {
+      setLastClick(now);
+      return true;
+    }
+  }
 
   const processIncrement = () => {
-    setDeaths( (deaths) => deaths+1 );
+    if (canProcess())
+    {
+      setDeaths( (deaths) => deaths+1 );
+    }
+  }
+
+  const processDecrement = () => {
+    if (canProcess())
+    {
+      setDeaths( (deaths) => deaths-1 );
+    }
+
   }
 
   React.useEffect( () => {
@@ -92,6 +115,14 @@ const DeathEntityForm = () => {
               value={deaths}
               onChange={(e) => { processNumber(e.target.value) }}
             />
+          </Grid>
+        </Grid>
+        <Grid container justifyContent="space-around" alignItems="center" paddingBottom={2}>
+          <Grid item>
+            <IconButton color="error" onClick={processDecrement}><Remove/></IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton color="success" onClick={processIncrement}><Add/></IconButton>
           </Grid>
         </Grid>
         <Button variant="outlined" onClick={processSubmit}>{id ? "Edit" : "Add"}</Button>

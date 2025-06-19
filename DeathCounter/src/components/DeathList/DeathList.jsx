@@ -1,4 +1,4 @@
-import { Container, Paper } from '@mui/material';
+import { Container, Grid, Paper } from '@mui/material';
 import React, { useEffect } from 'react';
 
 import DeathEntity from './DeathEntity';
@@ -38,28 +38,34 @@ const DeathList = () => {
   }
 
   return (
-    <Container>
-      <DeathPageHeader deaths={deathList}/>
-      {filteredList.sort((a,b) => a.id - b.id).length > 0 ? (
-        <Paper sx={
-          {
-            mb: 5,
-            p: 2,
-            mt: 2,
-            borderRadius: 5,
-            width: isMobile() ? "90%" : "500px",
-            mx: "auto"
-          }
-        }>
-          <DeathListHeader/>
-          {
-            filteredList.map( (item) => (
-              <DeathEntity key={item.id} data={item} processClick={processCurrentlySelected} />
-            ))
-          }
-        </Paper>
-      ) : (null)}
-      <DeathEntityForm data={currentlySelected}/>
+    <Container disableGutters>
+      <Grid container spacing={2} direction="column" disableGutters>
+        <Grid item>
+          <DeathPageHeader deaths={deathList}/>
+        </Grid>
+        {filteredList.sort((a,b) => a.id - b.id).length > 0 ? (
+          <Grid item>
+            <Paper sx={
+              {
+                p: 2,
+                borderRadius: 5,
+                width: isMobile() ? "90%" : "500px",
+                mx: "auto"
+              }
+            }>
+              <DeathListHeader/>
+              {
+                filteredList.map( (item) => (
+                  <DeathEntity key={item.id} data={item} processClick={processCurrentlySelected} />
+                ))
+              }
+            </Paper>
+          </Grid>
+        ) : (null)}
+        <Grid item>
+          <DeathEntityForm data={currentlySelected}/>
+        </Grid>
+      </Grid>
     </Container>
   )
 }
