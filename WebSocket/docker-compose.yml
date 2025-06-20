@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  websocket:
+    build:
+      context: ./Server
+    ports:
+      - "7778:7778"
+    container_name: deathcounter-wss-server
+    restart: unless-stopped
