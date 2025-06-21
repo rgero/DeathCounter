@@ -48,28 +48,52 @@ const DeathTrackerProvider = ({ children }) => {
   }
 
   const filterList = (term) => {
-    if (!term) { return deathList; }
-    return deathList.filter( item => item.name.toUpperCase().includes(term.toUpperCase()) );
+    const processedList = deathList.filter(item => item.name !== "Generic Deaths")
+    if (!term) { return processedList; }
+    return processedList.filter(item => !term || item.name.toUpperCase().includes(term.toUpperCase()));
   }
 
-  const incrementGenericDeath = () => {
+  const manipulateGenericDeath = (value) => {
     let newDeathList = deathList.map(item => {
-      if (item.name === "General Deaths") {
-        return { ...item, deaths: item.deaths + 1 };
+      if (item.name === "Generic Deaths") {
+        return { ...item, deaths: item.deaths + value };
       }
       return item;
     });
 
-    // If the item does not exist, add it to the list
-    if (!newDeathList.some(item => item.name === "General Deaths")) {
-      newDeathList.push({ name: "General Deaths", deaths: 1 });
+    if (!newDeathList.some(item => item.name === "Generic Deaths")) {
+      newDeathList.push({ name: "Generic Deaths", deaths: 1 });
     }
 
     setDeathList(newDeathList);
   }
 
+  const incrementGenericDeath = () => {
+    manipulateGenericDeath(1);
+  }
+
+  const decrementGenericDeath = () => {
+    manipulateGenericDeath(-1);
+  }
+
+  const genericDeaths = deathList.find(item => item.name === "Generic Deaths")?.deaths || 0;
+
   return (
-    <DeathTrackerContext.Provider value={{ gameName, setGameName, incrementGenericDeath, deathList, currentlySelected, addToList, clearItems, deleteItem, filterList, setItems, setCurrentlySelected }}>
+    <DeathTrackerContext.Provider value={{ 
+        gameName, 
+        setGameName, 
+        genericDeaths, 
+        decrementGenericDeath, 
+        incrementGenericDeath, 
+        deathList, 
+        currentlySelected, 
+        addToList, 
+        clearItems, 
+        deleteItem, 
+        filterList, 
+        setItems, 
+        setCurrentlySelected
+    }}>
       {children}
     </DeathTrackerContext.Provider>
   );

@@ -6,8 +6,13 @@ import { useDeathTracker } from "../../context/DeathTrackerContext";
 
 const Stats = () => {
   const { deathList } = useDeathTracker();
+  const filteredList = deathList.filter(item => item.name !== "Generic Deaths" && item.deaths > 0);
 
-  const sortedList = deathList.sort( (a,b) => b.deaths - a.deaths);
+  if (filteredList.length === 0) {
+    return;
+  }
+
+  const sortedList = deathList.filter(item => item.name !== "Generic Deaths").sort( (a,b) => b.deaths - a.deaths)
   const totalDeaths = deathList.reduce((total, currentItem) => total + currentItem.deaths, 0);
   const averagePerBoss = Math.round(totalDeaths / deathList.length * 100)/100;
 

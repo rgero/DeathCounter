@@ -5,6 +5,7 @@ import DeathEntity from './DeathEntity';
 import DeathEntityForm from './DeathEntityForm';
 import DeathListHeader from './DeathListHeader';
 import DeathPageHeader from './DeathPageHeader';
+import GenericDeaths from './GenericDeaths';
 import { isMobile } from '../../utils/isMobile';
 import { useDeathTracker } from '../../context/DeathTrackerContext';
 import { useSearchParams } from 'react-router-dom';
@@ -56,8 +57,8 @@ const DeathList = () => {
             }>
               <DeathListHeader/>
               {
-                filteredList.map( (item) => (
-                  <DeathEntity key={item.id} data={item} processClick={processCurrentlySelected} />
+                filteredList.map( (item, index) => (
+                  <DeathEntity key={index} data={item} index={index} processClick={processCurrentlySelected} />
                 ))
               }
             </Paper>
@@ -65,6 +66,9 @@ const DeathList = () => {
         ) : (null)}
         <Grid item>
           <DeathEntityForm data={currentlySelected}/>
+        </Grid>
+        <Grid item>
+          <GenericDeaths/>
         </Grid>
       </Grid>
     </Container>

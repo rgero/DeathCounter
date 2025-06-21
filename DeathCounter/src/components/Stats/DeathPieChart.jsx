@@ -22,7 +22,7 @@ const DeathPieChart = () => {
   };
 
   useEffect(() => {
-    const filtered = deathList.filter(item => item.deaths !== 0);
+    const filtered = deathList.filter(item => item.deaths !== 0).filter(item => item.name !== "Generic Deaths");
     setFilteredItems(filtered);
     setColors(filtered.map(() => getRandomColor()));
   }, [deathList]);

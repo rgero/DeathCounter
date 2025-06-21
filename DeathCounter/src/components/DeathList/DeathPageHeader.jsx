@@ -30,7 +30,7 @@ const DeathPageHeader = ({deaths}) => {
           </Grid>
           <Grid item xs={4}>
             <Typography textAlign="center">
-              Bosses: {deaths.length} | 
+              Bosses: {deaths.filter(item => item.name !== "Generic Deaths").length} | 
               Deaths: {deaths.reduce((total, currentItem) => total + currentItem.deaths, 0)}
             </Typography>
           </Grid>
