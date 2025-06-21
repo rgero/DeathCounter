@@ -1,16 +1,14 @@
 import { IconButton, Tooltip } from '@mui/material';
 
 import ClearIcon from '@mui/icons-material/Clear';
-import ClearModal from '../Modals/ClearModal';
-import { useState } from 'react';
+import { useDialogProvider } from '../../context/DialogContext';
 
 const ClearButton = () => {
-  const [isOpen, setOpen] = useState(false);
+  const {toggleClearDialog} = useDialogProvider();
   return (
     <>
-      <ClearModal open={isOpen} handleClose={() => setOpen(false)}/>
       <Tooltip title="Clear All">
-        <IconButton onClick={() => setOpen(true)}>
+        <IconButton onClick={toggleClearDialog}>
           <ClearIcon/>
         </IconButton>
       </Tooltip>

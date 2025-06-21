@@ -1,52 +1,42 @@
-import { Button, Grid, Modal, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 
+import BaseModal from "./BaseModal";
 import { useDeathTracker } from "../../context/DeathTrackerContext";
+import { useDialogProvider } from "../../context/DialogContext";
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 5,
-};
-
-const DeleteModal = ({open, handleClose, target}) => {
-  const {deleteItem} = useDeathTracker();
+const DeleteModal = ({open}) => {
+  const {deleteItem, currentlySelected} = useDeathTracker();
+  const {toggleDeleteDialog} = useDialogProvider();
+  
   const processDelete = () => {
-    deleteItem(target.id);
-    handleClose();
+    deleteItem(currentlySelected.id);
+    toggleDeleteDialog();
   }
 
-  if (!target) { return; }
+  if (!currentlySelected) { return; }
 
   return (
-    <Modal
+    <BaseModal
       open={open}
-      onClose={handleClose}
-      aria-labelledby="confirm-delete"
+      handleClose={toggleDeleteDialog}
+      label="confirm-delete"
     >
-      <Grid container justifyContent="center" spacing={5} sx={{ ...style}}>
+      <Grid container justifyContent="center" spacing={5}>
         <Grid item>
           <Typography>Are you sure?</Typography>
           <Typography>You might want to save the data just in case</Typography>
-          <Typography>{target.name} - {target.deaths}</Typography>
+          <Typography>{currentlySelected.name} - {currentlySelected.deaths}</Typography>
         </Grid>
         <Grid container item justifyContent="space-evenly">
           <Grid item>
-            <Button onClick={handleClose} variant="contained" color="error">No</Button>
+            <Button onClick={toggleDeleteDialog} variant="contained" color="error">No</Button>
           </Grid>
           <Grid item>
             <Button onClick={processDelete} variant="contained" color="success">Delete</Button>
           </Grid>
         </Grid>
       </Grid>
-    </Modal>
+    </BaseModal>
   )
 }
 

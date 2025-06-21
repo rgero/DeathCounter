@@ -1,25 +1,14 @@
-import { Button, Grid, Modal, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 
+import BaseModal from "./BaseModal";
 import { MuiFileInput } from "mui-file-input";
 import { useDeathTracker } from "../../context/DeathTrackerContext";
+import { useDialogProvider } from "../../context/DialogContext";
 import { useState } from "react";
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 5,
-};
-
-const ImportModal = ({open, handleClose}) => {
+const ImportModal = ({open}) => {
   const {setItems, setGameName, clearItems} = useDeathTracker();
+  const {toggleImportDialog} = useDialogProvider();
   const [file, setFile] = useState(null);
   const [fileData, setFileContent] = useState([]);
 
@@ -58,7 +47,7 @@ const ImportModal = ({open, handleClose}) => {
         // Clear the data
         setFile(null);
         setFileContent([]);
-        handleClose();
+        toggleImportDialog();
       } catch (e) {
         console.error(e);
       }
@@ -66,14 +55,14 @@ const ImportModal = ({open, handleClose}) => {
   }
 
   return (
-    <Modal
+    <BaseModal
       open={open}
-      onClose={handleClose}
-      aria-labelledby="confirm-clear"
+      handleClose={toggleImportDialog}
+      label="import-file"
     >
-      <Grid container justifyContent="center" spacing={5} sx={{ ...style}}>
+      <Grid container direction="column" justifyItems="center" alignItems="center" spacing={5} sx={{pt: 2,}}>
         <Grid item>
-          <Typography justifyContent="center">Please select a file</Typography>
+          <Typography>Please select a file</Typography>
         </Grid>
         <Grid item>
           <MuiFileInput
@@ -93,7 +82,7 @@ const ImportModal = ({open, handleClose}) => {
           </Grid>
         </Grid>
       </Grid>
-    </Modal>
+    </BaseModal>
   )
 }
 

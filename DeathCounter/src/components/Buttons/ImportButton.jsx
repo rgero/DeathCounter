@@ -1,16 +1,14 @@
 import { IconButton, Tooltip } from '@mui/material';
 
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import ImportModal from '../Modals/ImportModal';
-import { useState } from 'react';
+import { useDialogProvider } from '../../context/DialogContext';
 
 const ImportButton = () => {
-  const [isOpen, setOpen] = useState(false);
+  const {toggleImportDialog} = useDialogProvider();
   return (
     <>
-      <ImportModal open={isOpen} handleClose={() => setOpen(false)}/>
       <Tooltip title="Import Data">
-        <IconButton onClick={() => setOpen(true)}>
+        <IconButton onClick={toggleImportDialog}>
           <FileUploadIcon/>
         </IconButton>
       </Tooltip>
