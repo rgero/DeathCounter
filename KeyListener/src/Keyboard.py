@@ -5,7 +5,7 @@ def on_release(key):
   if key == keyboard.Key.f9:
     socketio.emit("Death")
 
-  if key == keyboard.Key.f7:
+  if key == keyboard.Key.f6:
     socketio.emit("Generic Death")
 
   if key == keyboard.Key.f8:
