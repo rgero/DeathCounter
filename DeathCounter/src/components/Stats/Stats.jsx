@@ -6,15 +6,15 @@ import { useDeathTracker } from "../../context/DeathTrackerContext";
 
 const Stats = () => {
   const { deathList } = useDeathTracker();
-  const filteredList = deathList.filter(item => item.name !== "Generic Deaths" && item.deaths > 0);
+  const filteredList = deathList.filter(item => item.name !== "Generic Deaths");
 
   if (filteredList.length === 0) {
     return;
   }
 
-  const sortedList = deathList.filter(item => item.name !== "Generic Deaths").sort( (a,b) => b.deaths - a.deaths)
-  const totalDeaths = deathList.reduce((total, currentItem) => total + currentItem.deaths, 0);
-  const averagePerBoss = Math.round(totalDeaths / deathList.length * 100)/100;
+  const sortedList = filteredList.sort( (a,b) => b.deaths - a.deaths)
+  const totalDeaths = filteredList.reduce((total, currentItem) => total + currentItem.deaths, 0);
+  const averagePerBoss = Math.round(totalDeaths / filteredList.length * 100)/100;
 
   let percentage;
   if (sortedList.length > 0 && totalDeaths > 0)
@@ -22,7 +22,7 @@ const Stats = () => {
     percentage = Math.round((sortedList[0].deaths / totalDeaths) * 1000)/10
   }
 
-  if (deathList.length == 0)
+  if (filteredList.length == 0)
   {
     return;
   }
@@ -34,7 +34,7 @@ const Stats = () => {
             <Typography variant="h4" justifyContent="flex-start">Stats</Typography>
           </Grid>
           <Grid item>
-            <Typography>Total Bosses: {deathList.length}</Typography>
+            <Typography>Total Bosses: {filteredList.length}</Typography>
             <Typography>Total Deaths: {totalDeaths}</Typography>
             <Typography>Average Per Boss: {averagePerBoss}</Typography>
             <Typography>Most Deaths: {sortedList[0].name} - {sortedList[0].deaths} {percentage && `(${percentage}%)`}</Typography>
