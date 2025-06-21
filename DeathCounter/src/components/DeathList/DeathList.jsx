@@ -16,6 +16,7 @@ const DeathList = () => {
   const [currentlySelected, setSelected] = React.useState({});
   const [searchParams] = useSearchParams();
   const socket = useSocket();
+  const isMobileDevice = isMobile();
 
   useEffect( () => {
     setFilteredList( filterList(searchParams.get('filter')) );
@@ -39,7 +40,7 @@ const DeathList = () => {
 
   return (
     <Container disableGutters>
-      <Grid container spacing={2} direction="column" disableGutters>
+      <Grid container spacing={2} direction="column">
         <Grid item>
           <DeathPageHeader deaths={deathList}/>
         </Grid>
@@ -49,7 +50,7 @@ const DeathList = () => {
               {
                 p: 2,
                 borderRadius: 5,
-                width: isMobile() ? "90%" : "500px",
+                width: isMobileDevice ? "90%" : "500px",
                 mx: "auto"
               }
             }>
