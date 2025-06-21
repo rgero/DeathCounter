@@ -4,11 +4,21 @@ import { Grid, IconButton, Paper, Typography } from "@mui/material";
 import React from "react";
 import { isMobile } from "../../utils/isMobile";
 import { useDeathTracker } from "../../context/DeathTrackerContext";
+import { useSocket } from "../../hooks/useWebSocket";
 
 const GenericDeaths = () => {
   const {genericDeaths, decrementGenericDeath, incrementGenericDeath} = useDeathTracker();
   const [lastClick, setLastClick] = React.useState(new Date());
   const timeDelay = 500;
+  const socket = useSocket();
+
+  React.useEffect( () => {
+    socket.on("Generic Death", processIncrement);
+
+    return () => {
+      socket.off("Generic Death", processIncrement);
+    }
+  })
 
   const canProcess = () => {
     const now = new Date();
