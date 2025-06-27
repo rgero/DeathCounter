@@ -1,5 +1,6 @@
 import {Divider, Menu} from "@mui/material";
 
+import ImportOption from "./HeaderOptions/ImportOption";
 import LogoutOption from "./HeaderOptions/LogoutOption";
 import StatsOption from "./HeaderOptions/StatsOption";
 import UserOption from "./HeaderOptions/UserOption";
@@ -26,6 +27,7 @@ const HeaderMenu: React.FC<Props> = ({anchorEl, closeFn}) => {
       >
         <UserOption/>
         <Divider/>
+        <ImportOption/>
         <StatsOption/>
         <Divider/>
         <LogoutOption/>

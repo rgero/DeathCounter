@@ -8,6 +8,7 @@ import { AuthenticationProvider } from "./context/AuthenticationContext";
 import DashboardPage from "./pages/DashboardPage";
 import { DeathListProvider } from "./context/DeathCounterContext";
 import LandingPage from "./pages/LandingPage";
+import { ModalProvider } from "./context/ModalContext";
 import PageNotFound from "./pages/PageNotFound";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SocketProvider } from "./context/WebSocketContext";
@@ -38,27 +39,29 @@ const App = () => {
         <CssBaseline/>
         <QueryClientProvider client={queryClient}>
           <AuthenticationProvider>
-            <SocketProvider>
+            {/* <SocketProvider> */}
               <DeathListProvider>
-                <BrowserRouter>
-                  <Routes>
-                    <Route
-                      element={
-                        <AuthenticatedRoute>
-                          <AppLayout />
-                        </AuthenticatedRoute>
-                      }
-                    >
-                      <Route index element={<DashboardPage/>}/>
-                    </Route>
-                    <Route path='landing' element={<LandingPage/>} />
-                    <Route element={<AppLayout/>}>
-                      <Route path="*" element={<PageNotFound />} />
-                    </Route>
-                  </Routes>
-                </BrowserRouter>
+                <ModalProvider>
+                  <BrowserRouter>
+                    <Routes>
+                      <Route
+                        element={
+                          <AuthenticatedRoute>
+                            <AppLayout />
+                          </AuthenticatedRoute>
+                        }
+                      >
+                        <Route index element={<DashboardPage/>}/>
+                      </Route>
+                      <Route path='landing' element={<LandingPage/>} />
+                      <Route element={<AppLayout/>}>
+                        <Route path="*" element={<PageNotFound />} />
+                      </Route>
+                    </Routes>
+                  </BrowserRouter>
+                </ModalProvider>
               </DeathListProvider>
-            </SocketProvider>
+            {/* </SocketProvider> */}
           </AuthenticationProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
