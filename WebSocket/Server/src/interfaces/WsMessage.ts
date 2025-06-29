@@ -1,9 +1,15 @@
+import { WsPayload } from "./WsPayload"
 
-export type WsMessage = ChatMessage | SystemNotice
+export type WsMessage = BossDeathIncrement | GenericDeathIncrement | SystemNotice
 
-export interface ChatMessage {
-  event: 'chat',
-  contents: string
+export interface BossDeathIncrement {
+  event: 'bossDeathIncrement',
+  payload: WsPayload
+}
+
+export interface GenericDeathIncrement{
+  event: 'genericDeathIncrement',
+  payload: WsPayload
 }
 
 export interface SystemNotice {
