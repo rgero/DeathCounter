@@ -5,5 +5,6 @@ export const MessageSchema = z.object({
   payload: z.object({
     authToken: z.string(),
     gameId: z.string().optional(),
+    userId: z.string().optional(),
   }).optional(),
 })
