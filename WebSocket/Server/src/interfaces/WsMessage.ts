@@ -1,18 +1,18 @@
 import { WsPayload } from "./WsPayload"
 
-export type WsMessage = BossDeathIncrement | GenericDeathIncrement | SystemNotice
+export type WsMessage = BossDeathIncrement | GenericDeathIncrement | KeyQuery
 
 export interface BossDeathIncrement {
   event: 'bossDeathIncrement',
-  payload: WsPayload
+  payload?: WsPayload
 }
 
 export interface GenericDeathIncrement{
   event: 'genericDeathIncrement',
-  payload: WsPayload
+  payload?: WsPayload
 }
 
-export interface SystemNotice {
-  event: 'systemNotice',
-  contents: string,
+export interface KeyQuery {
+  event: 'keyQuery',
+  payload?: WsPayload
 }
