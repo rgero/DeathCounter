@@ -1,15 +1,21 @@
-import { ServerOptions } from 'ws';
 import { SocketHandler } from './server/SocketHandler';
+import apiRoutes from './routes/apiRoutes';
+import { createServer } from 'http';
 import dotenv from 'dotenv';
+import express from 'express';
 
 dotenv.config();
 
-console.log(`Using encryption key: ${process.env.ENCRYPTION_KEY}`);
+const app = express();
 
-function main() {
-  const options: ServerOptions = { port: process.env.PORT ? parseInt(process.env.PORT) : 8080 };
-  const handler = new SocketHandler()
-  handler.initialize(options)
-}
+app.use('/api', apiRoutes);
 
-main();
+const server = createServer(app);
+
+const handler = new SocketHandler()
+handler.initialize(server)
+
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8080;
+server.listen(PORT, () => {
+  console.log(`HTTP server + WebSocket listening on http://localhost:${PORT}`);
+});

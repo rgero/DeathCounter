@@ -1,17 +1,17 @@
+import { IncomingMessage, Server } from 'http';
 import { RawData, ServerOptions, WebSocket, WebSocketServer } from "ws";
 
-import { IncomingMessage } from 'http';
 import { MessageSchema } from "../schemas/Message";
 import { WsMessage } from "../interfaces/WsMessage";
 
 export class SocketHandler {
   private server: WebSocketServer | undefined;
   
-  initialize(options: ServerOptions)
+  initialize(server: Server)
   {
-    this.server = new WebSocketServer(options)
+    this.server = new WebSocketServer({server})
     
-    this.server.on('listening', () => console.log(`Server listening on port ${options.port}`))
+    this.server.on('listening', () => console.log(`WebSocket server initialized.`))
     this.server.on('connection', (socket, request) => this.onSocketConnected(socket, request))
   }
 
@@ -34,9 +34,6 @@ export class SocketHandler {
           break;
         case 'genericDeathIncrement':
           socket.send(JSON.stringify({ event: 'ack', message: 'Generic death increment received' }));
-          break;
-        case 'keyQuery':
-          socket.send(JSON.stringify({ event: 'ack', message: 'Key query received' }));
           break;
         default:
           socket.send(JSON.stringify({ event: 'error', message: 'Unknown event type' }));
