@@ -6,6 +6,8 @@ import { useDeathLists } from "../context/DeathCounterContext";
 
 const DashboardPage = () => {
   const {deathLists, isLoading} = useDeathLists();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   if (isLoading) {
     return <Loading/>
@@ -15,8 +17,7 @@ const DashboardPage = () => {
     return deathList.currentlyActive;
   });
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
 
   return (
     <Container>
@@ -24,7 +25,7 @@ const DashboardPage = () => {
       {selectedDeathList ? (
         <>
           <Typography variant="body1">
-            {selectedDeathList.game.name}
+            {selectedDeathList.name}
           </Typography>
           <Typography>
             {selectedDeathList.entityList.map((entity) => entity.name).join(", ")}

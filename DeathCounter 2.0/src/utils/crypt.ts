@@ -16,11 +16,9 @@ const decryptField = (ciphertext: string): string => {
 };
 
 export const decryptData = (data: DeathList): DeathList => {
-  const game = data.game as Game;
-  data.game.name = decryptField(game.name)
-  data.game.description = game.description ? decryptField(game.description) : "";
+  data.name = decryptField(data.name)
+  data.description = data.description ? decryptField(data.description) : "";
 
-  data.game = game;
   data.entityList = data.entityList.map((entity) => ({
     ...entity,
     name: decryptField(entity.name),
@@ -30,11 +28,8 @@ export const decryptData = (data: DeathList): DeathList => {
 }
 
 export const encryptData = (data: DeathList): DeathList => {
-  const game = data.game as Game;
-  game.name = encryptField(game.name);
-  game.description = game.description ? encryptField(game.description) : "";
-
-  data.game = game;
+  data.name = encryptField(data.name);
+  data.description = data.description ? encryptField(data.description) : "";
 
   data.entityList = data.entityList.map((entity) => ({
     ...entity,

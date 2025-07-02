@@ -1,4 +1,4 @@
-import { InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
+import { MenuItem, Select, SelectChangeEvent } from "@mui/material"
 
 import { useDeathLists } from "../../context/DeathCounterContext";
 
@@ -12,7 +12,7 @@ const GameSelector = () => {
 
   const games = deathLists.map(deathList => ({
     id: String(deathList.id),
-    name: deathList.game.name
+    name: deathList.name
   }));
 
   return (
