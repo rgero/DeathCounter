@@ -1,3 +1,5 @@
+import './services/supabase';
+
 import { SocketHandler } from './server/SocketHandler';
 import apiRoutes from './routes/apiRoutes';
 import { createServer } from 'http';
@@ -6,8 +8,10 @@ import express from 'express';
 
 dotenv.config();
 
+
 const app = express();
 
+app.use(express.json());
 app.use('/api', apiRoutes);
 
 const server = createServer(app);

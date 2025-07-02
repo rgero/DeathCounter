@@ -4,13 +4,13 @@ import BaseModal from "./BaseModal";
 import { useModalProvider } from "../../context/ModalContext";
 import { useState } from "react";
 
-const ImportModal = ({ open }) => {
+const ImportModal = ({ open } : { open: boolean} ) => {
   const { toggleImportModal } = useModalProvider();
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File|null>(null);
   const [fileData, setFileContent] = useState([]);
 
-  const handleFileChange = (event) => {
-    const newFile = event.target.files[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newFile = event.target.files?.[0];
     setFile(newFile);
 
     if (newFile) {
