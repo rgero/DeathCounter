@@ -1,16 +1,18 @@
 import React, { useContext } from "react";
-import { createDeathList, getDeathLists, updateActiveDeathList } from "../services/apiDeathCounter";
+import { createDeathList, getDeathLists, updateActiveDeathList, updateDeathListToken } from "../services/apiDeathCounter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DeathList } from "../interfaces/DeathList";
 import toast from "react-hot-toast";
 import { useAuthenticationContext } from "./AuthenticationContext";
+import { v4 as uuidv4 } from 'uuid';
 
 interface DeathListContextType {
   deathLists: DeathList[];
   addDeathList: (deathList: DeathList) => void;
   updateActiveStatus: (id: number) => void;
   getCurrentlyActiveDeathList: () => DeathList | undefined;
+  regenerateToken: () => void;
   // removeDeathList: (id: string) => void;
   // updateDeathList: (id: string, updatedDeathList: DeathList) => void;
   // clearDeathLists: () => void;
@@ -25,6 +27,7 @@ const DeathListContext = React.createContext<DeathListContextType>({
   addDeathList: () => {},
   updateActiveStatus: () => {},
   getCurrentlyActiveDeathList: () => undefined,
+  regenerateToken: () => {},
   // removeDeathList: () => {},
   // updateDeathList: () => {},
   // clearDeathLists: () => {},
@@ -80,6 +83,23 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     },
   })
 
+  const { mutateAsync: regenerateToken } = useMutation({
+    mutationFn: async () => {
+      const currentlyActiveDeathList = getCurrentlyActiveDeathList();
+      if (!currentlyActiveDeathList || !currentlyActiveDeathList.id) {
+        throw new Error("No active death list found to regenerate token");
+      }
+
+      const newToken = uuidv4();
+      await updateDeathListToken(currentlyActiveDeathList.id, newToken);
+    },
+    onSuccess: () => {
+      toast.success("Token regenerated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["death_counters"] });
+      refetch();
+    },
+  });
+
 
 
   return (
@@ -88,6 +108,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         deathLists,
         addDeathList: addNewDeathList,
         getCurrentlyActiveDeathList,
+        regenerateToken,
         updateActiveStatus,
         isLoading,
         error

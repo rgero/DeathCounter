@@ -62,3 +62,17 @@ export const updateActiveDeathList = async (id: number, currentlyActive: boolean
     throw new Error("Failed to update Death List status");
   }
 }
+
+export const updateDeathListToken = async (id: number, token: string) => {
+  const { error } = await supabase
+    .from("death_counters")
+    .update({ token })
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to update Death List token");
+  }
+}

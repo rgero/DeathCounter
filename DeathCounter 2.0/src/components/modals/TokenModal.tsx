@@ -6,11 +6,15 @@ import { useModalProvider } from "../../context/ModalContext"
 
 const TokenModal = () => {
   const {tokenModalOpen, toggleTokenModal} = useModalProvider()
-  const {getCurrentlyActiveDeathList, isLoading} = useDeathLists()
+  const {getCurrentlyActiveDeathList, regenerateToken, isLoading} = useDeathLists()
 
   const currentlyActiveDeathList = getCurrentlyActiveDeathList();
   if (isLoading || !currentlyActiveDeathList) {
     return null;
+  }
+
+  const handleRegenerateToken = async () => {
+    await regenerateToken();
   }
 
   return (
@@ -27,7 +31,9 @@ const TokenModal = () => {
           <Typography variant="body1">Token: {currentlyActiveDeathList.token}</Typography>
         </Grid>
         <Grid>
-          <Typography variant="body2">Stub for Regenerating Token</Typography>
+          <IconButton onClick={handleRegenerateToken}>
+            <Typography variant="body2">Regenerate Token</Typography>
+          </IconButton>     
         </Grid>
         <Grid>
           <IconButton onClick={toggleTokenModal}>
