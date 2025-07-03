@@ -1,4 +1,4 @@
-import { Box, Modal, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Fade, Modal, useMediaQuery, useTheme } from "@mui/material"
 
 const BaseModal = ({children, label, open, handleClose}) => {
   const theme = useTheme();
@@ -25,9 +25,11 @@ const BaseModal = ({children, label, open, handleClose}) => {
       onClose={handleClose}
       aria-labelledby={label}
     >
-      <Box sx={{ ...style }}>
-        {children}
-      </Box>
+      <Fade in={open}>
+        <Box sx={{ ...style }}>
+          {children}
+        </Box>
+      </Fade>
     </Modal>
   )
 }

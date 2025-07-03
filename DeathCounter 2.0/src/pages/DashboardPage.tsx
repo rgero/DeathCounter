@@ -1,5 +1,6 @@
 import { Box, Container, Typography, useMediaQuery, useTheme } from "@mui/material"
 
+import DeathlistHeader from "../components/death_list/DeathlistHeader";
 import GameSelector from "../components/game/GameSelector";
 import Loading from "../components/ui/Loading";
 import { useDeathLists } from "../context/DeathCounterContext";
@@ -24,9 +25,7 @@ const DashboardPage = () => {
       {isMobile ? <Box sx={{paddingBottom: "10px"}}><GameSelector/></Box> : null}
       {selectedDeathList ? (
         <>
-          <Typography variant="body1">
-            {selectedDeathList.name}
-          </Typography>
+          <DeathlistHeader/>
           <Typography>
             {selectedDeathList.entityList.map((entity) => entity.name).join(", ")}
           </Typography>

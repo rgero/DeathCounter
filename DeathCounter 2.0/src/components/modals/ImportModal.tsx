@@ -4,8 +4,8 @@ import BaseModal from "./BaseModal";
 import { useModalProvider } from "../../context/ModalContext";
 import { useState } from "react";
 
-const ImportModal = ({ open } : { open: boolean} ) => {
-  const { toggleImportModal } = useModalProvider();
+const ImportModal = ( ) => {
+  const { importModalOpen, toggleImportModal } = useModalProvider();
   const [file, setFile] = useState<File|null>(null);
   const [fileData, setFileContent] = useState([]);
 
@@ -39,7 +39,7 @@ const ImportModal = ({ open } : { open: boolean} ) => {
 
   return (
     <BaseModal
-      open={open}
+      open={importModalOpen}
       handleClose={toggleImportModal}
       label="import-file"
     >

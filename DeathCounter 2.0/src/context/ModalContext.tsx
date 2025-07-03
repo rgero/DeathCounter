@@ -1,25 +1,34 @@
 import React, { createContext, useContext, useState } from "react";
 
 import ImportModal from "../components/modals/ImportModal";
+import TokenModal from "../components/modals/TokenModal";
 
 interface ModalContextProps {
-  importModal: boolean;
+  importModalOpen: boolean;
+  tokenModalOpen: boolean;
   toggleImportModal: () => void;
+  toggleTokenModal: () => void;
 }
 
 const ModalContext = createContext<ModalContextProps|undefined>(undefined);
 
 const ModalProvider = ({ children }: { children: React.ReactNode }) => {
-  const [importModal, setImportModal] = useState(false);
+  const [importModalOpen, setImportModal] = useState(false);
+  const [tokenModalOpen, setTokenModalOpen] = useState(false);
+
+  const toggleTokenModal = () => setTokenModalOpen(prev => !prev);
 
   const toggleImportModal = () => setImportModal(prev => !prev);
 
   return (
     <ModalContext.Provider value={{ 
-      importModal, 
-      toggleImportModal
+      importModalOpen,
+      tokenModalOpen, 
+      toggleImportModal,
+      toggleTokenModal
     }}>
-      <ImportModal open={importModal} />
+      <ImportModal/>
+      <TokenModal/>
       {children}
     </ModalContext.Provider>
   )
