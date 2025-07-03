@@ -7,9 +7,9 @@ import { WsMessage } from "../interfaces/WsMessage";
 export class SocketHandler {
   private server: WebSocketServer | undefined;
   
-  initialize(server: Server)
+  initialize(options: ServerOptions)
   {
-    this.server = new WebSocketServer({server})
+    this.server = new WebSocketServer(options)
     
     this.server.on('listening', () => console.log(`WebSocket server initialized.`))
     this.server.on('connection', (socket, request) => this.onSocketConnected(socket, request))
