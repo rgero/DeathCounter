@@ -77,7 +77,6 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       await updateActiveDeathList(id, true);
     },
     onSuccess: () => {
-      toast.success("Death List status updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["death_counters"] });
       refetch();
     },
