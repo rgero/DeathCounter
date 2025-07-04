@@ -12,6 +12,7 @@ import { ModalProvider } from "./context/ModalContext";
 import PageNotFound from "./pages/PageNotFound";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SocketProvider } from "./context/WebSocketContext";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,7 +35,6 @@ const App = () => {
   });
 
   return (
-    
       <ThemeProvider theme={darkTheme}>
         <CssBaseline/>
         <QueryClientProvider client={queryClient}>
@@ -65,6 +65,15 @@ const App = () => {
           </AuthenticationProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
+        <Toaster 
+          position="bottom-center" 
+          toastOptions={{
+            style: {
+              background: '#333',
+              color: '#fff'
+            },
+          }}
+        />
       </ThemeProvider>
   )
 }
