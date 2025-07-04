@@ -76,3 +76,25 @@ export const updateDeathListToken = async (id: number, token: string) => {
     throw new Error("Failed to update Death List token");
   }
 }
+
+export const uploadDeathList = async (deathList: DeathList) => {
+  // First see if there is an existing death list with the same ID
+  const existingList = deathList.id ?  await getDeathListById(deathList.id) : null;
+  deathList.currentlyActive = deathList.currentlyActive ? deathList.currentlyActive : false;
+
+  if (existingList) {
+    // If it exists, update it
+    const { error } = await supabase
+      .from("death_counters")
+      .update(encryptData(deathList))
+      .eq("id", deathList.id);
+
+    if (error) {
+      console.error(error);
+      throw new Error("Failed to update Death List");
+    }
+  } else {
+    // If it doesn't exist, create a new one
+    await createDeathList(deathList);
+  }
+}

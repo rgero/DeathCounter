@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { createDeathList, getDeathLists, updateActiveDeathList, updateDeathListToken } from "../services/apiDeathCounter";
+import { createDeathList, getDeathLists, updateActiveDeathList, updateDeathListToken, uploadDeathList as uploadDeathListAPI } from "../services/apiDeathCounter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DeathList } from "../interfaces/DeathList";
@@ -13,6 +13,7 @@ interface DeathListContextType {
   updateActiveStatus: (id: number) => void;
   getCurrentlyActiveDeathList: () => DeathList | undefined;
   regenerateToken: () => void;
+  uploadDeathList: (deathList: DeathList) => void;
   // removeDeathList: (id: string) => void;
   // updateDeathList: (id: string, updatedDeathList: DeathList) => void;
   // clearDeathLists: () => void;
@@ -28,6 +29,7 @@ const DeathListContext = React.createContext<DeathListContextType>({
   updateActiveStatus: () => {},
   getCurrentlyActiveDeathList: () => undefined,
   regenerateToken: () => {},
+  uploadDeathList: () => {},
   // removeDeathList: () => {},
   // updateDeathList: () => {},
   // clearDeathLists: () => {},
@@ -58,6 +60,17 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       queryClient.invalidateQueries({ queryKey: ["death_counters"] });
       refetch();
     },
+  });
+
+  const {mutateAsync: uploadDeathList} = useMutation({
+    mutationFn: async (deathList: DeathList) => {
+      await uploadDeathListAPI(deathList);
+    },
+    onSuccess: () => {
+      toast.success("Death List uploaded successfully!");
+      queryClient.invalidateQueries({ queryKey: ["death_counters"] });
+      refetch();
+    }
   });
 
   const getCurrentlyActiveDeathList = () => {
@@ -109,6 +122,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         getCurrentlyActiveDeathList,
         regenerateToken,
         updateActiveStatus,
+        uploadDeathList,
         isLoading,
         error
       }}

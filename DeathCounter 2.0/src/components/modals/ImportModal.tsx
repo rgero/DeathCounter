@@ -1,13 +1,16 @@
 import { Button, Grid, Typography } from "@mui/material";
 
 import BaseModal from "./BaseModal";
+import { DeathList } from "../../interfaces/DeathList";
+import { useDeathLists } from "../../context/DeathCounterContext";
 import { useModalProvider } from "../../context/ModalContext";
 import { useState } from "react";
 
 const ImportModal = ( ) => {
   const { importModalOpen, toggleImportModal } = useModalProvider();
-  const [file, setFile] = useState<File|null>(null);
-  const [fileData, setFileContent] = useState([]);
+  const {uploadDeathList} = useDeathLists();
+  const [file, setFile] = useState<File|undefined>(undefined);
+  const [fileData, setFileContent] = useState<DeathList|undefined>(undefined);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFile = event.target.files?.[0];
@@ -27,10 +30,12 @@ const ImportModal = ( ) => {
     }
   };
 
-  const processUpload = () => {
+  const processUpload = async () => {
     if (fileData) {
       try {
-        console.log(fileData);
+        await uploadDeathList(fileData);
+        setFile(undefined);
+        toggleImportModal();
       } catch (e) {
         console.error(e);
       }
