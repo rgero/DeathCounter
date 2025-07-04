@@ -8,7 +8,7 @@ interface GenericMenuItemProps {
   onClick?: () => void;
 }
 
-const HeaderMenuOption = ({ icon, text, onClick }: GenericMenuItemProps) => {
+const MenuOption = ({ icon, text, onClick }: GenericMenuItemProps) => {
   return (
     <MenuItem onClick={onClick ? onClick : () => {}}>
       {icon}
@@ -17,4 +17,4 @@ const HeaderMenuOption = ({ icon, text, onClick }: GenericMenuItemProps) => {
   );
 };
 
-export default HeaderMenuOption;
+export default MenuOption;

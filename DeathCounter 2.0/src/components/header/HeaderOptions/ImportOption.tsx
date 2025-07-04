@@ -1,11 +1,11 @@
-import HeaderMenuOption from "./HeaderMenuOption";
+import MenuOption from "../../../interfaces/MenuOption";
 import { QueryStats } from "@mui/icons-material";
 import { useModalProvider } from "../../../context/ModalContext";
 
 const ImportOption = () => {
   const {toggleImportModal} = useModalProvider();
   return (
-    <HeaderMenuOption icon={<QueryStats/>} text="Import Game" onClick={toggleImportModal}/>
+    <MenuOption icon={<QueryStats/>} text="Import Game" onClick={toggleImportModal}/>
   )
 }
 

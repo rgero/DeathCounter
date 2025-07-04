@@ -1,4 +1,4 @@
-import HeaderMenuOption from "./HeaderMenuOption";
+import MenuOption from "../../../interfaces/MenuOption";
 import { Person } from "@mui/icons-material";
 import { useAuthenticationContext } from "../../../context/AuthenticationContext";
 
@@ -7,7 +7,7 @@ const UserOption = () => {
   const userName =  user ? user.user_metadata.full_name : "Default User";
 
   return (
-    <HeaderMenuOption icon={<Person/>} text={userName} />
+    <MenuOption icon={<Person/>} text={userName} />
   )
 }
 

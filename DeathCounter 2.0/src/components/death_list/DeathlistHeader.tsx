@@ -1,9 +1,9 @@
-import { Grid } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
+
+import DeathListMenuButton from "./DeathListMenuButton";
 import { useDeathLists } from "../../context/DeathCounterContext";
-import { useModalProvider } from "../../context/ModalContext";
 
 const DeathlistHeader = () => {
-  const { toggleTokenModal } = useModalProvider();
   const {getCurrentlyActiveDeathList, isLoading} = useDeathLists();
 
   const currentlyActiveDeathList = getCurrentlyActiveDeathList();
@@ -15,10 +15,10 @@ const DeathlistHeader = () => {
   return (
     <Grid container direction="row" justifyContent="space-between">
       <Grid>
-        {currentlyActiveDeathList.name}
+        <Typography variant="h4">{currentlyActiveDeathList.name}</Typography>
       </Grid>
       <Grid>
-        <button onClick={toggleTokenModal}>Toggle Token Modal</button>
+        <DeathListMenuButton/>
       </Grid>
     </Grid>
   )
