@@ -2,6 +2,7 @@ import { decryptData, encryptData } from "../utils/crypt";
 
 import { DeathList } from "../interfaces/DeathList";
 import supabase from "./supabase";
+import { v4 as uuidv4 } from 'uuid';
 
 export const getDeathLists = async () => {
   const { data, error } = await supabase
@@ -35,6 +36,11 @@ export const getDeathListById = async (id: number) => {
 
 export const createDeathList = async (deathList: DeathList) => {
   deathList = encryptData(deathList);
+
+  // New deathlists should always be inactive and need to have a token.
+  deathList.currentlyActive = false;
+  deathList.token = uuidv4();
+
   const { data, error } = await supabase
     .from("death_counters")
     .insert([deathList])
@@ -48,6 +54,22 @@ export const createDeathList = async (deathList: DeathList) => {
 
   return decryptData(data as DeathList);
 };
+
+export const updateDeathList = async (deathList: DeathList) => {
+  const updatedDeathList = encryptData(deathList);
+
+  const { error } = await supabase
+    .from("death_counters")
+    .update(updatedDeathList)
+    .eq("id", deathList.id)
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to update Death List");
+  }
+}
 
 export const updateActiveDeathList = async (id: number, currentlyActive: boolean) => {
   const { error } = await supabase
@@ -80,8 +102,6 @@ export const updateDeathListToken = async (id: number, token: string) => {
 export const uploadDeathList = async (deathList: DeathList) => {
   // First see if there is an existing death list with the same ID
   const existingList = deathList.id ?  await getDeathListById(deathList.id) : null;
-  deathList.currentlyActive = deathList.currentlyActive ? deathList.currentlyActive : false;
-
   if (existingList) {
     // If it exists, update it
     const { error } = await supabase
@@ -96,5 +116,17 @@ export const uploadDeathList = async (deathList: DeathList) => {
   } else {
     // If it doesn't exist, create a new one
     await createDeathList(deathList);
+  }
+}
+
+export const removeDeathList = async (id: number) => {
+  const { error } = await supabase
+    .from("death_counters")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to remove Death List");
   }
 }

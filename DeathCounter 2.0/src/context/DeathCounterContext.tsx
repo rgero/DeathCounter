@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { createDeathList, getDeathLists, updateActiveDeathList, updateDeathListToken, uploadDeathList as uploadDeathListAPI } from "../services/apiDeathCounter";
+import { createDeathList, getDeathLists, removeDeathList as removeDeathListAPI, updateActiveDeathList, updateDeathList as updateDeathListAPI, updateDeathListToken, uploadDeathList as uploadDeathListAPI } from "../services/apiDeathCounter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DeathList } from "../interfaces/DeathList";
@@ -14,8 +14,8 @@ interface DeathListContextType {
   getCurrentlyActiveDeathList: () => DeathList | undefined;
   regenerateToken: () => void;
   uploadDeathList: (deathList: DeathList) => void;
-  // removeDeathList: (id: string) => void;
-  // updateDeathList: (id: string, updatedDeathList: DeathList) => void;
+  updateDeathList: (deathList: DeathList) => void;
+  removeDeathList: (id: number) => void;
   // clearDeathLists: () => void;
   // getDeathListById: (id: string) => DeathList | undefined;
   // addMultipleDeathLists: (deathLists: DeathList[]) => void;
@@ -30,8 +30,8 @@ const DeathListContext = React.createContext<DeathListContextType>({
   getCurrentlyActiveDeathList: () => undefined,
   regenerateToken: () => {},
   uploadDeathList: () => {},
-  // removeDeathList: () => {},
-  // updateDeathList: () => {},
+  updateDeathList: () => {},
+  removeDeathList: () => {},
   // clearDeathLists: () => {},
   // getDeathListById: () => undefined,
   // addMultipleDeathLists: () => {}
@@ -62,6 +62,28 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     },
   });
 
+  const { mutateAsync: updateDeathList } = useMutation({
+    mutationFn: async (deathList: DeathList) => {
+      await updateDeathListAPI(deathList);
+    },
+    onSuccess: () => {
+      toast.success("Death List updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["death_counters"] });
+      refetch();
+    },
+  });
+
+  const {mutateAsync: removeDeathList} = useMutation({
+    mutationFn: async (id: number) => {
+      await removeDeathListAPI(id);
+    },
+    onSuccess: () => {
+      toast.success("Death List removed successfully!");
+      queryClient.invalidateQueries({ queryKey: ["death_counters"] });
+      refetch();
+    }
+  });
+
   const {mutateAsync: uploadDeathList} = useMutation({
     mutationFn: async (deathList: DeathList) => {
       await uploadDeathListAPI(deathList);
@@ -76,7 +98,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const getCurrentlyActiveDeathList = () => {
     return deathLists.find((deathList) => deathList.currentlyActive);
   }
-
+  
   const { mutateAsync: updateActiveStatus } = useMutation({
     mutationFn: async (id: number) => {
       const currentlyActiveDeathList = getCurrentlyActiveDeathList();
@@ -121,8 +143,10 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         addDeathList: addNewDeathList,
         getCurrentlyActiveDeathList,
         regenerateToken,
+        removeDeathList,
         updateActiveStatus,
         uploadDeathList,
+        updateDeathList,
         isLoading,
         error
       }}

@@ -1,6 +1,7 @@
 import {Divider, Menu} from "@mui/material";
 
-import ToggleTokenOption from "./deathlist_menu_options/ToggleTokenDialog";
+import RemoveListOption from "./deathlist_menu_options/RemoveListOption";
+import ToggleTokenOption from "./deathlist_menu_options/ToggleTokenDialogOption";
 
 interface Props
 {
@@ -24,6 +25,7 @@ const DeathListMenu: React.FC<Props> = ({anchorEl, closeFn}) => {
       >
         <ToggleTokenOption/>
         <Divider/>
+        <RemoveListOption/>
       </Menu>
     </>
   );
