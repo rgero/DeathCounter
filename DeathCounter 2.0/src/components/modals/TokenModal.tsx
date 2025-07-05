@@ -32,7 +32,7 @@ const TokenModal = () => {
   };
 
   const copyTokenToClipboard = () => {
-    navigator.clipboard.writeText(currentlyActiveDeathList.token);
+    navigator.clipboard.writeText(currentlyActiveDeathList.token as string);
     toast.success("Token copied to clipboard");
   }
 

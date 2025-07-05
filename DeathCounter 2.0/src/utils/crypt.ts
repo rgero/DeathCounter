@@ -1,6 +1,5 @@
 import CryptoJS from "crypto-js";
 import { DeathList } from "../interfaces/DeathList";
-import { Game } from "../interfaces/Game";
 
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
 

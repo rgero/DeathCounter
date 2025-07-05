@@ -20,7 +20,7 @@ const ImportModal = ( ) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
-          const content = JSON.parse(e.target.result);
+          const content = JSON.parse(e.target?.result as string);
           setFileContent(content);
         } catch (error) {
           console.error("Error parsing JSON:", error);

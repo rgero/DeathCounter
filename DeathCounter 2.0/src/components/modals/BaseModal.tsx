@@ -1,6 +1,15 @@
 import { Box, Fade, Modal, useMediaQuery, useTheme } from "@mui/material"
 
-const BaseModal = ({children, label, open, handleClose}) => {
+import { ReactNode } from "react";
+
+interface BaseModalProps {
+  children: ReactNode;
+  label: string;
+  open: boolean;
+  handleClose: () => void;
+}
+
+const BaseModal = ({children, label, open, handleClose}: BaseModalProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
