@@ -19,7 +19,7 @@ const DeathListTable = () => {
   return (
     <Container disableGutters>
       <Grid container spacing={2} direction="column">
-        {deathList.entityList.sort((a,b) => a.id - b.id).length > 0 ? (
+        {deathList.entityList.sort((a, b) => (a.id ?? 0) - (b.id ?? 0)).length > 0 ? (
           <Grid>
             <Paper sx={
               {
