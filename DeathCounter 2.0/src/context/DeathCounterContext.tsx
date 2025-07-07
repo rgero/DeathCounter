@@ -3,6 +3,7 @@ import { createDeathList, getDeathLists, removeDeathList as removeDeathListAPI, 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DeathList } from "../interfaces/DeathList";
+import { Entity } from "../interfaces/Entity";
 import toast from "react-hot-toast";
 import { useAuthenticationContext } from "./AuthenticationContext";
 import { v4 as uuidv4 } from 'uuid';
@@ -10,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 interface DeathListContextType {
   deathLists: DeathList[];
   addDeathList: (deathList: DeathList) => void;
+  addToList: (entity: Entity) => void;
   updateActiveStatus: (id: number) => void;
   getCurrentlyActiveDeathList: () => DeathList | undefined;
   regenerateToken: () => void;
@@ -26,6 +28,7 @@ interface DeathListContextType {
 const DeathListContext = React.createContext<DeathListContextType>({
   deathLists: [],
   addDeathList: () => {},
+  addToList: () => {},
   updateActiveStatus: () => {},
   getCurrentlyActiveDeathList: () => undefined,
   regenerateToken: () => {},
@@ -72,6 +75,23 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       refetch();
     },
   });
+
+  const {mutateAsync: addToList} = useMutation({
+    mutationFn: async (entity: Entity) => {
+      const currentDeathList: DeathList|undefined = getCurrentlyActiveDeathList();
+      if (!currentDeathList) {
+        throw new Error("No active death list found");
+      }
+
+      currentDeathList.entityList.push(entity);
+      await updateDeathListAPI(currentDeathList);
+    },
+    onSuccess: () => {
+      toast.success("Death List removed successfully!");
+      queryClient.invalidateQueries({ queryKey: ["death_counters"] });
+      refetch();
+    }
+  })
 
   const {mutateAsync: removeDeathList} = useMutation({
     mutationFn: async (id: number) => {
@@ -140,6 +160,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     <DeathListContext.Provider
       value={{
         deathLists,
+        addToList,
         addDeathList: addNewDeathList,
         getCurrentlyActiveDeathList,
         regenerateToken,
