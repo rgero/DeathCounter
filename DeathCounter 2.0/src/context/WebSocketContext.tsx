@@ -1,39 +1,26 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { Socket } from 'socket.io-client';
+import { createContext, useContext } from "react";
+
 import io from 'socket.io-client';
 
 console.log(import.meta.env.VITE_WSS_URL)
 
-const SocketContext = createContext<Socket | null>(null);
+const socket = io(`${import.meta.env.VITE_WSS_URL}`, {
+    withCredentials: true,
+    transports: ['websocket', 'polling'],
+    upgrade: true,
+    rememberUpgrade: true
+});
+
+const SocketContext = createContext(socket);
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
-
-  useEffect(() => {
-    console.log("Creating socket connection");
-    
-    const newSocket = io(`${import.meta.env.VITE_WSS_URL}`, {
-      withCredentials: true,
-      autoConnect: true
-    });
-
-    newSocket.on('connect', () => {
-      console.log('Connected:', newSocket.id);
-    });
-
-    newSocket.on('disconnect', (reason) => {
-      console.log('Disconnected:', reason);
-    });
-
-    setSocket(newSocket);
-
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
-
+  console.log("SocketProvider initialized");
   return (
-    <SocketContext.Provider value={socket}>
+    <SocketContext.Provider 
+      value={
+        socket
+      }
+    >
       {children}
     </SocketContext.Provider>
   );
@@ -41,10 +28,5 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({childre
 
 export const useSocketContext = () => {
   const socket = useContext(SocketContext);
-  
-  if (!socket) {
-    throw new Error('useSocketContext must be used within a SocketProvider');
-  }
-  
   return socket;
 };

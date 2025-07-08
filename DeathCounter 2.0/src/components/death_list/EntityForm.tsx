@@ -1,21 +1,33 @@
 import { Add, Remove } from "@mui/icons-material";
 import { Button, FormControl, FormHelperText, Grid, IconButton, Paper, TextField, useMediaQuery, useTheme } from "@mui/material"
+import React, { useEffect } from "react"
 
 import { Entity } from "../../interfaces/Entity";
-import React from "react"
 import { useDeathLists } from "../../context/DeathCounterContext";
 
 const EntityForm = () => {
-  const {addToList} = useDeathLists();
+  const {addToList, currentlySelectedEntity, removeEntityFromList} = useDeathLists();
   const [id, setID] = React.useState<number>(-1);
   const [name, setName] = React.useState("");
   const [deaths, setDeaths] = React.useState(0);
   const [error, setError] = React.useState("");
   const [lastClick, setLastClick] = React.useState(new Date());
   const timeDelay: number = 500;
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  useEffect(() => {
+    if (currentlySelectedEntity)
+    {
+      setID(currentlySelectedEntity.id ?? -1);
+      setName(currentlySelectedEntity.name);
+      setDeaths(currentlySelectedEntity.deaths);
+    }
+    else
+    {
+      clearForm();
+    }
+  },[currentlySelectedEntity]);
 
   const canProcess = () => {
     const now = new Date();
@@ -70,6 +82,15 @@ const EntityForm = () => {
     }
   }
 
+  const removeEntity = () => {
+    if (id == -1) {
+      setError("No entity selected to remove");
+      return;
+    }
+    removeEntityFromList(id);
+    clearForm();
+  }
+
   return (
     <Paper sx={{padding: 2, borderRadius: 5, width: isMobile ? "90%" : "500px", mx: "auto"}}>
       <FormControl fullWidth error={Boolean(error)}>
@@ -100,7 +121,16 @@ const EntityForm = () => {
             <IconButton color="success" onClick={processIncrement}><Add/></IconButton>
           </Grid>
         </Grid>
-        <Button variant="outlined" onClick={processSubmit}>{id != -1 ? "Edit" : "Add"}</Button>
+        <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
+          { id != -1 ? (
+            <Grid>
+              <Button variant="outlined" onClick={removeEntity}>Delete</Button>
+            </Grid>
+          ): (null)}
+          <Grid>
+            <Button variant="outlined" onClick={processSubmit}>{id != -1 ? "Edit" : "Add"}</Button>
+          </Grid>
+        </Grid>
         <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2} >
           <Grid>
             <FormHelperText>{error}</FormHelperText>

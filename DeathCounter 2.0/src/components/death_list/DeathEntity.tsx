@@ -1,6 +1,10 @@
 import { Grid, Typography, useTheme } from "@mui/material"
 
-const DeathEntity = ({index, data} : {index: number, data: {name: string, deaths: number}}) => {
+import { Entity } from "../../interfaces/Entity";
+import { useDeathLists } from "../../context/DeathCounterContext";
+
+const DeathEntity = ({index, data} : {index: number, data: Entity}) => {
+  const {setCurrentlySelectedEntity} = useDeathLists();
   const theme = useTheme();
   const styles = {
     gridItem: {
@@ -10,7 +14,7 @@ const DeathEntity = ({index, data} : {index: number, data: {name: string, deaths
   }
 
   return (
-    <Grid container direction="row" justifyContent="space-between" sx={styles.gridItem}>
+    <Grid container direction="row" justifyContent="space-between" sx={styles.gridItem} onClick={() => { setCurrentlySelectedEntity(data) } }>
       <Grid>
         <Typography>
           {data.name}

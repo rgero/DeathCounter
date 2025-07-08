@@ -10,14 +10,17 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface DeathListContextType {
   deathLists: DeathList[];
+  currentlySelectedEntity: Entity | null;
   addDeathList: (deathList: DeathList) => void;
   addToList: (entity: Entity) => void;
   updateActiveStatus: (id: number) => void;
   getCurrentlyActiveDeathList: () => DeathList | undefined;
   regenerateToken: () => void;
+  setCurrentlySelectedEntity: (entity: Entity | null) => void;
   uploadDeathList: (deathList: DeathList) => void;
   updateDeathList: (deathList: DeathList) => void;
   removeDeathList: (id: number) => void;
+  removeEntityFromList: (id: number) => void;
   // clearDeathLists: () => void;
   // getDeathListById: (id: string) => DeathList | undefined;
   // addMultipleDeathLists: (deathLists: DeathList[]) => void;
@@ -27,14 +30,18 @@ interface DeathListContextType {
 
 const DeathListContext = React.createContext<DeathListContextType>({
   deathLists: [],
+  currentlySelectedEntity: null,
+
   addDeathList: () => {},
   addToList: () => {},
   updateActiveStatus: () => {},
   getCurrentlyActiveDeathList: () => undefined,
   regenerateToken: () => {},
+  removeDeathList: () => {},
+  removeEntityFromList: () => {},
+  setCurrentlySelectedEntity: () => {},
   uploadDeathList: () => {},
   updateDeathList: () => {},
-  removeDeathList: () => {},
   // clearDeathLists: () => {},
   // getDeathListById: () => undefined,
   // addMultipleDeathLists: () => {}
@@ -45,6 +52,7 @@ const DeathListContext = React.createContext<DeathListContextType>({
 export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = useQueryClient();
   const {user} = useAuthenticationContext();
+  const [currentlySelectedEntity, setCurrentlySelectedEntity] = React.useState<Entity | null>(null);
 
   const { data: deathLists = [], error, isLoading, refetch } = useQuery({
     queryKey: ["death_counters"],
@@ -83,7 +91,33 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         throw new Error("No active death list found");
       }
 
+      const existingEntity = currentDeathList.entityList.find(e => e.id === entity.id);
+      if (existingEntity) {
+        existingEntity.deaths = entity.deaths;
+        existingEntity.name = entity.name;
+        await updateDeathListAPI(currentDeathList);
+        return;
+      }
+
       currentDeathList.entityList.push(entity);
+      await updateDeathListAPI(currentDeathList);
+    },
+    onSuccess: () => {
+      toast.success("Death List removed successfully!");
+      queryClient.invalidateQueries({ queryKey: ["death_counters"] });
+      refetch();
+    }
+  })
+
+  const {mutateAsync: removeEntityFromList} = useMutation({
+    mutationFn: async (id: number) => {
+      const currentDeathList: DeathList|undefined = getCurrentlyActiveDeathList();
+      if (!currentDeathList) {
+        throw new Error("No active death list found");
+      }
+
+      const updatedList = currentDeathList.entityList.filter(e => e.id !== id);
+      currentDeathList.entityList = updatedList;
       await updateDeathListAPI(currentDeathList);
     },
     onSuccess: () => {
@@ -154,17 +188,18 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     },
   });
 
-
-
   return (
     <DeathListContext.Provider
       value={{
         deathLists,
+        currentlySelectedEntity,
         addToList,
         addDeathList: addNewDeathList,
         getCurrentlyActiveDeathList,
         regenerateToken,
         removeDeathList,
+        removeEntityFromList,
+        setCurrentlySelectedEntity,
         updateActiveStatus,
         uploadDeathList,
         updateDeathList,
