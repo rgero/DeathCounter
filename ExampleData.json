@@ -1,115 +1,169 @@
 {
-  "gameName":"Elden Ring DLC",
+  "gameName": "Lies of P (DLC)",
   "deathList": [
     {
-      "id": 0,
-      "name": "Blackgaol Knight",
-      "deaths": 10
-    },
-    {
-      "name": "Logur",
-      "deaths": 5,
+      "name": "Parade Master",
+      "deaths": 0,
       "id": 1
     },
     {
-      "id": 5,
-      "name": "Divine Beast Dancing Lion",
-      "deaths": 9
+      "name": "Mad Donkey",
+      "deaths": 0,
+      "id": 2
     },
     {
-      "name": "Rellana, Twin Moon Knight",
-      "deaths": 18,
+      "name": "Scrapped Watchman",
+      "deaths": 5,
+      "id": 3
+    },
+    {
+      "name": "Puppet of the Future (Factory)",
+      "deaths": 0,
+      "id": 4
+    },
+    {
+      "name": "Survivor (Factory)",
+      "deaths": 0,
+      "id": 5
+    },
+    {
+      "name": "King's Flame, Fuoco",
+      "deaths": 1,
       "id": 6
     },
     {
-      "name": "Ralva",
-      "deaths": 0,
+      "name": "Fallen Archbishop Andreus",
+      "deaths": 7,
       "id": 7
     },
     {
-      "name": "Golden Hippo",
-      "deaths": 1,
+      "name": "Eldest of the Black Rabbit Brotherhood",
+      "deaths": 11,
       "id": 8
     },
     {
-      "name": "Messmer the Impaler",
-      "deaths": 15,
+      "name": "White Lady",
+      "deaths": 0,
+      "id": 9
+    },
+    {
+      "name": "Mad Clown Puppet",
+      "deaths": 1,
       "id": 10
     },
     {
-      "name": "Rakshasa",
-      "deaths": 9,
+      "name": "King of Puppets",
+      "deaths": 15,
       "id": 11
     },
     {
-      "name": "Jori, Elder Inquistor",
+      "name": "Champion Victor",
       "deaths": 4,
       "id": 12
     },
     {
-      "name": "Midra, Lord of the Frenzied Flame",
-      "deaths": 1,
+      "name": "Puppet of the Future (Swamp #1)",
+      "deaths": 0,
       "id": 13
     },
     {
-      "name": "Black Knight Edredd",
-      "deaths": 0,
+      "name": "Puppet of the Future (Swamp #2)",
+      "deaths": 1,
       "id": 14
     },
     {
-      "name": "Scadrutree Avatar",
-      "deaths": 18,
+      "name": "Owl Doctor",
+      "deaths": 0,
       "id": 15
     },
     {
-      "name": "Ghostflame Dragon",
-      "deaths": 0,
+      "name": "Green Swamp",
+      "deaths": 4,
       "id": 16
     },
     {
-      "name": "Putrescent Knight",
-      "deaths": 3,
+      "name": "Robber Weasel",
+      "deaths": 0,
       "id": 17
     },
     {
-      "name": "Commander Gaius",
-      "deaths": 6,
+      "name": "Walker of Illusions",
+      "deaths": 4,
       "id": 18
     },
     {
-      "name": "Metyr, Mother of Fingers",
-      "deaths": 0,
+      "name": "Corrupted Parade Master",
+      "deaths": 2,
       "id": 19
     },
     {
-      "name": "Ymir, Mother of Fingers",
-      "deaths": 0,
+      "name": "Generic Deaths",
+      "deaths": 0
+    },
+    {
+      "name": "Black Rabbit Brotherhood",
+      "deaths": 1,
       "id": 20
     },
     {
-      "name": "Romina, Saint of the Bud",
-      "deaths": 1,
+      "name": "Door Guardian",
+      "deaths": 0,
       "id": 21
     },
     {
-      "name": "Demi-Human Swordmaster Onze",
-      "deaths": 0,
+      "name": "Laxasia The Complete",
+      "deaths": 3,
       "id": 22
     },
     {
-      "name": "Ancient Dragon-Man",
-      "deaths": 1,
+      "name": "Tyrannical Predator",
+      "deaths": 26,
       "id": 23
     },
     {
-      "name": "Ancient Dragon Senessax",
-      "deaths": 2,
+      "name": "Markiona, Puppeter of Death",
+      "deaths": 16,
       "id": 24
     },
     {
-      "name": "Bayle the Dread",
+      "name": "Veronique, Leader of the Sweepers",
       "deaths": 12,
       "id": 25
+    },
+    {
+      "name": "Two-Faced Overseer",
+      "deaths": 0,
+      "id": 26
+    },
+    {
+      "name": "Premetamorphic Green Hunter",
+      "deaths": 3,
+      "id": 27
+    },
+    {
+      "name": "Anguished Guardian of the Ruins",
+      "deaths": 16,
+      "id": 28
+    },
+    {
+      "name": "Lumacchio, Leader of the Bastards",
+      "deaths": 24,
+      "id": 29
+    },
+    {
+      "name": "Simon Manus",
+      "deaths": 2,
+      "id": 30
+    },
+    {
+      "name": "Nameless Puppet",
+      "deaths": 0,
+      "id": 31
+    },
+    {
+      "name": "Blood Artist",
+      "deaths": 31,
+      "id": 32
     }
   ]
 }
