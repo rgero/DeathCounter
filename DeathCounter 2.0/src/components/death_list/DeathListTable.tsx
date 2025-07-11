@@ -12,35 +12,32 @@ const DeathListTable = () => {
 
   const deathList = getCurrentlyActiveDeathList();
 
-  if (!deathList) {
+  if (!deathList || deathList.entityList.length === 0) {
     return null;
   }
 
   return (
     <Container disableGutters>
       <Grid container spacing={2} direction="column">
-        {deathList.entityList.sort((a, b) => (a.id ?? 0) - (b.id ?? 0)).length > 0 ? (
-          <Grid>
-            <Paper sx={
-              {
-                p: 2,
-                borderRadius: 5,
-                width: isMobile ? "90%" : "500px",
-                mx: "auto"
-              }
-            }>
-              <DeathListTableHeader/>
-              {
-                deathList.entityList.map( (item, index) => (
-                  <DeathEntity key={index} data={item} index={index} />
-                ))
-              }
-            </Paper>
-          </Grid>
-        ) : (null)}
+        <Grid>
+          <Paper sx={{
+            p: 2,
+            borderRadius: 5,
+            width: isMobile ? "90%" : "500px",
+            mx: "auto"
+          }}>
+            <DeathListTableHeader/>
+            {deathList.entityList
+              .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
+              .map((item, index) => (
+                <DeathEntity key={index} data={item} index={index} />
+              ))
+            }
+          </Paper>
+        </Grid>
       </Grid>
     </Container>
-  )
-}
+  );
+};
 
-export default DeathListTable
+export default DeathListTable;
