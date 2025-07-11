@@ -92,7 +92,7 @@ const EntityForm = () => {
   }
 
   return (
-    <Paper sx={{padding: 2, borderRadius: 5, width: isMobile ? "90%" : "500px", mx: "auto"}}>
+    <Paper sx={{marginTop: 2, padding: 2, borderRadius: 5, width: isMobile ? "90%" : "500px", mx: "auto"}}>
       <FormControl fullWidth error={Boolean(error)}>
         <Grid container justifyContent="center" alignItems="center" spacing={3} direction={isMobile ? "column" : "row"} sx={{paddingBottom: 2}}>
           <Grid>
