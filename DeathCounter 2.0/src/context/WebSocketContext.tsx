@@ -2,8 +2,6 @@ import { createContext, useContext } from "react";
 
 import io from 'socket.io-client';
 
-console.log(import.meta.env.VITE_WSS_URL)
-
 const socket = io(`${import.meta.env.VITE_WSS_URL}`, {
     withCredentials: true,
     transports: ['websocket', 'polling'],
