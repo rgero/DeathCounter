@@ -61,9 +61,7 @@ export const updateDeathList = async (deathList: DeathList) => {
   const { error } = await supabase
     .from("death_counters")
     .update(updatedDeathList)
-    .eq("id", deathList.id)
-    .select("*")
-    .single();
+    .eq("id", deathList.id);
 
   if (error) {
     console.error(error);
@@ -75,9 +73,7 @@ export const updateActiveDeathList = async (id: number, currentlyActive: boolean
   const { error } = await supabase
     .from("death_counters")
     .update({ currentlyActive })
-    .eq("id", id)
-    .select("*")
-    .single();
+    .eq("id", id);
 
   if (error) {
     console.error(error);
@@ -89,9 +85,7 @@ export const updateDeathListToken = async (id: number, token: string) => {
   const { error } = await supabase
     .from("death_counters")
     .update({ token })
-    .eq("id", id)
-    .select("*")
-    .single();
+    .eq("id", id);
 
   if (error) {
     console.error(error);
@@ -100,10 +94,8 @@ export const updateDeathListToken = async (id: number, token: string) => {
 }
 
 export const uploadDeathList = async (deathList: DeathList) => {
-  // First see if there is an existing death list with the same ID
   const existingList = deathList.id ?  await getDeathListById(deathList.id) : null;
   if (existingList) {
-    // If it exists, update it
     const { error } = await supabase
       .from("death_counters")
       .update(encryptData(deathList))
@@ -114,7 +106,6 @@ export const uploadDeathList = async (deathList: DeathList) => {
       throw new Error("Failed to update Death List");
     }
   } else {
-    // If it doesn't exist, create a new one
     await createDeathList(deathList);
   }
 }
