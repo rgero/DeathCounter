@@ -20,7 +20,6 @@ const GameSelector = () => {
       id="game-selector"
       value={getCurrentlyActiveDeathList() ? String(getCurrentlyActiveDeathList()!.id) : ""}
       onChange={handleChange}
-      inputProps= {{ color: "red"}}
       size="small"
     >
       {games.map(game => (
