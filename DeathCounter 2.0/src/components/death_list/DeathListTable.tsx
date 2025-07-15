@@ -5,14 +5,12 @@ import DeathListTableHeader from './DeathListTableHeader';
 import { useDeathLists } from '../../context/DeathCounterContext';
 
 const DeathListTable = () => {
-  const { getCurrentlyActiveDeathList } = useDeathLists();
+  const { activeDeathList } = useDeathLists();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const deathList = getCurrentlyActiveDeathList();
-
-  if (!deathList || deathList.entityList.length === 0) {
+  if (!activeDeathList || activeDeathList.entityList.length === 0) {
     return null;
   }
 
@@ -27,7 +25,7 @@ const DeathListTable = () => {
             mx: "auto"
           }}>
             <DeathListTableHeader/>
-            {deathList.entityList
+            {activeDeathList.entityList
               .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
               .map((item, index) => (
                 <DeathEntity key={index} data={item} index={index} />

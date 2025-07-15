@@ -7,12 +7,11 @@ import { useModalProvider } from "../../context/ModalContext";
 
 const DeleteListModal = () => {
   const {deleteModalOpen, toggleDeleteModal} = useModalProvider();
-  const {getCurrentlyActiveDeathList, removeDeathList} = useDeathLists();
+  const {activeDeathList, removeDeathList} = useDeathLists();
 
   const confirmDelete = async () => {
-    const currentlyActiveDeathList = getCurrentlyActiveDeathList();
-    if (currentlyActiveDeathList?.id) {
-      await removeDeathList(currentlyActiveDeathList.id);
+    if (activeDeathList?.id) {
+      await removeDeathList(activeDeathList.id);
       toggleDeleteModal();
     }
   }
@@ -32,7 +31,7 @@ const DeleteListModal = () => {
         sx={{ pt: 2 }}
       >
         <Grid>
-          <Typography>Delete {getCurrentlyActiveDeathList()?.name}?</Typography>
+          <Typography>Delete {activeDeathList?.name}?</Typography>
         </Grid>
         <Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
           <Grid>

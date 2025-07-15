@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { createDeathList, getDeathLists, removeDeathList as removeDeathListAPI, updateActiveDeathList, updateDeathList as updateDeathListAPI, updateDeathListToken, uploadDeathList as uploadDeathListAPI } from "../services/apiDeathCounter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface DeathListContextType {
   deathLists: DeathList[];
+  activeDeathList: DeathList | undefined;
+  setActiveDeathList: (deathList: DeathList) => void;
   currentlySelectedEntity: Entity | null;
   addDeathList: (deathList: DeathList) => void;
   addToList: (entity: Entity) => void;
@@ -29,7 +31,8 @@ interface DeathListContextType {
 const DeathListContext = React.createContext<DeathListContextType>({
   deathLists: [],
   currentlySelectedEntity: null,
-
+  activeDeathList: undefined,
+  setActiveDeathList: () => {},
   addDeathList: () => {},
   addToList: () => {},
   updateActiveStatus: () => {},
@@ -49,11 +52,22 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const queryClient = useQueryClient();
   const {user} = useAuthenticationContext();
   const [currentlySelectedEntity, setCurrentlySelectedEntity] = React.useState<Entity | null>(null);
+  const [activeDeathList, setActiveDeathList] = React.useState<DeathList | undefined>(undefined);
 
   const { data: deathLists = [], error, isLoading, isFetching, refetch } = useQuery({
     queryKey: ["death_counters"],
     queryFn: () => getDeathLists(),
   });
+
+  useEffect(() => {    
+    if (deathLists.length > 0) {
+      const activeList = deathLists.find(list => list.currentlyActive);
+      setActiveDeathList(activeList);
+    } else {
+      console.log("No death lists found, clearing active death list");
+      setActiveDeathList(undefined);
+    }
+  }, [deathLists]);
 
   // Shared success handler
   const handleMutationSuccess = (message: string) => {
@@ -81,35 +95,32 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const {mutateAsync: addToList} = useMutation({
     mutationFn: async (entity: Entity) => {
-      const currentDeathList: DeathList|undefined = getCurrentlyActiveDeathList();
-      if (!currentDeathList) {
+      if (!activeDeathList) {
         throw new Error("No active death list found");
       }
-
-      const existingEntity = currentDeathList.entityList.find(e => e.id === entity.id);
+      const existingEntity = activeDeathList.entityList.find(e => e.id === entity.id);
       if (existingEntity) {
         existingEntity.deaths = entity.deaths;
         existingEntity.name = entity.name;
-        await updateDeathListAPI(currentDeathList);
+        await updateDeathListAPI(activeDeathList);
         return;
       }
 
-      currentDeathList.entityList.push(entity);
-      await updateDeathListAPI(currentDeathList);
+      activeDeathList.entityList.push(entity);
+      await updateDeathListAPI(activeDeathList);
     },
     onSuccess: () => handleMutationSuccess("Entity updated successfully!"),
   })
 
   const {mutateAsync: removeEntityFromList} = useMutation({
     mutationFn: async (id: number) => {
-      const currentDeathList: DeathList|undefined = getCurrentlyActiveDeathList();
-      if (!currentDeathList) {
+      if (!activeDeathList) {
         throw new Error("No active death list found");
       }
 
-      const updatedList = currentDeathList.entityList.filter(e => e.id !== id);
-      currentDeathList.entityList = updatedList;
-      await updateDeathListAPI(currentDeathList);
+      const updatedList = activeDeathList.entityList.filter(e => e.id !== id);
+      activeDeathList.entityList = updatedList;
+      await updateDeathListAPI(activeDeathList);
     },
     onSuccess: () => handleMutationSuccess("Entity removed successfully!"),
   })
@@ -134,12 +145,10 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   
   const { mutateAsync: updateActiveStatus } = useMutation({
     mutationFn: async (id: number) => {
-      const currentlyActiveDeathList = getCurrentlyActiveDeathList();
-
-      if (currentlyActiveDeathList) {
-        if (currentlyActiveDeathList.id)
+      if (activeDeathList) {
+        if (activeDeathList.id)
         {
-          await updateActiveDeathList(currentlyActiveDeathList.id, false);
+          await updateActiveDeathList(activeDeathList.id, false);
         }
       }
       await updateActiveDeathList(id, true);
@@ -149,13 +158,12 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const { mutateAsync: regenerateToken } = useMutation({
     mutationFn: async () => {
-      const currentlyActiveDeathList = getCurrentlyActiveDeathList();
-      if (!currentlyActiveDeathList || !currentlyActiveDeathList.id) {
+      if (!activeDeathList || !activeDeathList.id) {
         throw new Error("No active death list found to regenerate token");
       }
 
       const newToken = uuidv4();
-      await updateDeathListToken(currentlyActiveDeathList.id, newToken);
+      await updateDeathListToken(activeDeathList.id, newToken);
     },
     onSuccess: () => handleMutationSuccess("Token regenerated successfully!"),
   });
@@ -164,6 +172,8 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     <DeathListContext.Provider
       value={{
         deathLists,
+        activeDeathList,
+        setActiveDeathList,
         currentlySelectedEntity,
         addToList,
         addDeathList: addNewDeathList,

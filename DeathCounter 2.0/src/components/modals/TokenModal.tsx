@@ -9,11 +9,10 @@ import { useState } from "react"
 
 const TokenModal = () => {
   const {tokenModalOpen, toggleTokenModal} = useModalProvider()
-  const {getCurrentlyActiveDeathList, regenerateToken, isLoading} = useDeathLists()
+  const {activeDeathList, regenerateToken, isLoading} = useDeathLists()
   const [showToken, setShowToken] = useState(false);
 
-  const currentlyActiveDeathList = getCurrentlyActiveDeathList();
-  if (isLoading || !currentlyActiveDeathList) {
+  if (isLoading || !activeDeathList) {
     return null;
   }
 
@@ -32,7 +31,7 @@ const TokenModal = () => {
   };
 
   const copyTokenToClipboard = () => {
-    navigator.clipboard.writeText(currentlyActiveDeathList.token as string);
+    navigator.clipboard.writeText(activeDeathList.token as string);
     toast.success("Token copied to clipboard");
   }
 
@@ -44,13 +43,13 @@ const TokenModal = () => {
     >
       <Grid container direction="column" justifyContent="center" alignItems="center" spacing={2}>
         <Grid>
-          <Typography variant="h6">{currentlyActiveDeathList.name} - Token</Typography>
+          <Typography variant="h6">{activeDeathList.name} - Token</Typography>
         </Grid>
         <Grid>
           <OutlinedInput
             id="outlined-adornment-token"
             type={showToken ? 'text' : 'password'}
-            value={currentlyActiveDeathList.token}
+            value={activeDeathList.token}
             endAdornment={
               <InputAdornment position="end">
                 <Box display="flex" alignItems="center" gap="4px">

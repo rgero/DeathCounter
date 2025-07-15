@@ -3,7 +3,7 @@ import { MenuItem, Select, SelectChangeEvent } from "@mui/material"
 import { useDeathLists } from "../../context/DeathCounterContext";
 
 const GameSelector = () => {
-  const { deathLists, getCurrentlyActiveDeathList, updateActiveStatus } = useDeathLists();
+  const { activeDeathList, deathLists, updateActiveStatus } = useDeathLists();
 
   const handleChange = (event: SelectChangeEvent) => {
     const selectedGameId = event.target.value;
@@ -18,7 +18,7 @@ const GameSelector = () => {
   return (
     <Select
       id="game-selector"
-      value={getCurrentlyActiveDeathList() ? String(getCurrentlyActiveDeathList()!.id) : ""}
+      value={activeDeathList ? String(activeDeathList!.id) : ""}
       onChange={handleChange}
       size="small"
     >

@@ -5,23 +5,22 @@ import DeathListMenuButton from "./DeathListMenuButton";
 import { useDeathLists } from "../../context/DeathCounterContext";
 
 const DeathlistHeader = () => {
-  const { getCurrentlyActiveDeathList, isLoading, updateDeathList } = useDeathLists();
-  const currentlyActiveDeathList = getCurrentlyActiveDeathList();
+  const { activeDeathList, isLoading, updateDeathList } = useDeathLists();
 
   const [name, setName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (currentlyActiveDeathList) {
-      setName(currentlyActiveDeathList.name);
+    if (activeDeathList) {
+      setName(activeDeathList.name);
     }
-  }, [currentlyActiveDeathList]);
+  }, [activeDeathList]);
 
   const handleSubmit = async () => {
-    if (!currentlyActiveDeathList || name === currentlyActiveDeathList.name) return;
+    if (!activeDeathList || name === activeDeathList.name) return;
 
-    currentlyActiveDeathList.name = name;
-    await updateDeathList(currentlyActiveDeathList);
+    activeDeathList.name = name;
+    await updateDeathList(activeDeathList);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -31,7 +30,7 @@ const DeathlistHeader = () => {
     }
   };
 
-  if (isLoading || !currentlyActiveDeathList) return null;
+  if (isLoading || !activeDeathList) return null;
 
   return (
     <Grid container direction="row" justifyContent="space-between" alignItems="center">
