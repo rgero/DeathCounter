@@ -1,67 +1,69 @@
-import { IncomingMessage, Server } from 'http';
-import { RawData, ServerOptions, WebSocket, WebSocketServer } from "ws";
+import { Server, Socket } from 'socket.io';
 
 import { MessageSchema } from "../schemas/Message";
 import { WsMessage } from "../interfaces/WsMessage";
 
 export class SocketHandler {
-  private server: WebSocketServer | undefined;
-  private connectedSockets: Set<WebSocket> = new Set();
+  private io: Server | undefined;
   
-  initialize(options: ServerOptions)
-  {
-    this.server = new WebSocketServer(options)
-    this.server.on('listening', () => console.log(`WebSocket server initialized.`))
-    this.server.on('connection', (socket, request) => this.onSocketConnected(socket, request))
+  initialize(io: Server) {
+    this.io = io;
+    
+    console.log('Socket.IO server initialized.');
+    
+    this.io.engine.on("connection_error", (err) => {
+      console.log("Engine connection error:", err);
+    });
+    
+    this.io.on('connection', (socket) => this.onSocketConnected(socket));
   }
 
-  private onSocketConnected(socket: WebSocket, request: IncomingMessage) {
-    console.log(`Socket connected from:`, request.socket.remoteAddress);
-    this.connectedSockets.add(socket);
-
-    console.log(`Total connected sockets: ${this.connectedSockets.size}`);
-    socket.on('message', (data) => this.onSocketMessage(socket, data))
-    socket.on('close', ((code, reason) => this.onSocketClosed(socket, code, reason)))
+  private onSocketConnected(socket: Socket) {
+    console.log(`Socket connected: ${socket.id}`);
+    
+    // Listen for specific events instead of generic 'message'
+    socket.on('bossDeathIncrement', (data) => this.onSocketMessage(socket, { event: 'bossDeathIncrement', ...data }));
+    socket.on('genericDeathIncrement', (data) => this.onSocketMessage(socket, { event: 'genericDeathIncrement', ...data }));
+    socket.on('message', (data) => this.onSocketMessage(socket, { event: 'message', ...data }));
+    
+    socket.on('disconnect', (reason) => this.onSocketDisconnected(socket, reason));
+    socket.on('error', (error) => {
+      console.error(`Socket error for ${socket.id}:`, error);
+    });
   }
   
-  onSocketMessage(socket: WebSocket, data: RawData): void {
-    console.log(`Received message: ${data.toString()}`);
+  onSocketMessage(socket: Socket, data: any): void {
+    console.log(`Received message from ${socket.id}:`, data);
 
     try {
-      const messageJSON = JSON.parse(data.toString());
-      const message: WsMessage = MessageSchema.parse(messageJSON) as WsMessage;
+      const message: WsMessage = MessageSchema.parse(data) as WsMessage;
 
       switch(message.event) {
         case 'bossDeathIncrement':
-          socket.send(JSON.stringify({ event: 'ack', message: 'Boss death increment received' }));
+          socket.emit('ack', { message: 'Boss death increment received' });
           break;
         case 'genericDeathIncrement':
-          socket.send(JSON.stringify({ event: 'ack', message: 'Generic death increment received' }));
+          socket.emit('ack', { message: 'Generic death increment received' });
           break;
         default:
           // Handle 'message' event - broadcast to all connected sockets
-          this.broadcastToAll({ event: 'message', payload: message.payload });
-          return;
+          this.broadcastToAll('message', { event: 'message', payload: message.payload });
+          break;
       }
     }
     catch (error) {
       console.error("Error parsing message:", error);
-      socket.send(JSON.stringify({ event: 'error', message: 'Invalid message format' }));
-      return;
+      socket.emit('error', { message: 'Invalid message format' });
     }
   }
 
-  onSocketClosed(socket: WebSocket, code: number, reason: Buffer) {
-    console.log(`Client has disconnected; code=${code}, reason=${reason}`)
-    this.connectedSockets.delete(socket);
+  onSocketDisconnected(socket: Socket, reason: string) {
+    console.log(`Socket disconnected: ${socket.id}, reason: ${reason}`);
   }
 
-  private broadcastToAll(message: any) {
-    const messageString = JSON.stringify(message);
-    this.connectedSockets.forEach(socket => {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.send(messageString);
-      }
-    });
+  private broadcastToAll(event: string, data: any) {
+    if (this.io) {
+      this.io.emit(event, data);
+    }
   }
 }
