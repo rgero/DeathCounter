@@ -10,7 +10,7 @@ const DeathListTable = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  if (!activeDeathList || activeDeathList.entityList.length === 0) {
+  if (!activeDeathList?.entityList || activeDeathList.entityList.length === 0) {
     return null;
   }
 

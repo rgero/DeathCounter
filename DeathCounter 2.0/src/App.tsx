@@ -39,8 +39,8 @@ const App = () => {
         <CssBaseline/>
         <QueryClientProvider client={queryClient}>
           <AuthenticationProvider>
-            <SocketProvider>
-              <DeathListProvider>
+            <DeathListProvider>
+              <SocketProvider>
                 <ModalProvider>
                   <BrowserRouter>
                     <Routes>
@@ -60,8 +60,8 @@ const App = () => {
                     </Routes>
                   </BrowserRouter>
                 </ModalProvider>
-              </DeathListProvider>
-            </SocketProvider>
+              </SocketProvider>
+            </DeathListProvider>
           </AuthenticationProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

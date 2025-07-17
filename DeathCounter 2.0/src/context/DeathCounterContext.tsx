@@ -6,6 +6,7 @@ import { DeathList } from "../interfaces/DeathList";
 import { Entity } from "../interfaces/Entity";
 import toast from "react-hot-toast";
 import { useAuthenticationContext } from "./AuthenticationContext";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import { v4 as uuidv4 } from 'uuid';
 
 interface DeathListContextType {
@@ -49,25 +50,34 @@ const DeathListContext = React.createContext<DeathListContextType>({
 });
 
 export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [activeDeathList, setActiveDeathList] = useLocalStorage(undefined, "activeDeathList");
   const queryClient = useQueryClient();
   const {user} = useAuthenticationContext();
   const [currentlySelectedEntity, setCurrentlySelectedEntity] = React.useState<Entity | null>(null);
-  const [activeDeathList, setActiveDeathList] = React.useState<DeathList | undefined>(undefined);
 
   const { data: deathLists = [], error, isLoading, isFetching, refetch } = useQuery({
     queryKey: ["death_counters"],
     queryFn: () => getDeathLists(),
   });
 
-  useEffect(() => {    
-    if (deathLists.length > 0) {
-      const activeList = deathLists.find(list => list.currentlyActive);
-      setActiveDeathList(activeList);
-    } else {
-      console.log("No death lists found, clearing active death list");
-      setActiveDeathList(undefined);
+  useEffect(() => {
+    // Only run when data is loaded and we're not currently fetching
+    if (isLoading || isFetching) {
+      console.log("Still loading data, skipping activeDeathList update");
+      return;
     }
-  }, [deathLists]);
+    
+    if (deathLists.length > 0) {
+      const activeList = deathLists.find(list => list.currentlyActive);    
+      if (activeList) {
+        setActiveDeathList(activeList);
+      } else {
+        console.log("No active list found in API data");
+      }
+    } else {
+      console.log("No death lists available from API");
+    }
+  }, [deathLists, isLoading, isFetching]);
 
   // Shared success handler
   const handleMutationSuccess = (message: string) => {
