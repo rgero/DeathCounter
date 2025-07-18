@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import io, { Socket } from 'socket.io-client';
 
+import { KeyboardReturnOutlined } from "@mui/icons-material";
 import { useDeathLists } from "./DeathCounterContext";
 
 interface SocketContextType {
@@ -16,7 +17,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const initializeSocket = useCallback((params: Record<string, string>) => {
     const newSocket = io(import.meta.env.VITE_WSS_URL, {
-      withCredentials: true,
       query: params,
     });
 
@@ -44,6 +44,19 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
     };
   }, [activeDeathList, socket, initializeSocket, initializedId]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("message", ( data: {event: string; payload: string;}) => {
+      console.log("Received message:", data.payload);
+    });
+
+    return () => {
+      socket.off("message");
+    }
+
+  }, [socket]);
 
   return (
     <SocketContext.Provider value={{ socket }}>
