@@ -7,7 +7,7 @@ import express from 'express';
 
 dotenv.config();
 
-console.log(`Using encryption key: ${process.env.ENCRYPTION_KEY}`);
+console.log(`Using encryption key: ${process.env.KEY_QUERY_PASSKEY}`);
 
 function main() {
   // Create Express app with CORS

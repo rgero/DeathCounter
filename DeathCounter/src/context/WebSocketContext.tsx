@@ -64,12 +64,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [socket]);
 
   // FUNCTIONS
-  const checkGameToken = (authToken: string|undefined) => {
-    return authToken === activeDeathList?.token;
+  const checkGameToken = (gameToken: string|undefined) => {
+    return gameToken === activeDeathList?.token;
   };
 
   const processBossDeathIncrement = (event: WsEvent) => {
-    if (checkGameToken(event.authToken)) {
+    if (checkGameToken(event.gameToken)) {
       console.log("Processing death increment for game")
     } else 
     {

@@ -2,6 +2,7 @@ import CryptoJS from "crypto-js";
 import { DeathList } from "../interfaces/DeathList";
 
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
+const SECRET_AUTH_TOKEN = import.meta.env.VITE_WS_AUTH_TOKEN;
 
 const encryptField = (text: string | undefined): string => {
   if (!text) return "";
@@ -37,3 +38,8 @@ export const encryptData = (data: DeathList): DeathList => {
     })),
   };
 };
+
+export const encryptAuthToken = (token: string | undefined): string => {
+  if (!token) return "";
+  return CryptoJS.AES.encrypt(token, SECRET_AUTH_TOKEN).toString();
+}

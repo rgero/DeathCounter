@@ -1,6 +1,6 @@
 import CryptoJS from "crypto-js";
 
-const SECRET_KEY = process.env.ENCRYPTION_KEY ? process.env.ENCRYPTION_KEY : "DefaultSecretKey";
+const SECRET_KEY = process.env.KEY_QUERY_PASSKEY ? process.env.KEY_QUERY_PASSKEY : "DefaultSecretKey";
 
 export const encryptField = (text: string|undefined): string => {
   if (!text) return "";
@@ -8,6 +8,7 @@ export const encryptField = (text: string|undefined): string => {
 };
 
 export const decryptField = (ciphertext: string): string => {
+  const SECRET_KEY = process.env.KEY_QUERY_PASSKEY ? process.env.KEY_QUERY_PASSKEY : "DefaultSecretKey";
   if (!ciphertext) return "";
   const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
   return bytes.toString(CryptoJS.enc.Utf8);

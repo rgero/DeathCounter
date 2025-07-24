@@ -1,4 +1,5 @@
 export interface WsEvent {
   event: string;
-  authToken?: string;
+  gameToken?: string;
+  
 } 

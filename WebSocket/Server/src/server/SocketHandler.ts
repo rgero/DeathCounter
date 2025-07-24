@@ -1,7 +1,9 @@
 import { Server, Socket } from 'socket.io';
+import { decryptField, encryptField } from '../utils/crypt';
 
 import { MessageSchema } from "../schemas/Message";
 import { WsMessage } from "../interfaces/WsMessage";
+import { decrypt } from 'dotenv';
 
 export class SocketHandler {
   private io: Server | undefined;
@@ -37,7 +39,17 @@ export class SocketHandler {
 
     try {
       const message: WsMessage = MessageSchema.parse(data) as WsMessage;
-      // Validate the message structure
+      console.log("Message: ", message);
+      console.log(message.authToken);
+      const correctAuthToken = decryptField(message.authToken);
+
+      console.log(correctAuthToken);
+
+      if (correctAuthToken !== message.gameToken) {
+        console.log("Not correct token");
+        return;
+      }
+
       this.broadcastToAll(message);
     }
     catch (error) {
@@ -51,6 +63,7 @@ export class SocketHandler {
   }
 
   private broadcastToAll(message: WsMessage) {
+    console.log(message);
     if (this.io) {
       this.io.emit(message.event, message);
     }
