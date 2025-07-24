@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import io, { Socket } from 'socket.io-client';
 
-import { KeyboardReturnOutlined } from "@mui/icons-material";
+import { WsEvent } from "../interfaces/WsEvent";
 import { useDeathLists } from "./DeathCounterContext";
 
 interface SocketContextType {
@@ -52,11 +52,30 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.log("Received message:", data.payload);
     });
 
+    socket.on("bossDeathIncrement", (data: WsEvent) => {
+      processBossDeathIncrement(data);
+    });
+
     return () => {
       socket.off("message");
+      socket.off("bossDeathIncrement");
     }
 
   }, [socket]);
+
+  // FUNCTIONS
+  const checkGameToken = (authToken: string|undefined) => {
+    return authToken === activeDeathList?.token;
+  };
+
+  const processBossDeathIncrement = (event: WsEvent) => {
+    if (checkGameToken(event.authToken)) {
+      console.log("Processing death increment for game")
+    } else 
+    {
+      console.log("Invalid Token, we don't care");
+    }
+  };
 
   return (
     <SocketContext.Provider value={{ socket }}>

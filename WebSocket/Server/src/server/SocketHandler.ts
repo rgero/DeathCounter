@@ -37,22 +37,8 @@ export class SocketHandler {
 
     try {
       const message: WsMessage = MessageSchema.parse(data) as WsMessage;
-
-      switch(message.event) {
-        case 'bossDeathIncrement':
-          console.log("Boss death increment event received");
-          this.broadcastToAll('bossDeathIncrement', { event: 'bossDeathIncrement', payload: message.payload });
-          break;
-        case 'genericDeathIncrement':
-          this.broadcastToAll('genericDeathIncrement', { event: 'genericDeathIncrement', payload: message.payload });
-          break;
-        case 'bossBeaten':
-          this.broadcastToAll('bossBeaten', { event: 'bossBeaten', payload: message.payload });
-          break;
-        default:
-          throw new Error(`Unknown event type: ${message}`);
-          break;
-      }
+      // Validate the message structure
+      this.broadcastToAll(message);
     }
     catch (error) {
       console.error("Error parsing message:", error);
@@ -64,9 +50,9 @@ export class SocketHandler {
     console.log(`Socket disconnected: ${socket.id}, reason: ${reason}`);
   }
 
-  private broadcastToAll(event: string, data: any) {
+  private broadcastToAll(message: WsMessage) {
     if (this.io) {
-      this.io.emit(event, data);
+      this.io.emit(message.event, message);
     }
   }
 }
