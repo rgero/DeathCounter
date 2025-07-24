@@ -15,7 +15,6 @@ const TokenModal = () => {
   const [showAuthToken, setShowAuthToken] = useState(false);
   const [encryptedAuthToken, setEncryptedAuthToken] = useState("");
 
-  // Update encrypted token whenever activeDeathList.token changes
   useEffect(() => {
     if (activeDeathList?.token) {
       setEncryptedAuthToken(encryptAuthToken(activeDeathList.token));

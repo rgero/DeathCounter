@@ -174,8 +174,15 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
       const newToken = uuidv4();
       await updateDeathListToken(activeDeathList.id, newToken);
+      return newToken;
     },
-    onSuccess: () => handleMutationSuccess("Token regenerated successfully!"),
+    onSuccess: (newToken) => {
+      // Update the local activeDeathList state with the new token
+      if (activeDeathList) {
+        setActiveDeathList({ ...activeDeathList, token: newToken });
+      }
+      handleMutationSuccess("Token regenerated successfully!");
+    },
   });
 
   return (

@@ -45,6 +45,20 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, [activeDeathList, socket, initializeSocket, initializedId]);
 
+  // FUNCTIONS
+  const checkGameToken = useCallback((gameToken: string|undefined) => {
+    return gameToken === activeDeathList?.token;
+  }, [activeDeathList?.token]);
+
+  const processBossDeathIncrement = useCallback((event: WsEvent) => {
+    if (checkGameToken(event.gameToken)) {
+      console.log("Processing death increment for game")
+    } else 
+    {
+      console.log("Invalid Token, we don't care");
+    }
+  }, [checkGameToken]);
+
   useEffect(() => {
     if (!socket) return;
 
@@ -61,21 +75,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       socket.off("bossDeathIncrement");
     }
 
-  }, [socket]);
-
-  // FUNCTIONS
-  const checkGameToken = (gameToken: string|undefined) => {
-    return gameToken === activeDeathList?.token;
-  };
-
-  const processBossDeathIncrement = (event: WsEvent) => {
-    if (checkGameToken(event.gameToken)) {
-      console.log("Processing death increment for game")
-    } else 
-    {
-      console.log("Invalid Token, we don't care");
-    }
-  };
+  }, [socket, processBossDeathIncrement]);
 
   return (
     <SocketContext.Provider value={{ socket }}>
