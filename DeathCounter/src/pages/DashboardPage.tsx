@@ -3,7 +3,7 @@ import { Box, Container, Typography, useMediaQuery, useTheme } from "@mui/materi
 import DeathListTable from "../components/death_list/DeathListTable";
 import DeathlistHeader from "../components/death_list/DeathlistHeader";
 import EntityForm from "../components/death_list/EntityForm";
-import GameSelector from "../components/game/GameSelector";
+import GameSelector from "../components/ui/GameSelector";
 import Loading from "../components/ui/Loading";
 import { useDeathLists } from "../context/DeathCounterContext";
 

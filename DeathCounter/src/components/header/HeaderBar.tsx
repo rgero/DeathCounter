@@ -1,6 +1,6 @@
 import { AppBar, Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material"
 
-import GameSelector from "../game/GameSelector";
+import GameSelector from "../ui/GameSelector";
 import { Link } from "react-router-dom"
 import UserAvatar from "./UserAvatar";
 import { useAuthenticationContext } from "../../context/AuthenticationContext";

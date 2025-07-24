@@ -45,7 +45,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, [activeDeathList, socket, initializeSocket, initializedId]);
 
-  // FUNCTIONS
   const checkGameToken = useCallback((gameToken: string|undefined) => {
     return gameToken === activeDeathList?.token;
   }, [activeDeathList?.token]);
