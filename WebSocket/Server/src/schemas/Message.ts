@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const MessageSchema = z.object({
-  event: z.enum(['bossDeathIncrement', 'genericDeathIncrement', 'message']),
+  event: z.enum(['bossDeathIncrement', 'genericDeathIncrement', 'bossBeaten', 'message']),
   payload: z.object({
     authToken: z.string(),
-    userId: z.string().optional(),
+    gameId: z.string().optional(),
   }).optional(),
 })

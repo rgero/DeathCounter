@@ -40,14 +40,17 @@ export class SocketHandler {
 
       switch(message.event) {
         case 'bossDeathIncrement':
-          socket.emit('ack', { message: 'Boss death increment received' });
+          console.log("Boss death increment event received");
+          this.broadcastToAll('bossDeathIncrement', { event: 'bossDeathIncrement', payload: message.payload });
           break;
         case 'genericDeathIncrement':
-          socket.emit('ack', { message: 'Generic death increment received' });
+          this.broadcastToAll('genericDeathIncrement', { event: 'genericDeathIncrement', payload: message.payload });
+          break;
+        case 'bossBeaten':
+          this.broadcastToAll('bossBeaten', { event: 'bossBeaten', payload: message.payload });
           break;
         default:
-          // Handle 'message' event - broadcast to all connected sockets
-          this.broadcastToAll('message', { event: 'message', payload: message.payload });
+          throw new Error(`Unknown event type: ${message}`);
           break;
       }
     }
