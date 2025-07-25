@@ -4,7 +4,7 @@ import { Entity } from "../../interfaces/Entity";
 import { useDeathLists } from "../../context/DeathCounterContext";
 
 const DeathEntity = ({index, data} : {index: number, data: Entity}) => {
-  const {setCurrentlySelectedEntity} = useDeathLists();
+  const {setEntityInEdit} = useDeathLists();
   const theme = useTheme();
   const styles = {
     gridItem: {
@@ -14,7 +14,7 @@ const DeathEntity = ({index, data} : {index: number, data: Entity}) => {
   }
 
   return (
-    <Grid container direction="row" justifyContent="space-between" sx={styles.gridItem} onClick={() => { setCurrentlySelectedEntity(data) } }>
+    <Grid container direction="row" justifyContent="space-between" sx={styles.gridItem} onClick={() => { setEntityInEdit(data) } }>
       <Grid>
         <Typography>
           {data.name}

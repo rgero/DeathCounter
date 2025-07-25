@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { createDeathList, getDeathLists, removeDeathList as removeDeathListAPI, updateActiveDeathList, updateDeathList as updateDeathListAPI, updateDeathListToken, uploadDeathList as uploadDeathListAPI } from "../services/apiDeathCounter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -12,14 +12,14 @@ import { v4 as uuidv4 } from 'uuid';
 interface DeathListContextType {
   deathLists: DeathList[];
   activeDeathList: DeathList | undefined;
+  entityInEdit: Entity | undefined;
   setActiveDeathList: (deathList: DeathList) => void;
-  currentlySelectedEntity: Entity | null;
+  setEntityInEdit: (entity: Entity | null) => void;
   addDeathList: (deathList: DeathList) => void;
   addToList: (entity: Entity) => void;
   updateActiveStatus: (id: number) => void;
   getCurrentlyActiveDeathList: () => DeathList | undefined;
   regenerateToken: () => void;
-  setCurrentlySelectedEntity: (entity: Entity | null) => void;
   uploadDeathList: (deathList: DeathList) => void;
   updateDeathList: (deathList: DeathList) => void;
   removeDeathList: (id: number) => void;
@@ -30,30 +30,30 @@ interface DeathListContextType {
 }
 
 const DeathListContext = React.createContext<DeathListContextType>({
-  deathLists: [],
-  currentlySelectedEntity: null,
   activeDeathList: undefined,
-  setActiveDeathList: () => {},
   addDeathList: () => {},
   addToList: () => {},
-  updateActiveStatus: () => {},
+  deathLists: [],
+  error: null,
   getCurrentlyActiveDeathList: () => undefined,
+  isFetching: false,
+  isLoading: false,
+  entityInEdit: undefined,
   regenerateToken: () => {},
   removeDeathList: () => {},
   removeEntityFromList: () => {},
-  setCurrentlySelectedEntity: () => {},
-  uploadDeathList: () => {},
+  setActiveDeathList: () => {},
+  updateActiveStatus: () => {},
   updateDeathList: () => {},
-  isFetching: false,
-  isLoading: false,
-  error: null,
+  setEntityInEdit: () => {},
+  uploadDeathList: () => {},
 });
 
 export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeDeathList, setActiveDeathList] = useLocalStorage(undefined, "activeDeathList");
+  const [entityInEdit, setEntityInEdit] = useLocalStorage(undefined, "entityInEdit");
   const queryClient = useQueryClient();
   const {user} = useAuthenticationContext();
-  const [currentlySelectedEntity, setCurrentlySelectedEntity] = React.useState<Entity | null>(null);
 
   const { data: deathLists = [], error, isLoading, isFetching, refetch } = useQuery({
     queryKey: ["death_counters"],
@@ -61,9 +61,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   });
 
   useEffect(() => {
-    // Only run when data is loaded and we're not currently fetching
     if (isLoading || isFetching) {
-      console.log("Still loading data, skipping activeDeathList update");
       return;
     }
     
@@ -115,6 +113,9 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         await updateDeathListAPI(activeDeathList);
         return;
       }
+
+      entity.id = activeDeathList.entityList.length > 0 ? Math.max(...activeDeathList.entityList.map((e: Entity) => e.id)) + 1 : 1;
+      console.log(entity.id);
 
       activeDeathList.entityList.push(entity);
       await updateDeathListAPI(activeDeathList);
@@ -188,23 +189,23 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   return (
     <DeathListContext.Provider
       value={{
-        deathLists,
         activeDeathList,
-        setActiveDeathList,
-        currentlySelectedEntity,
-        addToList,
         addDeathList: addNewDeathList,
+        addToList,
+        deathLists,
+        error,
         getCurrentlyActiveDeathList,
+        isFetching,
+        isLoading,
+        entityInEdit,
         regenerateToken,
         removeDeathList,
         removeEntityFromList,
-        setCurrentlySelectedEntity,
+        setActiveDeathList,
         updateActiveStatus,
-        uploadDeathList,
         updateDeathList,
-        isFetching,
-        isLoading,
-        error
+        setEntityInEdit,
+        uploadDeathList,
       }}
     >
       {children}

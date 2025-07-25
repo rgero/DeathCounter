@@ -6,7 +6,7 @@ import { Entity } from "../../interfaces/Entity";
 import { useDeathLists } from "../../context/DeathCounterContext";
 
 const EntityForm = () => {
-  const {addToList, currentlySelectedEntity, removeEntityFromList} = useDeathLists();
+  const {addToList, entityInEdit, setEntityInEdit, removeEntityFromList} = useDeathLists();
   const [id, setID] = React.useState<number>(-1);
   const [name, setName] = React.useState("");
   const [deaths, setDeaths] = React.useState(0);
@@ -17,17 +17,17 @@ const EntityForm = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
-    if (currentlySelectedEntity)
+    if (entityInEdit)
     {
-      setID(currentlySelectedEntity.id ?? -1);
-      setName(currentlySelectedEntity.name);
-      setDeaths(currentlySelectedEntity.deaths);
+      setID(entityInEdit.id ?? -1);
+      setName(entityInEdit.name);
+      setDeaths(entityInEdit.deaths);
     }
     else
     {
       clearForm();
     }
-  },[currentlySelectedEntity]);
+  },[entityInEdit]);
 
   const canProcess = () => {
     const now = new Date();
@@ -41,18 +41,26 @@ const EntityForm = () => {
   const processIncrement = () => {
     if (canProcess())
     {
-      setDeaths( (deaths) => deaths+1 );
+      const entityInEdit: Entity = {id: id, name: name, deaths: deaths+1};
+      setEntityInEdit(entityInEdit);
     }
   }
 
   const processDecrement = () => {
     if (canProcess())
     {
-      setDeaths( (deaths) => deaths-1 );
+      const entityInEdit: Entity = {id: id, name: name, deaths: deaths-1};
+      if (entityInEdit.deaths < 0)
+      {
+        setError("Deaths cannot be negative");
+        return;
+      }
+      setEntityInEdit(entityInEdit);
     }
   }
 
   const clearForm = () => {
+    setEntityInEdit(null);
     setID(-1)
     setName("");
     setDeaths(0);
