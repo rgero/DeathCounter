@@ -39,11 +39,7 @@ export class SocketHandler {
 
     try {
       const message: WsMessage = MessageSchema.parse(data) as WsMessage;
-      console.log("Message: ", message);
-      console.log(message.authToken);
       const correctAuthToken = decryptField(message.authToken);
-
-      console.log(correctAuthToken);
 
       if (correctAuthToken !== message.gameToken) {
         console.log("Not correct token");
