@@ -19,6 +19,7 @@ interface DeathListContextType {
   addToList: (entity: Entity) => void;
   updateActiveStatus: (id: number) => void;
   getCurrentlyActiveDeathList: () => DeathList | undefined;
+  incrementDeathsInEditEntity: () => void;
   regenerateToken: () => void;
   uploadDeathList: (deathList: DeathList) => void;
   updateDeathList: (deathList: DeathList) => void;
@@ -36,6 +37,7 @@ const DeathListContext = React.createContext<DeathListContextType>({
   deathLists: [],
   error: null,
   getCurrentlyActiveDeathList: () => undefined,
+  incrementDeathsInEditEntity: () => {},
   isFetching: false,
   isLoading: false,
   entityInEdit: undefined,
@@ -186,6 +188,17 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     },
   });
 
+
+  const incrementDeathsInEditEntity = () => {
+    setEntityInEdit((prevEntityInEdit : Entity|undefined) => {
+      const currentDeaths = prevEntityInEdit?.deaths || 0;
+      return {
+        ...prevEntityInEdit,
+        deaths: currentDeaths + 1,
+      };
+    });
+  }
+
   return (
     <DeathListContext.Provider
       value={{
@@ -195,6 +208,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         deathLists,
         error,
         getCurrentlyActiveDeathList,
+        incrementDeathsInEditEntity,
         isFetching,
         isLoading,
         entityInEdit,

@@ -13,7 +13,7 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined);
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
   const [initializedId, setInitializedId] = useState<number | undefined>(undefined);
-  const { activeDeathList } = useDeathLists();
+  const { activeDeathList, incrementDeathsInEditEntity } = useDeathLists();
 
   const initializeSocket = useCallback((params: Record<string, string>) => {
     const newSocket = io(import.meta.env.VITE_WSS_URL, {
@@ -51,9 +51,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const processBossDeathIncrement = useCallback((event: WsEvent) => {
     if (checkGameToken(event.gameToken)) {
-      console.log("Processing death increment for game")
-    } else 
-    {
+      incrementDeathsInEditEntity();
+    } else {
       console.log("Invalid Token, we don't care");
     }
   }, [checkGameToken]);
