@@ -1,6 +1,6 @@
 import { Create } from "@mui/icons-material";
 import MenuOption from "../../../interfaces/MenuOption";
-import { useModalProvider } from "../../../context/ModalContext";
+import { useModalProvider } from "../../../context/modal/ModalContext";
 
 const ToggleCreateNewOption = () => {
   const {toggleCreateNewModal} = useModalProvider();

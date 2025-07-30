@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 
-import { useAuthenticationContext } from "../context/AuthenticationContext";
+import { useAuthenticationContext } from "../context/authentication/AuthenticationContext";
 
 const LandingPage = () => {
   const {loginWithGoogle} = useAuthenticationContext();

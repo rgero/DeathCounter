@@ -5,8 +5,8 @@ import { useRef, useState } from "react";
 import BaseModal from "./BaseModal";
 import Button from "../ui/Button";
 import { DeathList } from "../../interfaces/DeathList";
-import { useDeathLists } from "../../context/DeathCounterContext";
-import { useModalProvider } from "../../context/ModalContext";
+import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
+import { useModalProvider } from "../../context/modal/ModalContext";
 
 const CreateNewModal = () => {
   const {createNewModalOpen, toggleCreateNewModal} = useModalProvider();
@@ -40,7 +40,7 @@ const CreateNewModal = () => {
         sx={{ pt: 2 }}
       >
         <Grid>
-          <Typography>Create new Death Counter?</Typography>
+          <Typography variant="h2">Create new Death Counter?</Typography>
         </Grid>
         <Grid>
           <TextField

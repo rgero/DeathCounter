@@ -5,8 +5,8 @@ import { useEffect, useState } from "react"
 import BaseModal from "./BaseModal"
 import { encryptAuthToken } from "../../utils/crypt"
 import toast from "react-hot-toast"
-import { useDeathLists } from "../../context/DeathCounterContext"
-import { useModalProvider } from "../../context/ModalContext"
+import { useDeathLists } from "../../context/deathCounter/DeathCounterContext"
+import { useModalProvider } from "../../context/modal/ModalContext"
 
 const TokenModal = () => {
   const {tokenModalOpen, toggleTokenModal} = useModalProvider()

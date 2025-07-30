@@ -4,14 +4,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import AppLayout from "./components/ui/AppLayout";
 import AuthenticatedRoute from "./components/AuthenicatedRoute";
-import { AuthenticationProvider } from "./context/AuthenticationContext";
+import { AuthenticationProvider } from "./context/authentication/AuthenticationProvider";
 import DashboardPage from "./pages/DashboardPage";
-import { DeathListProvider } from "./context/DeathCounterContext";
+import { DeathListProvider } from "./context/deathCounter/DeathCounterProvider";
 import LandingPage from "./pages/LandingPage";
-import { ModalProvider } from "./context/ModalContext";
+import { ModalProvider } from "./context/modal/ModalProvider";
 import PageNotFound from "./pages/PageNotFound";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { SocketProvider } from "./context/WebSocketContext";
+import { SocketProvider } from "./context/webSocket/WebSocketProvider";
 import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({

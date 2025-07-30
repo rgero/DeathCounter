@@ -1,6 +1,6 @@
 import { Logout } from "@mui/icons-material";
 import MenuOption from "../../../interfaces/MenuOption";
-import { useAuthenticationContext } from "../../../context/AuthenticationContext";
+import { useAuthenticationContext } from "../../../context/authentication/AuthenticationContext";
 
 const LogoutOption = () => {
   const { logout } = useAuthenticationContext();

@@ -1,7 +1,7 @@
 import { Grid, Typography, useTheme } from "@mui/material"
 
 import { Entity } from "../../interfaces/Entity";
-import { useDeathLists } from "../../context/DeathCounterContext";
+import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
 
 const DeathEntity = ({index, data} : {index: number, data: Entity}) => {
   const {setEntityInEdit} = useDeathLists();

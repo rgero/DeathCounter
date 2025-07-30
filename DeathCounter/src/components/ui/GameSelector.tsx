@@ -1,6 +1,6 @@
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material"
 
-import { useDeathLists } from "../../context/DeathCounterContext";
+import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
 
 const GameSelector = () => {
   const { isLoading, activeDeathList, deathLists, updateActiveStatus } = useDeathLists();

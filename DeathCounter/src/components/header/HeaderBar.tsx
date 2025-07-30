@@ -3,7 +3,7 @@ import { AppBar, Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/mat
 import GameSelector from "../ui/GameSelector";
 import { Link } from "react-router-dom"
 import UserAvatar from "./UserAvatar";
-import { useAuthenticationContext } from "../../context/AuthenticationContext";
+import { useAuthenticationContext } from "../../context/authentication/AuthenticationContext";
 
 const HeaderBar = () => {
   const {user} = useAuthenticationContext();

@@ -1,6 +1,6 @@
 import MenuOption from "../../../interfaces/MenuOption";
 import { QueryStats } from "@mui/icons-material";
-import { useModalProvider } from "../../../context/ModalContext";
+import { useModalProvider } from "../../../context/modal/ModalContext";
 
 const ImportOption = () => {
   const {toggleImportModal} = useModalProvider();

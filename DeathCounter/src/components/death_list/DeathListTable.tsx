@@ -2,7 +2,7 @@ import { Container, Grid, Paper, useMediaQuery, useTheme } from '@mui/material';
 
 import DeathEntity from './DeathEntity';
 import DeathListTableHeader from './DeathListTableHeader';
-import { useDeathLists } from '../../context/DeathCounterContext';
+import { useDeathLists } from '../../context/deathCounter/DeathCounterContext';
 
 const DeathListTable = () => {
   const { activeDeathList } = useDeathLists();

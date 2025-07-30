@@ -1,6 +1,6 @@
 import { Key } from "@mui/icons-material";
 import MenuOption from "../../../interfaces/MenuOption";
-import { useModalProvider } from "../../../context/ModalContext";
+import { useModalProvider } from "../../../context/modal/ModalContext";
 
 const ToggleTokenOption = () => {
   const {toggleTokenModal} = useModalProvider();

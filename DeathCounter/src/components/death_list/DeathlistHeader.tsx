@@ -2,7 +2,7 @@ import { Grid, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 import DeathListMenuButton from "./DeathListMenuButton";
-import { useDeathLists } from "../../context/DeathCounterContext";
+import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
 
 const DeathlistHeader = () => {
   const { activeDeathList, isLoading, updateDeathList } = useDeathLists();

@@ -7,8 +7,8 @@ import DeathlistHeader from "../components/death_list/DeathlistHeader";
 import EntityForm from "../components/death_list/EntityForm";
 import GameSelector from "../components/ui/GameSelector";
 import Loading from "../components/ui/Loading";
-import { useDeathLists } from "../context/DeathCounterContext";
-import { useModalProvider } from "../context/ModalContext";
+import { useDeathLists } from "../context/deathCounter/DeathCounterContext";
+import { useModalProvider } from "../context/modal/ModalContext";
 
 const DashboardPage = () => {
   const {deathLists, isLoading} = useDeathLists();

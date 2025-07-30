@@ -5,8 +5,8 @@ import React, { useCallback, useEffect } from "react"
 import { Entity } from "../../interfaces/Entity";
 import { WsMessage } from "../../interfaces/WsMessage";
 import toast from "react-hot-toast";
-import { useDeathLists } from "../../context/DeathCounterContext";
-import { useSocketContext } from "../../context/WebSocketContext";
+import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
+import { useSocketContext } from "../../context/webSocket/WebSocketContext";
 
 const EntityForm = () => {
   const { activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit } = useDeathLists();
