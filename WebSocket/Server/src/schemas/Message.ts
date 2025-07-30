@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const MessageSchema = z.object({
-  event: z.enum(['bossDeathIncrement', 'genericDeathIncrement', 'bossBeaten', 'message']),
+  event: z.enum(['bossDeathIncrement', 'genericDeathIncrement', 'bossDefeated', 'message']),
   authToken: z.string(),
   gameToken: z.string(),
 })
