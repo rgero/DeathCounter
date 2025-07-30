@@ -5,7 +5,7 @@ import { useDeathLists } from "../../context/DeathCounterContext";
 const GameSelector = () => {
   const { isLoading, activeDeathList, deathLists, updateActiveStatus } = useDeathLists();
 
-  if (isLoading || !deathLists) {
+  if (isLoading || deathLists.length === 0) {
     return null;
   }
 

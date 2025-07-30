@@ -35,24 +35,32 @@ export const getDeathListById = async (id: number) => {
 };
 
 export const createDeathList = async (deathList: DeathList) => {
-  deathList = encryptData(deathList);
-
-  // New deathlists should always be inactive and need to have a token.
-  deathList.currentlyActive = false;
-  deathList.token = uuidv4();
-
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("death_counters")
-    .insert([deathList])
+    .update({ currentlyActive: false })
+    .eq("currentlyActive", true);
+
+  if (error) {
+    console.error("Failed to mark the old active list as inactive:", error);
+    throw new Error("Failed to update currently active Death List");
+  }
+
+  const encryptedDeathList = encryptData(deathList);
+  encryptedDeathList.token = uuidv4();
+  encryptedDeathList.currentlyActive = true;
+
+  const { data: newData, error: insertError } = await supabase
+    .from("death_counters")
+    .insert([encryptedDeathList])
     .select("*")
     .single();
 
-  if (error) {
-    console.error(error);
+  if (insertError) {
+    console.error("Failed to create new Death List:", insertError);
     throw new Error("Failed to create Death List");
   }
 
-  return decryptData(data as DeathList);
+  return decryptData(newData as DeathList);
 };
 
 export const updateDeathList = async (deathList: DeathList) => {
