@@ -40,14 +40,14 @@ const TokenModal = () => {
     event.preventDefault();
   };
 
-  const copyTokenToClipboard = () => {
-    navigator.clipboard.writeText(activeDeathList.token as string);
-    toast.success("Token copied to clipboard");
-  }
+  const copyTokensToClipboard = () => {
+    const tokens = {
+      gameToken: activeDeathList.token,
+      authToken: encryptedAuthToken
+    }
 
-  const copyAuthTokenToClipboard = () => {
-    navigator.clipboard.writeText(encryptedAuthToken);
-    toast.success("Encrypted token copied to clipboard");
+    navigator.clipboard.writeText(JSON.stringify(tokens));
+    toast.success("Tokens copied to clipboard");
   }
 
   return (
@@ -81,11 +81,6 @@ const TokenModal = () => {
                         >
                           {showToken ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
-                      <IconButton
-                        aria-label="copy token to clipboard"
-                        onClick={copyTokenToClipboard}>
-                        <CopyAll/>  
-                      </IconButton>
                   </Box>
                 </InputAdornment>
 
@@ -112,11 +107,6 @@ const TokenModal = () => {
                           >
                             {showAuthToken ? <VisibilityOff /> : <Visibility />}
                           </IconButton>
-                        <IconButton
-                          aria-label="copy token to clipboard"
-                          onClick={copyAuthTokenToClipboard}>
-                          <CopyAll/>  
-                        </IconButton>
                     </Box>
                   </InputAdornment>
 
@@ -127,6 +117,10 @@ const TokenModal = () => {
           </Grid>
         </Grid>
         <Grid>
+          <IconButton onClick={copyTokensToClipboard}>
+            <CopyAll />
+            <Typography variant="body2">Copy Tokens</Typography>
+          </IconButton>
           <IconButton onClick={handleRegenerateToken}>
             <Typography variant="body2">Regenerate Token</Typography>
           </IconButton>     
