@@ -1,113 +1,138 @@
 import { Add, Remove } from "@mui/icons-material";
 import { Button, FormControl, FormHelperText, Grid, IconButton, Paper, TextField, useMediaQuery, useTheme } from "@mui/material"
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 
 import { Entity } from "../../interfaces/Entity";
+import { WsMessage } from "../../interfaces/WsMessage";
+import toast from "react-hot-toast";
 import { useDeathLists } from "../../context/DeathCounterContext";
+import { useSocketContext } from "../../context/WebSocketContext";
 
 const EntityForm = () => {
-  const {addToList, entityInEdit, setEntityInEdit, removeEntityFromList} = useDeathLists();
+  const { activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit } = useDeathLists();
+  const { socket } = useSocketContext();
   const [id, setID] = React.useState<number>(-1);
   const [name, setName] = React.useState("");
   const [deaths, setDeaths] = React.useState(0);
   const [error, setError] = React.useState("");
   const [lastClick, setLastClick] = React.useState(new Date());
-  const timeDelay: number = 500;
+  const timeDelay: number = 1000;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
+  React.useEffect(() => {
+    if (!entityInEdit || !entityInEdit.id) {
+      return;
+    }
+
+    setID(entityInEdit.id);
+    setName(entityInEdit.name);
+    setDeaths(entityInEdit.deaths);
+    setError("");
+  }, [entityInEdit]);
+
   useEffect(() => {
-    if (entityInEdit)
-    {
-      setID(entityInEdit.id ?? -1);
-      setName(entityInEdit.name);
-      setDeaths(entityInEdit.deaths);
-    }
-    else
-    {
-      clearForm();
-    }
-  },[entityInEdit]);
+    if (!socket) return;
+
+    const handleBossDeathIncrement = (event: WsMessage) => {
+      if (!checkGameToken(event.gameToken)) return;
+      processIncrement();
+    };
+
+    const handleBossDefeated = (event: WsMessage) => {
+      if (!checkGameToken(event.gameToken)) return;
+      processSubmit();
+    };
+
+    socket.on("bossDeathIncrement", handleBossDeathIncrement);
+    socket.on("bossDefeated", handleBossDefeated);
+
+    return () => {
+      socket.off("bossDeathIncrement", handleBossDeathIncrement);
+      socket.off("bossDefeated", handleBossDefeated);
+    };
+  }, [socket, name, deaths, id]);
+
+  const checkGameToken = useCallback((gameToken: string|undefined) => {
+    return gameToken === activeDeathList?.token;
+  }, [activeDeathList?.token]);
 
   const canProcess = () => {
     const now = new Date();
-    if ((now.getTime() - lastClick.getTime()) > timeDelay)
-    {
+    if (now.getTime() - lastClick.getTime() > timeDelay) {
       setLastClick(now);
       return true;
+    } else {
+      toast.error("Please wait before clicking again");
+      return false;
     }
-  }
+  };
 
   const processIncrement = () => {
-    if (canProcess())
-    {
-      const entityInEdit: Entity = {id: id, name: name, deaths: deaths+1};
-      setEntityInEdit(entityInEdit);
+    if (canProcess()) {
+      setDeaths((prev) => prev + 1);
     }
-  }
+  };
 
   const processDecrement = () => {
-    if (canProcess())
-    {
-      const entityInEdit: Entity = {id: id, name: name, deaths: deaths-1};
-      if (entityInEdit.deaths < 0)
-      {
-        setError("Deaths cannot be negative");
-        return;
-      }
-      setEntityInEdit(entityInEdit);
+    if (canProcess()) {
+      setDeaths((prev) => {
+        if (prev > 0) {
+          return prev - 1;
+        } else {
+          setError("Deaths cannot be negative");
+          return 0;
+        }
+      });
     }
-  }
+  };
 
   const clearForm = () => {
-    setEntityInEdit(null);
-    setID(-1)
+    setID(-1);
     setName("");
     setDeaths(0);
     setError("");
-  }
+    setEntityInEdit(null);
+  };
 
   const processSubmit = () => {
-    if (name == "")
-    {
+    if (name.trim() === "") {
       setError("Name must be filled out");
       return;
     }
 
-    const itemToSubmit: Entity = {name: name, deaths: deaths};
-    if (id != -1)
-    {
+    const itemToSubmit: Entity = { name: name.trim(), deaths };
+    if (id !== -1) {
       itemToSubmit.id = id;
     }
     addToList(itemToSubmit);
     clearForm();
-  }
+  };
 
   const processNumber = (num: string) => {
-    if( /^\d*$/.test(num) )
-    {
-      setDeaths(Number(num))
+    if (/^\d*$/.test(num)) {
+      setDeaths(Number(num));
     }
-  }
+  };
 
   const removeEntity = () => {
-    if (id == -1) {
+    if (id === -1) {
       setError("No entity selected to remove");
       return;
     }
     removeEntityFromList(id);
     clearForm();
-  }
+  };
 
   return (
-    <Paper sx={{marginTop: 2, padding: 2, borderRadius: 5, width: isMobile ? "90%" : "500px", mx: "auto"}}>
+    <Paper sx={{ marginTop: 2, padding: 2, borderRadius: 5, width: isMobile ? "90%" : "500px", mx: "auto" }}>
       <FormControl fullWidth error={Boolean(error)}>
-        <Grid container justifyContent="center" alignItems="center" spacing={3} direction={isMobile ? "column" : "row"} sx={{paddingBottom: 2}}>
+        <Grid container justifyContent="center" alignItems="center" spacing={3} direction={isMobile ? "column" : "row"} sx={{ paddingBottom: 2 }}>
           <Grid>
-            <TextField 
+            <TextField
               label="Name"
               value={name}
-              error={error ? true : false}
+              error={Boolean(error)}
               onChange={(e) => {
                 setName(e.target.value);
               }}
@@ -117,36 +142,46 @@ const EntityForm = () => {
             <TextField
               label="Deaths"
               value={deaths}
-              onChange={(e) => { processNumber(e.target.value) }}
+              onChange={(e) => {
+                processNumber(e.target.value);
+              }}
             />
           </Grid>
         </Grid>
         <Grid container justifyContent="space-around" alignItems="center" paddingBottom={2}>
           <Grid>
-            <IconButton color="error" onClick={processDecrement}><Remove/></IconButton>
+            <IconButton color="error" onClick={processDecrement}>
+              <Remove />
+            </IconButton>
           </Grid>
           <Grid>
-            <IconButton color="success" onClick={processIncrement}><Add/></IconButton>
+            <IconButton color="success" onClick={processIncrement}>
+              <Add />
+            </IconButton>
           </Grid>
         </Grid>
         <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
-          { id != -1 ? (
+          {id !== -1 && (
             <Grid>
-              <Button variant="outlined" onClick={removeEntity}>Delete</Button>
+              <Button variant="outlined" onClick={removeEntity}>
+                Delete
+              </Button>
             </Grid>
-          ): (null)}
+          )}
           <Grid>
-            <Button variant="outlined" onClick={processSubmit}>{id != -1 ? "Edit" : "Add"}</Button>
+            <Button variant="outlined" onClick={processSubmit}>
+              {id !== -1 ? "Edit" : "Add"}
+            </Button>
           </Grid>
         </Grid>
-        <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2} >
+        <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2}>
           <Grid>
             <FormHelperText>{error}</FormHelperText>
           </Grid>
         </Grid>
       </FormControl>
     </Paper>
-  )
-}
+  );
+};
 
-export default EntityForm
+export default EntityForm;

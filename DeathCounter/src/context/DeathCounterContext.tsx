@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { createDeathList, getDeathLists, removeDeathList as removeDeathListAPI, updateActiveDeathList, updateDeathList as updateDeathListAPI, updateDeathListToken, uploadDeathList as uploadDeathListAPI } from "../services/apiDeathCounter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -19,7 +19,6 @@ interface DeathListContextType {
   addToList: (entity: Entity) => void;
   updateActiveStatus: (id: number) => void;
   getCurrentlyActiveDeathList: () => DeathList | undefined;
-  incrementDeathsInEditEntity: () => void;
   regenerateToken: () => void;
   uploadDeathList: (deathList: DeathList) => void;
   updateDeathList: (deathList: DeathList) => void;
@@ -37,7 +36,6 @@ const DeathListContext = React.createContext<DeathListContextType>({
   deathLists: [],
   error: null,
   getCurrentlyActiveDeathList: () => undefined,
-  incrementDeathsInEditEntity: () => {},
   isFetching: false,
   isLoading: false,
   entityInEdit: undefined,
@@ -108,7 +106,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       if (!activeDeathList) {
         throw new Error("No active death list found");
       }
-      const existingEntity = activeDeathList.entityList.find(e => e.id === entity.id);
+      const existingEntity: Entity | undefined = activeDeathList.entityList.find((e: Entity) => e.id === entity.id);
       if (existingEntity) {
         existingEntity.deaths = entity.deaths;
         existingEntity.name = entity.name;
@@ -131,7 +129,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         throw new Error("No active death list found");
       }
 
-      const updatedList = activeDeathList.entityList.filter(e => e.id !== id);
+      const updatedList: Entity[] = activeDeathList.entityList.filter((e: Entity) => e.id !== id);
       activeDeathList.entityList = updatedList;
       await updateDeathListAPI(activeDeathList);
     },
@@ -188,17 +186,6 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     },
   });
 
-
-  const incrementDeathsInEditEntity = () => {
-    setEntityInEdit((prevEntityInEdit : Entity|undefined) => {
-      const currentDeaths = prevEntityInEdit?.deaths || 0;
-      return {
-        ...prevEntityInEdit,
-        deaths: currentDeaths + 1,
-      };
-    });
-  }
-
   return (
     <DeathListContext.Provider
       value={{
@@ -208,7 +195,6 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         deathLists,
         error,
         getCurrentlyActiveDeathList,
-        incrementDeathsInEditEntity,
         isFetching,
         isLoading,
         entityInEdit,

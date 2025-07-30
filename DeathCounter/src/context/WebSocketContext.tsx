@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import io, { Socket } from 'socket.io-client';
 
-import { WsEvent } from "../interfaces/WsEvent";
 import { useDeathLists } from "./DeathCounterContext";
 
 interface SocketContextType {
@@ -13,7 +12,7 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined);
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
   const [initializedId, setInitializedId] = useState<number | undefined>(undefined);
-  const { activeDeathList, incrementDeathsInEditEntity } = useDeathLists();
+  const { activeDeathList } = useDeathLists();
 
   const initializeSocket = useCallback((params: Record<string, string>) => {
     const newSocket = io(import.meta.env.VITE_WSS_URL, {
@@ -45,18 +44,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, [activeDeathList, socket, initializeSocket, initializedId]);
 
-  const checkGameToken = useCallback((gameToken: string|undefined) => {
-    return gameToken === activeDeathList?.token;
-  }, [activeDeathList?.token]);
-
-  const processBossDeathIncrement = useCallback((event: WsEvent) => {
-    if (checkGameToken(event.gameToken)) {
-      incrementDeathsInEditEntity();
-    } else {
-      console.log("Invalid Token, we don't care");
-    }
-  }, [checkGameToken]);
-
   useEffect(() => {
     if (!socket) return;
 
@@ -64,16 +51,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.log("Received message:", data.payload);
     });
 
-    socket.on("bossDeathIncrement", (data: WsEvent) => {
-      processBossDeathIncrement(data);
-    });
-
-    return () => {
-      socket.off("message");
-      socket.off("bossDeathIncrement");
-    }
-
-  }, [socket, processBossDeathIncrement]);
+  }, [socket]);
 
   return (
     <SocketContext.Provider value={{ socket }}>
