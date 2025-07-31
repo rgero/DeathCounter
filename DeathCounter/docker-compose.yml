@@ -1,0 +1,25 @@
+services:
+  deathcounter:
+    container_name: deathcounter
+    env_file:
+      - .env
+    build:
+      context: .
+    networks:
+      - deathcounter
+      - container-dmz
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.deathcounter.rule=Host(`${DOMAIN_NAME}`)"
+      - "traefik.http.routers.deathcounter.entrypoints=websecure"
+      - "traefik.http.routers.deathcounter.tls.certresolver=production"
+      - "traefik.http.services.deathcounter.loadbalancer.server.port=6200"
+    ports:
+      - "6200:6200"
+    restart: always
+
+networks:
+  deathcounter:
+    driver: bridge
+  container-dmz:
+    external: true
