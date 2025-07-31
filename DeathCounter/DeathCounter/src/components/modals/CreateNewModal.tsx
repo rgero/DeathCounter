@@ -6,6 +6,7 @@ import BaseModal from "./BaseModal";
 import Button from "../ui/Button";
 import { DeathList } from "../../interfaces/DeathList";
 import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
+import { useIsMobile } from "../../hooks/useIsMobile";
 import { useModalProvider } from "../../context/modal/ModalContext";
 
 const CreateNewModal = () => {
@@ -13,6 +14,8 @@ const CreateNewModal = () => {
   const {addDeathList} = useDeathLists();
   const [name, setName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const isMobile = useIsMobile();
 
   const handleSubmit = async () => {
     const newDeathList: DeathList = {
@@ -40,7 +43,7 @@ const CreateNewModal = () => {
         sx={{ pt: 2 }}
       >
         <Grid>
-          <Typography variant="h2">Create new Death Counter?</Typography>
+          <Typography variant={isMobile ? "h5" : "h4"}>Create new Death Counter?</Typography>
         </Grid>
         <Grid>
           <TextField

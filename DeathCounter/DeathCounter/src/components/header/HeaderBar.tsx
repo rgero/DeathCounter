@@ -1,15 +1,15 @@
-import { AppBar, Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { AppBar, Box, Grid, Typography } from "@mui/material"
 
 import GameSelector from "../ui/GameSelector";
 import { Link } from "react-router-dom"
 import UserAvatar from "./UserAvatar";
 import { useAuthenticationContext } from "../../context/authentication/AuthenticationContext";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 const HeaderBar = () => {
   const {user} = useAuthenticationContext();
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useIsMobile();
 
   return (
     <Box

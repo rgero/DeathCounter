@@ -1,11 +1,12 @@
 import { Add, Remove } from "@mui/icons-material";
-import { Button, FormControl, FormHelperText, Grid, IconButton, Paper, TextField, useMediaQuery, useTheme } from "@mui/material"
+import { Button, FormControl, FormHelperText, Grid, IconButton, Paper, TextField } from "@mui/material"
 import React, { useCallback, useEffect } from "react"
 
 import { Entity } from "../../interfaces/Entity";
 import { WsMessage } from "../../interfaces/WsMessage";
 import toast from "react-hot-toast";
 import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
+import { useIsMobile } from "../../hooks/useIsMobile";
 import { useSocketContext } from "../../context/webSocket/WebSocketContext";
 
 const EntityForm = () => {
@@ -17,8 +18,7 @@ const EntityForm = () => {
   const [error, setError] = React.useState("");
   const [lastClick, setLastClick] = React.useState(new Date());
   const timeDelay: number = 1000;
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useIsMobile();
 
   React.useEffect(() => {
     if (!entityInEdit || !entityInEdit.id) {

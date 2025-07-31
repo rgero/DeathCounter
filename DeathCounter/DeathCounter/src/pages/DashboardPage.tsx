@@ -1,4 +1,4 @@
-import { Box, Container, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Box, Container, Typography } from "@mui/material"
 
 import { Add } from "@mui/icons-material";
 import Button from "../components/ui/Button";
@@ -8,13 +8,13 @@ import EntityForm from "../components/death_list/EntityForm";
 import GameSelector from "../components/ui/GameSelector";
 import Loading from "../components/ui/Loading";
 import { useDeathLists } from "../context/deathCounter/DeathCounterContext";
+import { useIsMobile } from "../hooks/useIsMobile";
 import { useModalProvider } from "../context/modal/ModalContext";
 
 const DashboardPage = () => {
   const {deathLists, isLoading} = useDeathLists();
   const {toggleCreateNewModal} = useModalProvider();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useIsMobile();
 
   if (isLoading) {
     return <Loading/>

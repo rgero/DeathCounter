@@ -1,14 +1,14 @@
-import { Container, Grid, Paper, useMediaQuery, useTheme } from '@mui/material';
+import { Container, Grid, Paper } from '@mui/material';
 
 import DeathEntity from './DeathEntity';
 import DeathListTableHeader from './DeathListTableHeader';
 import { useDeathLists } from '../../context/deathCounter/DeathCounterContext';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 const DeathListTable = () => {
   const { activeDeathList } = useDeathLists();
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useIsMobile();
 
   if (!activeDeathList?.entityList || activeDeathList.entityList.length === 0) {
     return null;
