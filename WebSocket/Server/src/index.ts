@@ -12,21 +12,35 @@ console.log(`Using encryption key: ${process.env.KEY_QUERY_PASSKEY}`);
 function main() {
   // Create Express app with CORS
   const app = express();
-  app.use(cors({
-    origin: "*", // Allow all origins for development - restrict in production
+  
+  // CORS configuration - simplified for desktop applications
+  const corsOptions = {
+    origin: process.env.NODE_ENV === 'production' 
+      ? (process.env.ALLOWED_ORIGINS === '*' ? true : process.env.ALLOWED_ORIGINS?.split(',') || [])
+      : "*", // Allow all origins for development
     methods: ["GET", "POST"],
-  }));
+    credentials: true
+  };
+  
+  app.use(cors(corsOptions));
   app.use(express.json());
+
+  // Health check endpoint for Docker
+  app.get('/health', (req, res) => {
+    res.status(200).json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV || 'development'
+    });
+  });
 
   // Create HTTP server
   const server = createServer(app);
   
   // Initialize Socket.IO with CORS settings
   const io = new Server(server, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"],
-    },
+    cors: corsOptions,
     allowEIO3: true, // Allow older Engine.IO versions
     transports: ['websocket', 'polling'] // Support both transports
   });

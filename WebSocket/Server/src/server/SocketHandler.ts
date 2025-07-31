@@ -23,7 +23,7 @@ export class SocketHandler {
   private onSocketConnected(socket: Socket) {
     console.log(`Socket connected: ${socket.id}`);
     
-    // Listen for specific events instead of generic 'message'
+    // Listen for specific events - authentication happens per message
     socket.on('bossDeathIncrement', (data) => this.onSocketMessage(socket, { event: 'bossDeathIncrement', ...data }));
     socket.on('bossDefeated', (data) => this.onSocketMessage(socket, { event: 'bossDefeated', ...data }));
     socket.on('genericDeathIncrement', (data) => this.onSocketMessage(socket, { event: 'genericDeathIncrement', ...data }));

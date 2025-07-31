@@ -1,3 +1,5 @@
 WebSocket/Server/node_modules/
 WebSocket/Server/.env
 DeathCounter/.env
+WebSocket/Server/.env.production
+WebSocket/Server/dist/
