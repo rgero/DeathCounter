@@ -5,8 +5,8 @@ services:
     build:
       context: ./Server
       target: production
-    expose:
-      - "7654"
+    ports:
+      - "7654:7654"
     container_name: deathcounter-wss-server
     restart: unless-stopped
     environment:
@@ -22,20 +22,16 @@ services:
       start_period: 40s
     networks:
       - deathcounter
+      - container-dmz
     labels:
-      # Enable Traefik
-      - traefik.enable=true
-      # HTTPS router
-      - traefik.http.routers.websocket.rule=Host(`ws.roymond.net`)
-      - traefik.http.routers.websocket.entrypoints=websecure
-      - traefik.http.routers.websocket.tls.certresolver=production
-      # Service configuration
-      - traefik.http.services.websocket.loadbalancer.server.port=7654
-      # WebSocket specific headers
-      - traefik.http.routers.websocket.middlewares=websocket-headers
-      - traefik.http.middlewares.websocket-headers.headers.customrequestheaders.Connection=Upgrade
-      - traefik.http.middlewares.websocket-headers.headers.customrequestheaders.Upgrade=websocket
-
+      - "traefik.enable=true"
+      - "traefik.http.routers.websocket.rule=Host(`wss.roymond.net`)"
+      - "traefik.http.routers.websocket.entrypoints=websecure"
+      - "traefik.http.routers.websocket.tls.certresolver=production"
+      - "traefik.http.services.websocket.loadbalancer.server.port=7654"
+      
 networks:
   deathcounter:
     driver: bridge
+  container-dmz:
+    external: true
