@@ -3,3 +3,4 @@ WebSocket/Server/.env
 DeathCounter/.env
 WebSocket/Server/.env.production
 WebSocket/Server/dist/
+KeyListener/node_modules/
