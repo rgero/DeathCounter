@@ -12,6 +12,7 @@ import { ModalProvider } from "./context/modal/ModalProvider";
 import PageNotFound from "./pages/PageNotFound";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SocketProvider } from "./context/webSocket/WebSocketProvider";
+import StatsPage from "./pages/StatsPage";
 import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({
@@ -52,6 +53,7 @@ const App = () => {
                         }
                       >
                         <Route index element={<DashboardPage/>}/>
+                        <Route path="stats" element={<StatsPage />} />
                       </Route>
                       <Route path='landing' element={<LandingPage/>} />
                       <Route element={<AppLayout/>}>
