@@ -1,9 +1,27 @@
-import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
+import { Button, Card, CardContent, Grid, Theme, Typography, useTheme } from "@mui/material";
 
 import { useAuthenticationContext } from "../context/authentication/AuthenticationContext";
+import { useEffect } from "react";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 const LandingPage = () => {
+  const theme: Theme = useTheme();
+  const isMobile = useIsMobile();
+
   const {loginWithGoogle} = useAuthenticationContext();
+
+  useEffect(() => {
+    document.body.style.background = `url('/background.jpeg') center/cover no-repeat fixed`;
+    document.body.style.backgroundColor = theme.palette.background.paper;
+    document.body.style.color = theme.palette.primary.light;
+
+    return () => {
+      document.body.style.background = "";
+      document.body.style.backgroundColor = "";
+      document.body.style.color = "";
+    };
+  }, [theme]);
+
   return (
     <Grid
       container
@@ -11,7 +29,8 @@ const LandingPage = () => {
         height: "100vh"
       }}
       alignItems="center"
-      justifyContent="center"
+      justifyContent={isMobile ? "center" : "flex-start"}
+      paddingLeft={isMobile ? 0 : "15%"}
     >
       <Card sx={{padding: "10px"}}>
         <CardContent>
