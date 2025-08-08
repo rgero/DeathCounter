@@ -1,5 +1,6 @@
 import {Divider, Menu} from "@mui/material";
 
+import DownloadToolOption from "./HeaderOptions/DownloadToolOption";
 import ImportOption from "./HeaderOptions/ImportOption";
 import LogoutOption from "./HeaderOptions/LogoutOption";
 import StatsOption from "./HeaderOptions/StatsOption";
@@ -26,6 +27,8 @@ const HeaderMenu: React.FC<Props> = ({anchorEl, closeFn}) => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <UserOption/>
+        <Divider/>
+        <DownloadToolOption/>
         <Divider/>
         <ImportOption/>
         <StatsOption/>

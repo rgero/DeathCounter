@@ -7,6 +7,7 @@ import AuthenticatedRoute from "./components/AuthenicatedRoute";
 import { AuthenticationProvider } from "./context/authentication/AuthenticationProvider";
 import DashboardPage from "./pages/DashboardPage";
 import { DeathListProvider } from "./context/deathCounter/DeathCounterProvider";
+import DownloadPage from "./pages/DownloadPage";
 import LandingPage from "./pages/LandingPage";
 import { ModalProvider } from "./context/modal/ModalProvider";
 import PageNotFound from "./pages/PageNotFound";
@@ -54,6 +55,7 @@ const App = () => {
                       >
                         <Route index element={<DashboardPage/>}/>
                         <Route path="stats" element={<StatsPage />} />
+                        <Route path="download" element={<DownloadPage />} />
                       </Route>
                       <Route path='landing' element={<LandingPage/>} />
                       <Route element={<AppLayout/>}>
