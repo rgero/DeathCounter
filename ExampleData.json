@@ -1,6 +1,6 @@
 {
-  "gameName": "Lies of P (DLC)",
-  "deathList": [
+  "name": "Lies of P (DLC)",
+  "entityList": [
     {
       "name": "Parade Master",
       "deaths": 0,
