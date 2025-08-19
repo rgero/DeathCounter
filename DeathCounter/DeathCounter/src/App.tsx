@@ -14,6 +14,7 @@ import PageNotFound from "./pages/PageNotFound";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SocketProvider } from "./context/webSocket/WebSocketProvider";
 import StatsPage from "./pages/StatsPage";
+import { StatsProvider } from "./context/stats/StatsProvider";
 import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({
@@ -42,29 +43,31 @@ const App = () => {
         <QueryClientProvider client={queryClient}>
           <AuthenticationProvider>
             <DeathListProvider>
-              <SocketProvider>
-                <ModalProvider>
-                  <BrowserRouter>
-                    <Routes>
-                      <Route
-                        element={
-                          <AuthenticatedRoute>
-                            <AppLayout />
-                          </AuthenticatedRoute>
-                        }
-                      >
-                        <Route index element={<DashboardPage/>}/>
-                        <Route path="stats" element={<StatsPage />} />
-                        <Route path="download" element={<DownloadPage />} />
-                      </Route>
-                      <Route path='landing' element={<LandingPage/>} />
-                      <Route element={<AppLayout/>}>
-                        <Route path="*" element={<PageNotFound />} />
-                      </Route>
-                    </Routes>
-                  </BrowserRouter>
-                </ModalProvider>
-              </SocketProvider>
+              <StatsProvider>
+                <SocketProvider>
+                  <ModalProvider>
+                    <BrowserRouter>
+                      <Routes>
+                        <Route
+                          element={
+                            <AuthenticatedRoute>
+                              <AppLayout />
+                            </AuthenticatedRoute>
+                          }
+                        >
+                          <Route index element={<DashboardPage/>}/>
+                          <Route path="stats" element={<StatsPage />} />
+                          <Route path="download" element={<DownloadPage />} />
+                        </Route>
+                        <Route path='landing' element={<LandingPage/>} />
+                        <Route element={<AppLayout/>}>
+                          <Route path="*" element={<PageNotFound />} />
+                        </Route>
+                      </Routes>
+                    </BrowserRouter>
+                  </ModalProvider>
+                </SocketProvider>
+              </StatsProvider>
             </DeathListProvider>
           </AuthenticationProvider>
           <ReactQueryDevtools initialIsOpen={false} />
