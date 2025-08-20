@@ -1,37 +1,27 @@
 import { StatsContext, StatsContextProps } from "./StatsContext";
-import { useEffect, useState } from "react";
 
 import { DeathList } from "../../interfaces/DeathList";
 import { useDeathLists } from "../deathCounter/DeathCounterContext";
+import {useMemo} from "react";
 
 export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [deathCount, setDeathCount] = useState(0);
-  const [bossCount, setBossCount] = useState(0);
-  const [gameCount, setGameCount] = useState(0);
+  const {deathLists} = useDeathLists();
 
-  const { deathLists } = useDeathLists();
-
-  useEffect(() => {
-    const calculateStats = () => {
-      deathLists.forEach((list: DeathList) => {
-        setBossCount( (prev) => prev + list.entityList.length);
-        let deathCountForList = 0;
-        list.entityList.forEach((entity) => {
-          deathCountForList += entity.deaths;
-        });
-        setDeathCount((prev) => prev + deathCountForList);
+  const stats = useMemo<StatsContextProps>(() => {
+    let deathCount = 0;
+    let bossCount = 0;
+    deathLists.forEach((list: DeathList) => {
+      bossCount += list.entityList.length;
+      list.entityList.forEach((entity) => {
+        deathCount += entity.deaths;
       });
+    });
+    return {
+      deathCount,
+      bossCount,
+      gameCount: deathLists.length,
     };
-
-    setGameCount(deathLists.length);
-    calculateStats();
   }, [deathLists]);
 
-  const value: StatsContextProps = {
-    deathCount,
-    bossCount,
-    gameCount,
-  };
-
-  return <StatsContext.Provider value={value}>{children}</StatsContext.Provider>;
+  return <StatsContext.Provider value={stats}>{children}</StatsContext.Provider>;
 };
