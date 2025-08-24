@@ -8,27 +8,45 @@ const ExportModal = () => {
   const { exportModalOpen, toggleExportModal } = useModalProvider();
   const { activeDeathList } = useDeathLists();
 
+  const exportWithDownload = (json: string) => {
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${activeDeathList?.name || "deathlist"}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  };
+
   const handleExport = async () => {
     if (!activeDeathList) return;
 
+    const json = JSON.stringify(activeDeathList, null, 2);
+
     try {
-      // Convert to JSON string
-      const json = JSON.stringify(activeDeathList, null, 2);
+      if ("showDirectoryPicker" in window) {
+        // @ts-expect-error: not yet in TS DOM typings everywhere
+        const dirHandle = await window.showDirectoryPicker();
 
-      // Create a Blob and object URL
-      const blob = new Blob([json], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
+        const fileHandle = await dirHandle.getFileHandle(
+          `${activeDeathList.name || "deathlist"}.json`,
+          { create: true }
+        );
 
-      // Create an invisible download link
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${activeDeathList.name || "deathlist"}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+        const writable = await fileHandle.createWritable();
+        await writable.write(json);
+        await writable.close();
 
-      // Cleanup
-      URL.revokeObjectURL(url);
+        console.log("Exported using File System Access API");
+      } else {
+        // Fallback to normal download
+        exportWithDownload(json);
+        console.log("Exported using download fallback");
+      }
 
       toggleExportModal();
     } catch (e) {
