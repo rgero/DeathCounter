@@ -1,17 +1,18 @@
 import { createContext, useContext } from "react";
 
-export interface StatsContextProps {
-  deathCount: number;
-  bossCount: number;
-  gameCount: number;
+export interface Stats {
+  totalEntities: number;
+  totalDeaths: number;
+  averageDeaths: number;
+  topEntity?: { name: string; deaths: number; listName: string };
 }
 
-export const StatsContext = createContext<StatsContextProps | undefined>(undefined);
+export const StatsContext = createContext<Stats | undefined>(undefined);
 
 export const useStatsProvider = () => {
   const context = useContext(StatsContext);
-  if (context === undefined) {
-    throw new Error("StatsContext was used outside of StatsProvider");
+  if (!context) {
+    throw new Error("useStatsProvider must be used within a StatsProvider");
   }
   return context;
 };
