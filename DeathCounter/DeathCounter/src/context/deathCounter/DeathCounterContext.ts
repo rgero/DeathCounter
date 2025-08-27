@@ -7,7 +7,6 @@ export interface DeathListContextType {
   deathLists: DeathList[];
   activeDeathList: DeathList | undefined;
   entityInEdit: Entity | undefined;
-  setActiveDeathList: (deathList: DeathList) => void;
   setEntityInEdit: (entity: Entity | null) => void;
   addDeathList: (deathList: DeathList) => void;
   addToList: (entity: Entity) => void;
