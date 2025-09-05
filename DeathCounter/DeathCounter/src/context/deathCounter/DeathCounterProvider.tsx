@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [entityInEdit, setEntityInEdit] = useLocalStorage(undefined, "entityInEdit");
+  const [showDescription, setShowDescription] = useLocalStorage({ isShown: false }, "showDescription");
   const queryClient = useQueryClient();
   const { user } = useAuthenticationContext();
 
@@ -123,6 +124,11 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     onSuccess: () => handleMutationSuccess("Token regenerated successfully!"),
   });
 
+  const toggleDescription = () => {
+    setShowDescription({ isShown: !showDescription.isShown });
+  };
+
+
   return (
     <DeathListContext.Provider
       value={{
@@ -142,6 +148,8 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         updateDeathList,
         setEntityInEdit,
         uploadDeathList,
+        showDescription: showDescription?.isShown || false,
+        toggleDescription
       }}
     >
       {children}

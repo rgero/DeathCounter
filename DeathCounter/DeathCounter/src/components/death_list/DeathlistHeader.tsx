@@ -1,11 +1,12 @@
-import { Grid, TextField } from "@mui/material";
+import { Grid, IconButton, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 import DeathListMenuButton from "./DeathListMenuButton";
+import { Info } from "@mui/icons-material";
 import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
 
 const DeathlistHeader = () => {
-  const { activeDeathList, isLoading, updateDeathList } = useDeathLists();
+  const { activeDeathList, isLoading, updateDeathList, showDescription, toggleDescription } = useDeathLists();
 
   const [name, setName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -56,7 +57,21 @@ const DeathlistHeader = () => {
         />
       </Grid>
       <Grid>
-        <DeathListMenuButton />
+        <Grid container>
+          <Grid>
+            <IconButton
+              aria-label="death-list-description"
+              aria-controls="death-list-description"
+              aria-haspopup="true"
+              onClick={toggleDescription}
+            >
+              <Info color={showDescription ? "primary" : undefined} />
+            </IconButton>
+          </Grid>
+          <Grid>
+            <DeathListMenuButton />
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );

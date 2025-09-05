@@ -1,5 +1,6 @@
 import { Box, Container } from "@mui/material"
 
+import DeathDescription from "../components/death_list/DeathDescription";
 import DeathListTable from "../components/death_list/DeathListTable";
 import DeathlistHeader from "../components/death_list/DeathlistHeader";
 import EntityForm from "../components/death_list/EntityForm";
@@ -28,6 +29,7 @@ const DashboardPage = () => {
       {selectedDeathList ? (
         <>
           <DeathlistHeader/>
+          <DeathDescription/>
           <DeathListTable/>
           <EntityForm/>
         </>
