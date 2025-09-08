@@ -1,11 +1,15 @@
-import { Collapse, TextField } from "@mui/material";
+import { Box, Collapse, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 
+import { grey } from "@mui/material/colors";
 import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 const DeathDescription = () => {
   const { showDescription, activeDeathList, updateDeathList } = useDeathLists();
   const [localDescription, setLocalDescription] = useState("");
+
+    const isMobile = useIsMobile();
 
   useEffect(() => {
     setLocalDescription(activeDeathList?.description || "");
@@ -19,16 +23,28 @@ const DeathDescription = () => {
 
   return (
     <Collapse in={showDescription} timeout={500}>
-      <TextField
-        label="Description"
-        fullWidth
-        multiline
-        maxRows={2}
-        value={localDescription}
-        onChange={(e) => setLocalDescription(e.target.value)}
-        onBlur={handleBlur}
-        sx={{marginY: "20px"}}
-      />
+      <Box sx={{
+            backgroundColor: `${grey[900]}`,
+            padding: "10px",
+            borderRadius: 5,
+            boxShadow: 3,
+            marginY: "10px",
+            width: isMobile ? "90%" : "500px",
+            mx: "auto"
+          }}
+      >
+        <TextField
+          label="Description"
+          fullWidth
+          multiline
+          rows={4}
+          maxRows={4}
+          value={localDescription}
+          onChange={(e) => setLocalDescription(e.target.value)}
+          onBlur={handleBlur}
+          sx={{marginY: "20px"}}
+        />
+      </Box>
     </Collapse>
   );
 };
