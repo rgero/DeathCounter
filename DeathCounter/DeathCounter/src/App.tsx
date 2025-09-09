@@ -16,6 +16,7 @@ import { SocketProvider } from "./context/webSocket/WebSocketProvider";
 import StatsPage from "./pages/StatsPage";
 import { StatsProvider } from "./context/stats/StatsProvider";
 import { Toaster } from "react-hot-toast";
+import { grey } from "@mui/material/colors";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,33 @@ const App = () => {
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          containedPrimary: {
+            backgroundColor: grey[700],
+            color: "#FFFFFF",
+            "&:hover": {
+              backgroundColor: grey[600],
+            },
+          },
+          outlinedPrimary: {
+            borderColor: grey[500],
+            color: "#FFFFFF",
+            "&:hover": {
+              borderColor: grey[400],
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
+            },
+          },
+          textPrimary: {
+            color: "#FFFFFF",
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
+            },
+          },
+        },
+      },
     },
   });
 
