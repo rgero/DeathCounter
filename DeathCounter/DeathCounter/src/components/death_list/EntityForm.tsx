@@ -1,5 +1,5 @@
 import { Add, Remove } from "@mui/icons-material";
-import { Button, FormControl, FormHelperText, Grid, IconButton, Paper, TextField } from "@mui/material"
+import { Button, Container, FormControl, FormHelperText, Grid, IconButton, Paper, TextField } from "@mui/material"
 import React, { useCallback, useEffect } from "react"
 
 import { Entity } from "../../interfaces/Entity";
@@ -127,58 +127,56 @@ const EntityForm = () => {
   return (
     <Paper sx={{ marginTop: 2, padding: 2, borderRadius: 5, width: isMobile ? "90%" : "500px", mx: "auto" }}>
       <FormControl fullWidth error={Boolean(error)}>
-        <Grid container justifyContent="center" alignItems="center" spacing={3} direction={isMobile ? "column" : "row"} sx={{ paddingBottom: 2 }}>
-          <Grid>
-            <TextField
-              label="Name"
-              value={name}
-              error={Boolean(error)}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-            />
+        <Container>
+          <Grid container justifyContent="center" alignItems="center" spacing={isMobile ? 3 : 0} direction={isMobile ? "column" : "row"} sx={{ paddingBottom: 2 }}>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                label="Name"
+                value={name}
+                error={Boolean(error)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <TextField
+                label="Deaths"
+                value={deaths}
+                onChange={(e) => {
+                  processNumber(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid container justifyContent="space-evenly" alignItems="center" paddingTop={isMobile ? 1: 2} spacing={2}>
+              <IconButton color="error" onClick={processDecrement}>
+                <Remove />
+              </IconButton>
+              <IconButton color="success" onClick={processIncrement}>
+                <Add />
+              </IconButton>
+            </Grid>
           </Grid>
-          <Grid>
-            <TextField
-              label="Deaths"
-              value={deaths}
-              onChange={(e) => {
-                processNumber(e.target.value);
-              }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container justifyContent="space-around" alignItems="center" paddingBottom={2}>
-          <Grid>
-            <IconButton color="error" onClick={processDecrement}>
-              <Remove />
-            </IconButton>
-          </Grid>
-          <Grid>
-            <IconButton color="success" onClick={processIncrement}>
-              <Add />
-            </IconButton>
-          </Grid>
-        </Grid>
-        <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
-          {id !== -1 && (
+          <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
+            {id !== -1 && (
+              <Grid>
+                <Button variant="outlined" onClick={removeEntity}>
+                  Delete
+                </Button>
+              </Grid>
+            )}
             <Grid>
-              <Button variant="outlined" onClick={removeEntity}>
-                Delete
+              <Button variant="outlined" onClick={processSubmit}>
+                {id !== -1 ? "Edit" : "Add"}
               </Button>
             </Grid>
-          )}
-          <Grid>
-            <Button variant="outlined" onClick={processSubmit}>
-              {id !== -1 ? "Edit" : "Add"}
-            </Button>
           </Grid>
-        </Grid>
-        <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2}>
-          <Grid>
-            <FormHelperText>{error}</FormHelperText>
+          <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2}>
+            <Grid>
+              <FormHelperText>{error}</FormHelperText>
+            </Grid>
           </Grid>
-        </Grid>
+        </Container>
       </FormControl>
     </Paper>
   );
