@@ -1,5 +1,5 @@
 import { Add, Remove } from "@mui/icons-material";
-import { Button, Container, FormControl, FormHelperText, Grid, IconButton, Paper, TextField } from "@mui/material"
+import { Button, Container, Fade, FormControl, FormHelperText, Grid, IconButton, Paper, TextField } from "@mui/material"
 import React, { useCallback, useEffect } from "react"
 
 import { Entity } from "../../interfaces/Entity";
@@ -158,13 +158,21 @@ const EntityForm = () => {
             </Grid>
           </Grid>
           <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
-            {id !== -1 && (
+            <Fade in={id !== -1} timeout={500} unmountOnExit>
               <Grid>
                 <Button variant="outlined" onClick={removeEntity}>
                   Delete
                 </Button>
               </Grid>
-            )}
+            </Fade>
+
+            <Fade in={Boolean(name)} timeout={500} unmountOnExit>
+              <Grid>
+                <Button variant="outlined" onClick={clearForm}>
+                  Clear
+                </Button>
+              </Grid>
+            </Fade>
             <Grid>
               <Button variant="outlined" onClick={processSubmit}>
                 {id !== -1 ? "Edit" : "Add"}
