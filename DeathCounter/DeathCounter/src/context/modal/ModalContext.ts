@@ -4,12 +4,14 @@ export interface ModalContextProps {
   createNewModalOpen: boolean;
   deleteModalOpen: boolean;
   exportModalOpen: boolean;
+  feedbackModalOpen: boolean;
   importModalOpen: boolean;
   tokenModalOpen: boolean;
   switchGameModalOpen: boolean;
   toggleCreateNewModal: () => void;
   toggleDeleteModal: () => void;
   toggleExportModal: () => void;
+  toggleFeedbackOpen: () => void;
   toggleImportModal: () => void;
   toggleTokenModal: () => void;
   toggleSwitchGameModal: () => void;
