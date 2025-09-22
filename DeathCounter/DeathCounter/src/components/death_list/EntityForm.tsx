@@ -128,9 +128,10 @@ const EntityForm = () => {
     <Paper sx={{ marginTop: 2, padding: 2, borderRadius: 5, width: isMobile ? "90%" : "500px", mx: "auto" }}>
       <FormControl fullWidth error={Boolean(error)}>
         <Container>
-          <Grid container justifyContent="center" alignItems="center" spacing={isMobile ? 3 : 0} direction={isMobile ? "column" : "row"} sx={{ paddingBottom: 2 }}>
-            <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid container justifyContent="center" alignItems="center" spacing={2} direction={{xs: "column", md: "row"}} sx={{ paddingBottom: 2 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 8 }}>
               <TextField
+                fullWidth
                 label="Name"
                 value={name}
                 error={Boolean(error)}
@@ -139,8 +140,9 @@ const EntityForm = () => {
                 }}
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
               <TextField
+                fullWidth
                 label="Deaths"
                 value={deaths}
                 onChange={(e) => {
