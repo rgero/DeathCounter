@@ -1,4 +1,4 @@
-import { MenuItem, Select, SelectChangeEvent } from "@mui/material"
+import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 
 import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
 
@@ -11,26 +11,37 @@ const GameSelector = () => {
 
   const handleChange = (event: SelectChangeEvent) => {
     const selectedGameId = event.target.value;
-    updateActiveStatus(Number(selectedGameId));
-  }
+    if (selectedGameId) {
+      updateActiveStatus(Number(selectedGameId));
+    }
+  };
 
-  const games = deathLists.map(deathList => ({
+  const games = deathLists.map((deathList) => ({
     id: String(deathList.id),
-    name: deathList.name
+    name: deathList.name,
   }));
 
   return (
     <Select
       id="game-selector"
-      value={activeDeathList ? String(activeDeathList!.id) : ""}
+      value={activeDeathList ? String(activeDeathList.id) : ""}
       onChange={handleChange}
       size="small"
+      displayEmpty
     >
-      {games.map(game => (
-        <MenuItem key={game.id} value={game.id}>{game.name}</MenuItem>
+      {!activeDeathList && (
+        <MenuItem value="" disabled>
+          -------
+        </MenuItem>
+      )}
+
+      {games.map((game) => (
+        <MenuItem key={game.id} value={game.id}>
+          {game.name}
+        </MenuItem>
       ))}
     </Select>
-  )
-}
+  );
+};
 
-export default GameSelector
+export default GameSelector;
