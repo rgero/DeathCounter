@@ -38,7 +38,6 @@ const DeathDescription = () => {
           fullWidth
           multiline
           rows={4}
-          maxRows={4}
           value={localDescription}
           onChange={(e) => setLocalDescription(e.target.value)}
           onBlur={handleBlur}
