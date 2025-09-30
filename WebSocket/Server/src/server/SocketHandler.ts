@@ -36,8 +36,6 @@ export class SocketHandler {
   }
   
   onSocketMessage(socket: Socket, data: any): void {
-    console.log(`Received message from ${socket.id}:`, data);
-
     try {
       const message: WsMessage = MessageSchema.parse(data) as WsMessage;
       const correctAuthToken = decryptField(message.authToken);
@@ -60,7 +58,6 @@ export class SocketHandler {
   }
 
   private broadcastToAll(message: WsMessage) {
-    console.log(message);
     if (this.io) {
       this.io.emit(message.event, message);
     }
