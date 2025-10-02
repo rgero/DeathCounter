@@ -5,7 +5,7 @@ import { useModalProvider } from "../../../context/modal/ModalContext";
 const ToggleCreateNewOption = () => {
   const {toggleCreateNewModal} = useModalProvider();
   return (
-    <MenuOption icon={<Create/>} text="Create" onClick={toggleCreateNewModal}/>
+    <MenuOption icon={<Create/>} text="Create New" onClick={toggleCreateNewModal}/>
   )
 }
 

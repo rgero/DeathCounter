@@ -5,6 +5,7 @@ import FeedbackOption from "./HeaderOptions/FeedbackOption";
 import ImportOption from "./HeaderOptions/ImportOption";
 import LogoutOption from "./HeaderOptions/LogoutOption";
 import StatsOption from "./HeaderOptions/StatsOption";
+import ToggleCreateNewOption from "./HeaderOptions/ToggleCreateNewOption";
 import UserOption from "./HeaderOptions/UserOption";
 
 interface Props
@@ -31,6 +32,7 @@ const HeaderMenu: React.FC<Props> = ({anchorEl, closeFn}) => {
         <Divider/>
         <DownloadToolOption/>
         <Divider/>
+        <ToggleCreateNewOption/>
         <ImportOption/>
         <StatsOption/>
         <Divider/>

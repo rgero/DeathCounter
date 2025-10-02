@@ -2,7 +2,6 @@ import {Divider, Menu} from "@mui/material";
 
 import ChangeGameOption from "./deathlist_menu_options/ChangeGameOption";
 import RemoveListOption from "./deathlist_menu_options/RemoveListOption";
-import ToggleCreateNewOption from "./deathlist_menu_options/ToggleCreateNewOption";
 import ToggleExportOption from "./deathlist_menu_options/ToggleExportOption";
 import ToggleTokenOption from "./deathlist_menu_options/ToggleTokenDialogOption";
 import { useIsMobile } from "../../hooks/useIsMobile";
@@ -28,7 +27,6 @@ const DeathListMenu: React.FC<Props> = ({anchorEl, closeFn}) => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <ToggleCreateNewOption/>
         <ToggleTokenOption/>
         {isMobile && <ChangeGameOption/>}
         <ToggleExportOption/>

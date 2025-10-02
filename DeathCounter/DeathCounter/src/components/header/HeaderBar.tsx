@@ -46,9 +46,11 @@ const HeaderBar = () => {
           </Grid>
           {user && (
             <Grid container alignItems="center" justifyContent="flex-end" spacing={2}>
-              {!isMobile && (<Grid>
-                <GameSelector/>
-              </Grid>)}
+              {!isMobile && (
+                <Grid>
+                  <GameSelector/>
+                </Grid>
+              )}
               <Grid>
                 <UserAvatar />
               </Grid>
