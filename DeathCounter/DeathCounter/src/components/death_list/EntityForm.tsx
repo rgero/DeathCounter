@@ -1,5 +1,5 @@
 import { Add, Remove } from "@mui/icons-material";
-import { Button, Container, Fade, FormControl, FormHelperText, Grid, IconButton, Paper, TextField } from "@mui/material"
+import { Button, Container, Fade, FormControl, FormHelperText, Grid, Paper, TextField } from "@mui/material"
 import React, { useCallback, useEffect } from "react"
 
 import { Entity } from "../../interfaces/Entity";
@@ -150,13 +150,35 @@ const EntityForm = () => {
                 }}
               />
             </Grid>
-            <Grid container justifyContent="space-evenly" alignItems="center" paddingTop={isMobile ? 1: 2} spacing={2}>
-              <IconButton color="error" onClick={processDecrement}>
-                <Remove />
-              </IconButton>
-              <IconButton color="success" onClick={processIncrement}>
-                <Add />
-              </IconButton>
+            <Grid
+              container
+              justifyContent="space-evenly"
+              alignItems="center"
+              paddingTop={isMobile ? 1 : 2}
+              spacing={2}
+            >
+              <Grid>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={processDecrement}
+                  size={isMobile ? "large" : "medium"}
+                  sx={{ minWidth: 48, minHeight: 48 }}
+                >
+                  <Remove color="error"/>
+                </Button>
+              </Grid>
+              <Grid>
+                <Button
+                  variant="outlined"
+                  color="success"
+                  onClick={processIncrement}
+                  size={isMobile ? "large" : "medium"}
+                  sx={{ minWidth: 48, minHeight: 48 }}
+                >
+                  <Add color="success"/>
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
           <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
