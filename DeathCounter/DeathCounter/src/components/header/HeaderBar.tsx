@@ -1,16 +1,11 @@
 import { AppBar, Box, Grid, Typography } from "@mui/material"
 
-import GameSelector from "../ui/GameSelector";
+import HeaderOptionsPanel from "./HeaderOptionsPanel";
 import { Link } from "react-router-dom"
-import UserAvatar from "./UserAvatar";
-import { useAuthenticationContext } from "../../context/authentication/AuthenticationContext";
 import { useIsMobile } from "../../hooks/useIsMobile";
 
 const HeaderBar = () => {
-  const {user} = useAuthenticationContext();
-
   const isMobile = useIsMobile();
-
   return (
     <Box
       sx={{
@@ -22,12 +17,11 @@ const HeaderBar = () => {
       <AppBar position="static" 
         sx={{ 
           px: 2, 
-          padding: "0.5rem",
           backgroundColor: "transparent",
         }}
         elevation={0}
       >
-        <Grid container justifyContent="space-between" alignItems="center">
+        <Grid container justifyContent="space-between" alignItems="center" padding="0.25rem 0">
           <Grid>
             <Link to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", color: "inherit" }}>
               <Box sx={{
@@ -41,21 +35,10 @@ const HeaderBar = () => {
                   style={{ width: "100%", height: "100%" }} // Ensure img fills the Box
                 />
               </Box>
-              <Typography variant="h5">The Death Counter</Typography>
+              <Typography variant={!isMobile ? "h4" : "h5"}>The Death Counter</Typography>
             </Link>
           </Grid>
-          {user && (
-            <Grid container alignItems="center" justifyContent="flex-end" spacing={2}>
-              {!isMobile && (
-                <Grid>
-                  <GameSelector/>
-                </Grid>
-              )}
-              <Grid>
-                <UserAvatar />
-              </Grid>
-            </Grid>
-          )}
+          <HeaderOptionsPanel/>
         </Grid>
       </AppBar>
     </Box>
