@@ -1,9 +1,9 @@
-import DeathListMenu from "./DeathListMenu";
+import GameMenu from "./GameMenu";
 import { IconButton } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import { useState } from "react";
 
-const DeathListMenuButton = () => {
+const GameMenuButton = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 
@@ -25,9 +25,9 @@ const DeathListMenuButton = () => {
       >
         <Settings/>
       </IconButton>
-      <DeathListMenu anchorEl={anchorEl} closeFn={handleClose}/>
+      <GameMenu anchorEl={anchorEl} closeFn={handleClose}/>
     </>  
   )
 }
 
-export default DeathListMenuButton
+export default GameMenuButton

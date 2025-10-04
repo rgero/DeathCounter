@@ -1,7 +1,7 @@
 import { Grid, IconButton, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
-import DeathListMenuButton from "./DeathListMenuButton";
+import GameMenuButton from "../game_menu/GameMenuButton";
 import { Info } from "@mui/icons-material";
 import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
 
@@ -77,7 +77,7 @@ const DeathlistHeader = () => {
             </IconButton>
           </Grid>
           <Grid>
-            <DeathListMenuButton />
+            <GameMenuButton />
           </Grid>
         </Grid>
       </Grid>

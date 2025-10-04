@@ -1,9 +1,9 @@
 import {Divider, Menu} from "@mui/material";
 
-import ChangeGameOption from "./deathlist_menu_options/ChangeGameOption";
-import RemoveListOption from "./deathlist_menu_options/RemoveListOption";
-import ToggleExportOption from "./deathlist_menu_options/ToggleExportOption";
-import ToggleTokenOption from "./deathlist_menu_options/ToggleTokenDialogOption";
+import ChangeGameOption from "./options/ChangeGameOption";
+import RemoveListOption from "./options/RemoveListOption";
+import ToggleExportOption from "./options/ToggleExportOption";
+import ToggleTokenOption from "./options/ToggleTokenDialogOption";
 import { useIsMobile } from "../../hooks/useIsMobile";
 
 interface Props
@@ -12,7 +12,7 @@ interface Props
   closeFn: () => void
 }
 
-const DeathListMenu: React.FC<Props> = ({anchorEl, closeFn}) => {
+const GameMenu: React.FC<Props> = ({anchorEl, closeFn}) => {
   const isOpen = Boolean(anchorEl);
   const isMobile = useIsMobile()
   
@@ -37,4 +37,4 @@ const DeathListMenu: React.FC<Props> = ({anchorEl, closeFn}) => {
   );
 }
 
-export default DeathListMenu
+export default GameMenu
