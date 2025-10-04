@@ -1,6 +1,7 @@
-import { Box, Collapse, Grid, TextField, Typography } from "@mui/material";
+import { Box, Collapse, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 
+import GameStats from "../stats/GameStats";
 import { grey } from "@mui/material/colors";
 import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
 import { useIsMobile } from "../../hooks/useIsMobile";
@@ -43,13 +44,7 @@ const DeathDescription = () => {
           onBlur={handleBlur}
           sx={{marginY: "20px"}}
         />
-        <Box sx={{backgroundColor: `${grey[800]}`, padding: "10px", borderRadius: 3}}>
-          <Typography variant="h5" color="textSecondary">Stats</Typography>
-          <Grid container sx={{marginTop: "10px"}} direction="column">
-            <Grid><Typography>Total Bosses: {activeDeathList?.entityList.length || 0}</Typography></Grid>
-            <Grid><Typography>Total Deaths: {activeDeathList?.entityList.reduce((acc, entity) => acc + (entity.deaths || 0), 0) || 0}</Typography></Grid>
-          </Grid>
-        </Box>
+        <GameStats/>
       </Box>
     </Collapse>
   );
