@@ -4,7 +4,7 @@ import { getCurrentUser } from "./apiAuthentication";
 export const submitFeedback = async ({title, description} : {title: string, description: string}) => {
 
   const user = await getCurrentUser();
-  const userName = user?.user_metadata.display_name;
+  const userName = user?.user_metadata.fullName;
 
   const feedbackURL = import.meta.env.VITE_FEEDBACK_URL;
   const targetKey = import.meta.env.VITE_FEEDBACK_KEY;
