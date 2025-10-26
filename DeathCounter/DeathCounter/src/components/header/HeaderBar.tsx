@@ -2,10 +2,12 @@ import { AppBar, Box, Grid, Typography } from "@mui/material"
 
 import HeaderOptionsPanel from "./HeaderOptionsPanel";
 import { Link } from "react-router-dom"
+import { useAuthenticationContext } from "../../context/authentication/AuthenticationContext";
 import { useIsMobile } from "../../hooks/useIsMobile";
 
 const HeaderBar = () => {
   const isMobile = useIsMobile();
+  const {user} = useAuthenticationContext()
   return (
     <Box
       sx={{
@@ -38,7 +40,7 @@ const HeaderBar = () => {
               <Typography variant={!isMobile ? "h4" : "h5"}>The Death Counter</Typography>
             </Link>
           </Grid>
-          <HeaderOptionsPanel/>
+          {user && <HeaderOptionsPanel/>}
         </Grid>
       </AppBar>
     </Box>
