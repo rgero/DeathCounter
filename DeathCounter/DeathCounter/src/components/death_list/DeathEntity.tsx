@@ -15,13 +15,13 @@ const DeathEntity = ({index, data} : {index: number, data: Entity}) => {
 
   return (
     <Grid container direction="row" justifyContent="space-between" sx={styles.gridItem} onClick={() => { setEntityInEdit(data) } }>
-      <Grid>
+      <Grid size={10}>
         <Typography>
           {data.name}
         </Typography>
       </Grid>
-      <Grid>
-        <Typography>
+      <Grid size={2}>
+        <Typography align="right">
           {data.deaths}
         </Typography>
       </Grid>
