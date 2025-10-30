@@ -1,7 +1,7 @@
 import { Box, Fade, Modal } from "@mui/material"
 
 import { ReactNode } from "react";
-import { useIsMobile } from "../../hooks/useIsMobile";
+import { useIsMobile } from '@hooks/useIsMobile';
 
 interface BaseModalProps {
   children: ReactNode;

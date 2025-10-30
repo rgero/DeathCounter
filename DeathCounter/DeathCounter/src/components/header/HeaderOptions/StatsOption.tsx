@@ -1,4 +1,4 @@
-import MenuOption from "../../../interfaces/MenuOption";
+import MenuOption from '@interfaces/MenuOption';
 import { QueryStats } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 

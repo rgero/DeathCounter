@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 
 import GameStats from "../stats/GameStats";
 import { grey } from "@mui/material/colors";
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
-import { useIsMobile } from "../../hooks/useIsMobile";
+import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
+import { useIsMobile } from '@hooks/useIsMobile';
 
 const DeathDescription = () => {
   const { showDescription, activeDeathList, updateDeathList } = useDeathLists();

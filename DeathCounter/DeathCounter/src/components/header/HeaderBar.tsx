@@ -2,8 +2,8 @@ import { AppBar, Box, Grid, Typography } from "@mui/material"
 
 import HeaderOptionsPanel from "./HeaderOptionsPanel";
 import { Link } from "react-router-dom"
-import { useAuthenticationContext } from "../../context/authentication/AuthenticationContext";
-import { useIsMobile } from "../../hooks/useIsMobile";
+import { useAuthenticationContext } from '@context/authentication/AuthenticationContext';
+import { useIsMobile } from '@hooks/useIsMobile';
 
 const HeaderBar = () => {
   const isMobile = useIsMobile();

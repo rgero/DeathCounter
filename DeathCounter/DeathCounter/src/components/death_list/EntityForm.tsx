@@ -2,12 +2,12 @@ import { Add, Remove } from "@mui/icons-material";
 import { Button, Container, Fade, FormControl, FormHelperText, Grid, Paper, TextField } from "@mui/material"
 import React, { useCallback, useEffect } from "react"
 
-import { Entity } from "../../interfaces/Entity";
-import { WsMessage } from "../../interfaces/WsMessage";
+import { Entity } from '@interfaces/Entity';
+import { WsMessage } from '@interfaces/WsMessage';
 import toast from "react-hot-toast";
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
-import { useIsMobile } from "../../hooks/useIsMobile";
-import { useSocketContext } from "../../context/webSocket/WebSocketContext";
+import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
+import { useIsMobile } from '@hooks/useIsMobile';
+import { useSocketContext } from '@context/webSocket/WebSocketContext';
 
 const EntityForm = () => {
   const { activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit } = useDeathLists();

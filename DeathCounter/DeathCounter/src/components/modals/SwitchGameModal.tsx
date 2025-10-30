@@ -2,7 +2,7 @@ import { Button, Grid, Typography } from "@mui/material";
 
 import BaseModal from "./BaseModal"
 import GameSelector from "../ui/GameSelector";
-import { useModalProvider } from "../../context/modal/ModalContext";
+import { useModalProvider } from '@context/modal/ModalContext';
 
 const SwitchGameModal = () => {
   const {switchGameModalOpen, toggleSwitchGameModal} = useModalProvider();

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { getCurrentUser, logout, signInWithGoogle } from "../../services/apiAuthentication";
+import { getCurrentUser, logout, signInWithGoogle } from '@services/apiAuthentication';
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { AuthContext } from "./AuthenticationContext";
-import supabase from "../../services/supabase";
+import supabase from '@services/supabase';
 
 export const AuthenticationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = useQueryClient();

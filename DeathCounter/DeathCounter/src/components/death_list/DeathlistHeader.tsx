@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import GameMenuButton from "../game_menu/GameMenuButton";
 import { Info } from "@mui/icons-material";
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
+import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
 
 const DeathlistHeader = () => {
   const {

@@ -2,8 +2,8 @@ import { Container, Grid, Paper } from '@mui/material';
 
 import DeathEntity from './DeathEntity';
 import DeathListTableHeader from './DeathListTableHeader';
-import { useDeathLists } from '../../context/deathCounter/DeathCounterContext';
-import { useIsMobile } from '../../hooks/useIsMobile';
+import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
+import { useIsMobile } from '@hooks/useIsMobile';
 
 const DeathListTable = () => {
   const { activeDeathList } = useDeathLists();

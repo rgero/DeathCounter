@@ -4,10 +4,10 @@ import { useRef, useState } from "react";
 
 import BaseModal from "./BaseModal";
 import Button from "../ui/Button";
-import { DeathList } from "../../interfaces/DeathList";
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
-import { useIsMobile } from "../../hooks/useIsMobile";
-import { useModalProvider } from "../../context/modal/ModalContext";
+import { DeathList } from '@interfaces/DeathList';
+import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
+import { useIsMobile } from '@hooks/useIsMobile';
+import { useModalProvider } from '@context/modal/ModalContext';
 
 const CreateNewModal = () => {
   const {createNewModalOpen, toggleCreateNewModal} = useModalProvider();

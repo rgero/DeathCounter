@@ -1,8 +1,8 @@
 import { Button, Grid, Typography } from "@mui/material";
 
 import BaseModal from "./BaseModal";
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
-import { useModalProvider } from "../../context/modal/ModalContext";
+import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
+import { useModalProvider } from '@context/modal/ModalContext';
 
 const ExportModal = () => {
   const { exportModalOpen, toggleExportModal } = useModalProvider();

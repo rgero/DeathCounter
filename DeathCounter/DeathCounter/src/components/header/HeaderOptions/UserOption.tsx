@@ -1,6 +1,6 @@
-import MenuOption from "../../../interfaces/MenuOption";
+import MenuOption from '@interfaces/MenuOption';
 import { Person } from "@mui/icons-material";
-import { useAuthenticationContext } from "../../../context/authentication/AuthenticationContext";
+import { useAuthenticationContext } from '@context/authentication/AuthenticationContext';
 
 const UserOption = () => {
   const {user} = useAuthenticationContext();

@@ -1,5 +1,5 @@
 import CryptoJS from "crypto-js";
-import { DeathList } from "../interfaces/DeathList";
+import { DeathList } from '@interfaces/DeathList';
 
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
 const SECRET_AUTH_TOKEN = import.meta.env.VITE_WS_AUTH_TOKEN;

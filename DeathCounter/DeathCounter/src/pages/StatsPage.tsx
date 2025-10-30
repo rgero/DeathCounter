@@ -1,6 +1,6 @@
 import { Container, Divider, Typography } from "@mui/material"
 
-import { useStatsProvider } from "../context/stats/StatsContext";
+import { useStatsProvider } from '@context/stats/StatsContext';
 
 const StatsPage = () => {
   const { totalDeaths, totalEntities, averageDeaths } = useStatsProvider();

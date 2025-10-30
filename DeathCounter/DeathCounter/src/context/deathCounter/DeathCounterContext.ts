@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
-import { DeathList } from "../../interfaces/DeathList";
-import { Entity } from "../../interfaces/Entity";
+import { DeathList } from '@interfaces/DeathList';
+import { Entity } from '@interfaces/Entity';
 
 export interface DeathListContextType {
   deathLists: DeathList[];

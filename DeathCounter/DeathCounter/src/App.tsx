@@ -2,19 +2,19 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import AppLayout from "./components/ui/AppLayout";
-import AuthenticatedRoute from "./components/AuthenicatedRoute";
-import { AuthenticationProvider } from "./context/authentication/AuthenticationProvider";
-import DashboardPage from "./pages/DashboardPage";
-import { DeathListProvider } from "./context/deathCounter/DeathCounterProvider";
-import DownloadPage from "./pages/DownloadPage";
-import LandingPage from "./pages/LandingPage";
-import { ModalProvider } from "./context/modal/ModalProvider";
-import PageNotFound from "./pages/PageNotFound";
+import AppLayout from '@components/ui/AppLayout';
+import AuthenticatedRoute from '@components/AuthenicatedRoute';
+import { AuthenticationProvider } from '@context/authentication/AuthenticationProvider';
+import DashboardPage from '@pages/DashboardPage';
+import { DeathListProvider } from '@context/deathCounter/DeathCounterProvider';
+import DownloadPage from '@pages/DownloadPage';
+import LandingPage from '@pages/LandingPage';
+import { ModalProvider } from '@context/modal/ModalProvider';
+import PageNotFound from '@pages/PageNotFound';
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { SocketProvider } from "./context/webSocket/WebSocketProvider";
-import StatsPage from "./pages/StatsPage";
-import { StatsProvider } from "./context/stats/StatsProvider";
+import { SocketProvider } from '@context/webSocket/WebSocketProvider';
+import StatsPage from '@pages/StatsPage';
+import { StatsProvider } from '@context/stats/StatsProvider';
 import { Toaster } from "react-hot-toast";
 import { grey } from "@mui/material/colors";
 

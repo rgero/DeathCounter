@@ -1,6 +1,6 @@
 import { Add } from "@mui/icons-material"
 import { IconButton } from "@mui/material"
-import { useModalProvider } from "../../context/modal/ModalContext";
+import { useModalProvider } from '@context/modal/ModalContext';
 
 const CreateNewButton = () => {
   const {toggleCreateNewModal} = useModalProvider();

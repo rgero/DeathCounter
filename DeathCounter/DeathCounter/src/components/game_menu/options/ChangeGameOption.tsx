@@ -1,6 +1,6 @@
-import MenuOption from "../../../interfaces/MenuOption";
+import MenuOption from '@interfaces/MenuOption';
 import { SwapHoriz } from "@mui/icons-material";
-import { useModalProvider } from "../../../context/modal/ModalContext";
+import { useModalProvider } from '@context/modal/ModalContext';
 
 const ChangeGameOption = () => {
   const {toggleSwitchGameModal} = useModalProvider();

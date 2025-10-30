@@ -1,6 +1,6 @@
 import BaseModal from "./BaseModal"
 import FeedbackForm from "../feedback/FeedbackForm";
-import { useModalProvider } from "../../context/modal/ModalContext";
+import { useModalProvider } from '@context/modal/ModalContext';
 
 const FeedbackModal = () => {
   const {feedbackModalOpen, toggleFeedbackOpen} = useModalProvider();

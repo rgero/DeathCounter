@@ -1,8 +1,8 @@
 import { Button, Card, CardContent, Grid, Theme, Typography, useTheme } from "@mui/material";
 
-import { useAuthenticationContext } from "../context/authentication/AuthenticationContext";
+import { useAuthenticationContext } from '@context/authentication/AuthenticationContext';
 import { useEffect } from "react";
-import { useIsMobile } from "../hooks/useIsMobile";
+import { useIsMobile } from '@hooks/useIsMobile';
 
 const LandingPage = () => {
   const theme: Theme = useTheme();

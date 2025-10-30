@@ -1,6 +1,6 @@
-import { decryptData, encryptData } from "../utils/crypt";
+import { decryptData, encryptData } from '@utils/crypt';
 
-import { DeathList } from "../interfaces/DeathList";
+import { DeathList } from '@interfaces/DeathList';
 import supabase from "./supabase";
 import { v4 as uuidv4 } from 'uuid';
 

@@ -1,7 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material"
 
 import { grey } from "@mui/material/colors"
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
+import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
 
 const GameStats = () => {
   const {activeDeathList} = useDeathLists();

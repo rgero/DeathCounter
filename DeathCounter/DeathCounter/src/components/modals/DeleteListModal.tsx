@@ -2,8 +2,8 @@ import { Cancel, Check } from "@mui/icons-material";
 import { Grid, IconButton, Typography } from "@mui/material";
 
 import BaseModal from "./BaseModal";
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
-import { useModalProvider } from "../../context/modal/ModalContext";
+import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
+import { useModalProvider } from '@context/modal/ModalContext';
 
 const DeleteListModal = () => {
   const {deleteModalOpen, toggleDeleteModal} = useModalProvider();

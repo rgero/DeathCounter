@@ -2,7 +2,7 @@ import { Add, Upload } from "@mui/icons-material"
 import { Box, Container, Divider, Typography } from "@mui/material"
 
 import Button from "../ui/Button";
-import { useModalProvider } from "../../context/modal/ModalContext";
+import { useModalProvider } from '@context/modal/ModalContext';
 
 const NoDeathListFound = () => {
   const {toggleCreateNewModal, toggleImportModal} = useModalProvider();

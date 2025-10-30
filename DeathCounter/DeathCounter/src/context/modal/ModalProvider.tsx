@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
-import CreateNewModal from "../../components/modals/CreateNewModal";
-import DeleteListModal from "../../components/modals/DeleteListModal";
-import ExportModal from "../../components/modals/ExportModal";
-import FeedbackModal from "../../components/modals/FeedbackModal";
-import ImportModal from "../../components/modals/ImportModal";
+import CreateNewModal from '@components/modals/CreateNewModal';
+import DeleteListModal from '@components/modals/DeleteListModal';
+import ExportModal from '@components/modals/ExportModal';
+import FeedbackModal from '@components/modals/FeedbackModal';
+import ImportModal from '@components/modals/ImportModal';
 import { ModalContext } from "./ModalContext";
-import SwitchGameModal from "../../components/modals/SwitchGameModal";
-import TokenModal from "../../components/modals/TokenModal";
+import SwitchGameModal from '@components/modals/SwitchGameModal';
+import TokenModal from '@components/modals/TokenModal';
 
 export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [createNewModalOpen, setCreateNewModalOpen] = useState(false);

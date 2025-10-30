@@ -1,9 +1,9 @@
 import { Button, Grid, Typography } from "@mui/material";
 
 import BaseModal from "./BaseModal";
-import { DeathList } from "../../interfaces/DeathList";
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext";
-import { useModalProvider } from "../../context/modal/ModalContext";
+import { DeathList } from '@interfaces/DeathList';
+import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
+import { useModalProvider } from '@context/modal/ModalContext';
 import { useState } from "react";
 
 const ImportModal = ( ) => {

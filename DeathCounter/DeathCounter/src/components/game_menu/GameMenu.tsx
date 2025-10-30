@@ -4,7 +4,7 @@ import ChangeGameOption from "./options/ChangeGameOption";
 import RemoveListOption from "./options/RemoveListOption";
 import ToggleExportOption from "./options/ToggleExportOption";
 import ToggleTokenOption from "./options/ToggleTokenDialogOption";
-import { useIsMobile } from "../../hooks/useIsMobile";
+import { useIsMobile } from '@hooks/useIsMobile';
 
 interface Props
 {

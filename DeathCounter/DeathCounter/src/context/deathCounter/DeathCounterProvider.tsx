@@ -1,13 +1,13 @@
-import {createDeathList, getDeathLists, removeDeathList as removeDeathListAPI, updateActiveDeathList, updateDeathList as updateDeathListAPI, updateDeathListToken, uploadDeathList as uploadDeathListAPI} from "../../services/apiDeathCounter";
+import {createDeathList, getDeathLists, removeDeathList as removeDeathListAPI, updateActiveDeathList, updateDeathList as updateDeathListAPI, updateDeathListToken, uploadDeathList as uploadDeathListAPI} from '@services/apiDeathCounter';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { DeathList } from "../../interfaces/DeathList";
+import { DeathList } from '@interfaces/DeathList';
 import { DeathListContext } from "./DeathCounterContext";
-import { Entity } from "../../interfaces/Entity";
+import { Entity } from '@interfaces/Entity';
 import React from "react";
 import toast from "react-hot-toast";
 import { useAuthenticationContext } from "../authentication/AuthenticationContext";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { useLocalStorage } from '@hooks/useLocalStorage';
 import { v4 as uuidv4 } from "uuid";
 
 export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
