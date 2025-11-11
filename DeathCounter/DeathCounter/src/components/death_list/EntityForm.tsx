@@ -150,35 +150,35 @@ const EntityForm = () => {
                 }}
               />
             </Grid>
-            <Grid
-              container
-              justifyContent="space-evenly"
-              alignItems="center"
-              paddingTop={isMobile ? 1 : 2}
-              spacing={2}
-            >
-              <Grid>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={processDecrement}
-                  size={isMobile ? "large" : "medium"}
-                  sx={{ minWidth: 48, minHeight: 48 }}
-                >
-                  <Remove color="error"/>
-                </Button>
-              </Grid>
-              <Grid>
-                <Button
-                  variant="outlined"
-                  color="success"
-                  onClick={processIncrement}
-                  size={isMobile ? "large" : "medium"}
-                  sx={{ minWidth: 48, minHeight: 48 }}
-                >
-                  <Add color="success"/>
-                </Button>
-              </Grid>
+          </Grid>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            paddingY={isMobile ? 1 : 2}
+            spacing={2}
+          >
+            <Grid>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={processDecrement}
+                size={isMobile ? "large" : "medium"}
+                sx={{ minWidth: 128, minHeight: 48 }}
+              >
+                <Remove color="error"/>
+              </Button>
+            </Grid>
+            <Grid>
+              <Button
+                variant="outlined"
+                color="success"
+                onClick={processIncrement}
+                size={isMobile ? "large" : "medium"}
+                sx={{ minWidth: 128, minHeight: 48 }}
+              >
+                <Add color="success"/>
+              </Button>
             </Grid>
           </Grid>
           <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
