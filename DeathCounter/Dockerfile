@@ -1,35 +1,26 @@
-# Use the official Node.js image as a base
-FROM node:alpine AS build
+# ---------- BUILD ----------
+FROM node:22.14 AS build
 
-# Set the working directory inside the container
-WORKDIR /DeathCounter
+WORKDIR /deathcounter
 
-# Copy package.json and package-lock.json (if available)
-COPY DeathCounter/package*.json ./
+COPY package.json package-lock.json ./
 
-# Copy the .env file
-COPY .env ./
+RUN npm ci
 
-# Install dependencies
-RUN npm install
+COPY . .
 
-# Copy the rest of the application code
-COPY DeathCounter ./
-
-# Build the React app
 RUN npm run build
 
-# Use an Nginx image to serve the build files
-FROM nginx:alpine
+# ---------- SERVE ----------
+FROM node:22.14-alpine AS serve
 
-# Copy the build files from the previous step
-COPY --from=build /DeathCounter/dist /usr/share/nginx/deathcounter
+RUN npm install -g serve
 
-# Copy the custom Nginx configuration file
-COPY server/nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /deathcounter
 
-# Expose port 6200
-EXPOSE 6200
+COPY --from=build /deathcounter/dist ./dist
+COPY serve.json ./dist/serve.json
 
-# Start Nginx with the custom configuration
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3345
+
+CMD ["serve", "-s", "dist", "-l", "3345"]
