@@ -21,6 +21,6 @@ WORKDIR /deathcounter
 COPY --from=build /deathcounter/dist ./dist
 COPY serve.json ./dist/serve.json
 
-EXPOSE 3345
+EXPOSE 6200
 
-CMD ["serve", "-s", "dist", "-l", "3345"]
+CMD ["serve", "-s", "dist", "-l", "6200"]
