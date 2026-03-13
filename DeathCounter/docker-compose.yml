@@ -11,7 +11,7 @@ services:
       - "traefik.http.routers.deathcounter.rule=Host(`deathcounter.roymond.net`)"
       - "traefik.http.routers.deathcounter.entrypoints=websecure"
       - "traefik.http.routers.deathcounter.tls.certresolver=production"
-      - "traefik.http.services.deathcounter.loadbalancer.server.port=3345"
+      - "traefik.http.services.deathcounter.loadbalancer.server.port=6200"
     restart: always
 
 networks:
