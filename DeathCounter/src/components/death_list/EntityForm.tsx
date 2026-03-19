@@ -68,8 +68,8 @@ const EntityForm = () => {
     }
 
     addToList(itemToSubmit);
-    clearForm();
-  }, [addToList, clearForm]);
+    emitMessage("bossDefeated");
+  }, [addToList, emitMessage]);
 
   useEffect(() => {
     if (!socket) return;
@@ -86,7 +86,7 @@ const EntityForm = () => {
 
     const handleBossDefeated = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
-      processSubmit();
+      clearForm();
     };
 
     socket.on("bossDeathIncrement", handleIncrement);
