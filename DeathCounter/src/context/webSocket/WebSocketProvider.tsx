@@ -41,8 +41,34 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
   }, [socket]);
 
+  const emitBossDeath = () => {
+    if (!socket) return;
+    socket.emit("bossDeathIncrement", {
+      gameToken: activeDeathList?.token
+    })
+  }
+
+  const emitBossDeathDecrement = () => {
+    if (!socket) return;
+    socket.emit("bossDeathDecrement", {
+      gameToken: activeDeathList?.token
+    })
+  }
+
+  const emitBossCompleted  = () => {
+    if (!socket) return;
+    socket.emit("bossDefeated", {
+      gameToken: activeDeathList?.token
+    })
+  }
+
   return (
-    <SocketContext.Provider value={{ socket }}>
+    <SocketContext.Provider value={{ 
+      socket,
+      emitBossDeath,
+      emitBossDeathDecrement,
+      emitBossCompleted
+    }}>
       {children}
     </SocketContext.Provider>
   );

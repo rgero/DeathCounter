@@ -11,7 +11,7 @@ import { useSocketContext } from '@context/webSocket/WebSocketContext';
 
 const EntityForm = () => {
   const { activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit } = useDeathLists();
-  const { socket } = useSocketContext();
+  const { socket, emitBossCompleted, emitBossDeathDecrement, emitBossDeath } = useSocketContext();
   const [id, setID] = React.useState<number>(-1);
   const [name, setName] = React.useState("");
   const [deaths, setDeaths] = React.useState(0);
@@ -36,8 +36,20 @@ const EntityForm = () => {
 
     const handleBossDeathIncrement = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
-      processIncrement();
+      setDeaths( (prev) => prev+ 1);
     };
+
+    const handleBossDeathDecrement = (event: WsMessage) => {
+      if (!checkGameToken(event.gameToken)) return;
+      setDeaths((prev) => {
+        if (prev > 0) {
+          return prev - 1;
+        } else {
+          setError("Deaths cannot be negative");
+          return 0;
+        }
+      });
+    }
 
     const handleBossDefeated = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
@@ -45,10 +57,12 @@ const EntityForm = () => {
     };
 
     socket.on("bossDeathIncrement", handleBossDeathIncrement);
+    socket.on("bossDeathDecrement", handleBossDeathDecrement);
     socket.on("bossDefeated", handleBossDefeated);
 
     return () => {
       socket.off("bossDeathIncrement", handleBossDeathIncrement);
+      socket.off("bossDeathDecrement", handleBossDeathDecrement);
       socket.off("bossDefeated", handleBossDefeated);
     };
   }, [socket, name, deaths, id]);
@@ -70,20 +84,13 @@ const EntityForm = () => {
 
   const processIncrement = () => {
     if (canProcess()) {
-      setDeaths((prev) => prev + 1);
+      emitBossDeath();
     }
   };
 
   const processDecrement = () => {
     if (canProcess()) {
-      setDeaths((prev) => {
-        if (prev > 0) {
-          return prev - 1;
-        } else {
-          setError("Deaths cannot be negative");
-          return 0;
-        }
-      });
+      emitBossDeathDecrement();
     }
   };
 
@@ -198,7 +205,7 @@ const EntityForm = () => {
               </Grid>
             </Fade>
             <Grid>
-              <Button variant="outlined" onClick={processSubmit}>
+              <Button variant="outlined" onClick={emitBossCompleted}>
                 {id !== -1 ? "Edit" : "Add"}
               </Button>
             </Grid>
