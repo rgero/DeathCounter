@@ -2,6 +2,7 @@ import io, { Socket } from "socket.io-client";
 import { useCallback, useEffect, useState } from "react";
 
 import { SocketContext } from "../webSocket/WebSocketContext";
+import { encryptAuthToken } from "@utils/crypt";
 import { useDeathLists } from "../deathCounter/DeathCounterContext";
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -41,33 +42,18 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
   }, [socket]);
 
-  const emitBossDeath = () => {
+  const emitMessage = (event: string) => {
     if (!socket) return;
-    socket.emit("bossDeathIncrement", {
-      gameToken: activeDeathList?.token
-    })
-  }
-
-  const emitBossDeathDecrement = () => {
-    if (!socket) return;
-    socket.emit("bossDeathDecrement", {
-      gameToken: activeDeathList?.token
-    })
-  }
-
-  const emitBossCompleted  = () => {
-    if (!socket) return;
-    socket.emit("bossDefeated", {
-      gameToken: activeDeathList?.token
+    socket.emit(event, {
+      gameToken: activeDeathList?.token,
+      authToken: encryptAuthToken(activeDeathList?.token)
     })
   }
 
   return (
     <SocketContext.Provider value={{ 
       socket,
-      emitBossDeath,
-      emitBossDeathDecrement,
-      emitBossCompleted
+      emitMessage,
     }}>
       {children}
     </SocketContext.Provider>

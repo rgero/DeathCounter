@@ -1,125 +1,121 @@
 import { Add, Remove } from "@mui/icons-material";
-import { Button, Container, Fade, FormControl, FormHelperText, Grid, Paper, TextField } from "@mui/material"
-import React, { useCallback, useEffect } from "react"
+import {Button, Container, Fade, FormControl, FormHelperText, Grid, Paper, TextField} from "@mui/material";
+import React, { useCallback, useEffect, useRef } from "react";
 
-import { Entity } from '@interfaces/Entity';
-import { WsMessage } from '@interfaces/WsMessage';
+import { Entity } from "@interfaces/Entity";
+import { WsMessage } from "@interfaces/WsMessage";
 import toast from "react-hot-toast";
-import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
-import { useIsMobile } from '@hooks/useIsMobile';
-import { useSocketContext } from '@context/webSocket/WebSocketContext';
+import { useDeathLists } from "@context/deathCounter/DeathCounterContext";
+import { useIsMobile } from "@hooks/useIsMobile";
+import { useSocketContext } from "@context/webSocket/WebSocketContext";
 
 const EntityForm = () => {
-  const { activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit } = useDeathLists();
-  const { socket, emitBossCompleted, emitBossDeathDecrement, emitBossDeath } = useSocketContext();
+  const {activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit} = useDeathLists();
+  const {socket, emitMessage} = useSocketContext();
+
   const [id, setID] = React.useState<number>(-1);
   const [name, setName] = React.useState("");
   const [deaths, setDeaths] = React.useState(0);
   const [error, setError] = React.useState("");
   const [lastClick, setLastClick] = React.useState(new Date());
+
   const timeDelay: number = 1000;
   const isMobile = useIsMobile();
 
-  React.useEffect(() => {
-    if (!entityInEdit || !entityInEdit.id) {
-      return;
-    }
+  const stateRef = useRef({ name, deaths, id });
 
+  useEffect(() => {
+    stateRef.current = { name, deaths, id };
+  }, [name, deaths, id]);
+
+  const checkGameToken = useCallback(
+    (gameToken: string | undefined) => {
+      return gameToken === activeDeathList?.token;
+    },
+    [activeDeathList?.token],
+  );
+
+  useEffect(() => {
+    if (!entityInEdit || !entityInEdit.id) return;
     setID(entityInEdit.id);
     setName(entityInEdit.name);
     setDeaths(entityInEdit.deaths);
     setError("");
   }, [entityInEdit]);
 
+  const clearForm = useCallback(() => {
+    setID(-1);
+    setName("");
+    setDeaths(0);
+    setError("");
+    setEntityInEdit(null);
+  }, [setEntityInEdit]);
+
+  const processSubmit = useCallback(() => {
+    const current = stateRef.current;
+    if (current.name.trim() === "") {
+      setError("Name must be filled out");
+      return;
+    }
+
+    const itemToSubmit: Entity = {
+      name: current.name.trim(),
+      deaths: current.deaths,
+    };
+
+    if (current.id !== -1) {
+      itemToSubmit.id = current.id;
+    }
+
+    addToList(itemToSubmit);
+    clearForm();
+  }, [addToList, clearForm]);
+
   useEffect(() => {
     if (!socket) return;
 
-    const handleBossDeathIncrement = (event: WsMessage) => {
+    const handleIncrement = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
-      setDeaths( (prev) => prev+ 1);
+      setDeaths((prev) => prev + 1);
     };
 
-    const handleBossDeathDecrement = (event: WsMessage) => {
+    const handleDecrement = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
-      setDeaths((prev) => {
-        if (prev > 0) {
-          return prev - 1;
-        } else {
-          setError("Deaths cannot be negative");
-          return 0;
-        }
-      });
-    }
+      setDeaths((prev) => (prev > 0 ? prev - 1 : 0));
+    };
 
     const handleBossDefeated = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
       processSubmit();
     };
 
-    socket.on("bossDeathIncrement", handleBossDeathIncrement);
-    socket.on("bossDeathDecrement", handleBossDeathDecrement);
+    socket.on("bossDeathIncrement", handleIncrement);
+    socket.on("bossDeathDecrement", handleDecrement);
     socket.on("bossDefeated", handleBossDefeated);
 
     return () => {
-      socket.off("bossDeathIncrement", handleBossDeathIncrement);
-      socket.off("bossDeathDecrement", handleBossDeathDecrement);
+      socket.off("bossDeathIncrement", handleIncrement);
+      socket.off("bossDeathDecrement", handleDecrement);
       socket.off("bossDefeated", handleBossDefeated);
     };
-  }, [socket, name, deaths, id]);
-
-  const checkGameToken = useCallback((gameToken: string|undefined) => {
-    return gameToken === activeDeathList?.token;
-  }, [activeDeathList?.token]);
+  }, [socket, checkGameToken, processSubmit]);
 
   const canProcess = () => {
     const now = new Date();
     if (now.getTime() - lastClick.getTime() > timeDelay) {
       setLastClick(now);
       return true;
-    } else {
-      toast.error("Please wait before clicking again");
-      return false;
     }
+    toast.error("Please wait before clicking again");
+    return false;
   };
 
   const processIncrement = () => {
-    if (canProcess()) {
-      emitBossDeath();
-    }
+    if (canProcess()) emitMessage("bossDeathIncrement");
   };
 
   const processDecrement = () => {
-    if (canProcess()) {
-      emitBossDeathDecrement();
-    }
-  };
-
-  const clearForm = () => {
-    setID(-1);
-    setName("");
-    setDeaths(0);
-    setError("");
-    setEntityInEdit(null);
-  };
-
-  const processSubmit = () => {
-    if (name.trim() === "") {
-      setError("Name must be filled out");
-      return;
-    }
-
-    const itemToSubmit: Entity = { name: name.trim(), deaths };
-    if (id !== -1) {
-      itemToSubmit.id = id;
-    }
-    addToList(itemToSubmit);
-    clearForm();
-  };
-
-  const processNumber = (num: string) => {
-    if (/^\d*$/.test(num)) {
-      setDeaths(Number(num));
-    }
+    if (canProcess()) emitMessage("bossDeathDecrement");
   };
 
   const removeEntity = () => {
@@ -132,19 +128,32 @@ const EntityForm = () => {
   };
 
   return (
-    <Paper sx={{ marginTop: 2, padding: 2, borderRadius: 5, width: isMobile ? "90%" : "500px", mx: "auto" }}>
+    <Paper
+      sx={{
+        marginTop: 2,
+        padding: 2,
+        borderRadius: 5,
+        width: isMobile ? "90%" : "500px",
+        mx: "auto",
+      }}
+    >
       <FormControl fullWidth error={Boolean(error)}>
         <Container>
-          <Grid container justifyContent="center" alignItems="center" spacing={2} direction={{xs: "column", md: "row"}} sx={{ paddingBottom: 2 }}>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+            direction={{ xs: "column", md: "row" }}
+            sx={{ paddingBottom: 2 }}
+          >
             <Grid size={{ xs: 12, sm: 6, md: 8 }}>
               <TextField
                 fullWidth
                 label="Name"
                 value={name}
                 error={Boolean(error)}
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
+                onChange={(e) => setName(e.target.value)}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -153,11 +162,13 @@ const EntityForm = () => {
                 label="Deaths"
                 value={deaths}
                 onChange={(e) => {
-                  processNumber(e.target.value);
+                  if (/^\d*$/.test(e.target.value))
+                    setDeaths(Number(e.target.value));
                 }}
               />
             </Grid>
           </Grid>
+
           <Grid
             container
             justifyContent="center"
@@ -170,10 +181,9 @@ const EntityForm = () => {
                 variant="outlined"
                 color="error"
                 onClick={processDecrement}
-                size={isMobile ? "large" : "medium"}
                 sx={{ minWidth: 128, minHeight: 48 }}
               >
-                <Remove color="error"/>
+                <Remove />
               </Button>
             </Grid>
             <Grid>
@@ -181,23 +191,27 @@ const EntityForm = () => {
                 variant="outlined"
                 color="success"
                 onClick={processIncrement}
-                size={isMobile ? "large" : "medium"}
                 sx={{ minWidth: 128, minHeight: 48 }}
               >
-                <Add color="success"/>
+                <Add />
               </Button>
             </Grid>
           </Grid>
-          <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
-            <Fade in={id !== -1} timeout={500} unmountOnExit>
+
+          <Grid
+            container
+            justifyContent="flex-end"
+            alignItems="center"
+            spacing={2}
+          >
+            <Fade in={id !== -1} unmountOnExit>
               <Grid>
-                <Button variant="outlined" onClick={removeEntity}>
+                <Button variant="outlined" color="error" onClick={removeEntity}>
                   Delete
                 </Button>
               </Grid>
             </Fade>
-
-            <Fade in={Boolean(name)} timeout={500} unmountOnExit>
+            <Fade in={Boolean(name) || deaths > 0} unmountOnExit>
               <Grid>
                 <Button variant="outlined" onClick={clearForm}>
                   Clear
@@ -205,16 +219,17 @@ const EntityForm = () => {
               </Grid>
             </Fade>
             <Grid>
-              <Button variant="outlined" onClick={emitBossCompleted}>
-                {id !== -1 ? "Edit" : "Add"}
+              <Button variant="contained" onClick={processSubmit}>
+                {id !== -1 ? "Update" : "Add"}
               </Button>
             </Grid>
           </Grid>
-          <Grid container justifyContent={"center"} alignItems={"center"} paddingTop={2}>
-            <Grid>
+
+          {error && (
+            <Grid container justifyContent="center" paddingTop={2}>
               <FormHelperText>{error}</FormHelperText>
             </Grid>
-          </Grid>
+          )}
         </Container>
       </FormControl>
     </Paper>

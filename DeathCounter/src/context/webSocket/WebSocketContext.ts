@@ -4,9 +4,7 @@ import { Socket } from "socket.io-client";
 
 interface SocketContextType {
   socket: Socket | undefined;
-  emitBossDeath: () => void;
-  emitBossDeathDecrement: () => void;
-  emitBossCompleted: () => void;
+  emitMessage: (event: string) => void;
 }
 
 export const SocketContext = createContext<SocketContextType | undefined>(undefined);
