@@ -1,9 +1,8 @@
 import { Server, Socket } from 'socket.io';
-import { decryptField, encryptField } from '../utils/crypt';
 
 import { MessageSchema } from "../schemas/Message";
 import { WsMessage } from "../interfaces/WsMessage";
-import { decrypt } from 'dotenv';
+import { decryptField } from '../utils/crypt';
 
 export class SocketHandler {
   private io: Server | undefined;
@@ -25,6 +24,7 @@ export class SocketHandler {
     
     // Listen for specific events - authentication happens per message
     socket.on('bossDeathIncrement', (data) => this.onSocketMessage(socket, { event: 'bossDeathIncrement', ...data }));
+    socket.on('bossDeathDecrement', (data) => this.onSocketMessage(socket, { event: 'bossDeathDecrement', ...data }));
     socket.on('bossDefeated', (data) => this.onSocketMessage(socket, { event: 'bossDefeated', ...data }));
     socket.on('genericDeathIncrement', (data) => this.onSocketMessage(socket, { event: 'genericDeathIncrement', ...data }));
     socket.on('message', (data) => this.onSocketMessage(socket, { event: 'message', ...data }));
