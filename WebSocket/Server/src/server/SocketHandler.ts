@@ -27,6 +27,8 @@ export class SocketHandler {
     socket.on('bossDeathDecrement', (data) => this.onSocketMessage(socket, { event: 'bossDeathDecrement', ...data }));
     socket.on('bossDefeated', (data) => this.onSocketMessage(socket, { event: 'bossDefeated', ...data }));
     socket.on('genericDeathIncrement', (data) => this.onSocketMessage(socket, { event: 'genericDeathIncrement', ...data }));
+    socket.on('bossDeathSet', (data) => this.onSocketMessage(socket, { event: 'bossDeathSet', ...data }));
+    socket.on('bossNameSet', (data) => this.onSocketMessage(socket, { event: 'bossNameSet', ...data }));
     socket.on('message', (data) => this.onSocketMessage(socket, { event: 'message', ...data }));
     
     socket.on('disconnect', (reason) => this.onSocketDisconnected(socket, reason));
@@ -36,6 +38,7 @@ export class SocketHandler {
   }
   
   onSocketMessage(socket: Socket, data: any): void {
+    console.log(data);
     try {
       const message: WsMessage = MessageSchema.parse(data) as WsMessage;
       const correctAuthToken = decryptField(message.authToken);

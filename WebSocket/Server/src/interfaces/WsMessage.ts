@@ -1,5 +1,6 @@
 export type WsMessage = {
   event: string,
   authToken: string,
-  gameToken: string
+  gameToken: string,
+  data?: string|number
 }
