@@ -3,17 +3,13 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install all dependencies (including dev)
 RUN npm ci
 
-# Copy source code
 COPY src ./src
 
-# Build TypeScript
 RUN npm run build
 
 # Production stage
@@ -25,7 +21,6 @@ WORKDIR /app
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
-# Copy package files
 COPY package*.json ./
 
 # Install only production dependencies
@@ -38,12 +33,12 @@ COPY --from=builder /app/dist ./dist
 RUN chown -R nodejs:nodejs /app
 USER nodejs
 
-# Expose port
-EXPOSE 7778
+# Port aligned with docker-compose mapping
+EXPOSE 7654
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:7778/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+# Health check aligned with internal app port
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:7654/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # Start application
 CMD ["node", "dist/index.js"]
