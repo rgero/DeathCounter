@@ -42,11 +42,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
   }, [socket]);
 
-  const emitMessage = (event: string) => {
+  const emitMessage = (event: string, data?: string | number) => {
     if (!socket) return;
     socket.emit(event, {
       gameToken: activeDeathList?.token,
-      authToken: encryptAuthToken(activeDeathList?.token)
+      authToken: encryptAuthToken(activeDeathList?.token),
+      data
     })
   }
 

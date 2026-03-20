@@ -1,5 +1,5 @@
 import { Add, Remove } from "@mui/icons-material";
-import {Button, Container, Fade, FormControl, FormHelperText, Grid, Paper, TextField} from "@mui/material";
+import { Button, Container, Fade, FormControl, FormHelperText, Grid, Paper, TextField } from "@mui/material";
 import React, { useCallback, useEffect, useRef } from "react";
 
 import { Entity } from "@interfaces/Entity";
@@ -10,8 +10,8 @@ import { useIsMobile } from "@hooks/useIsMobile";
 import { useSocketContext } from "@context/webSocket/WebSocketContext";
 
 const EntityForm = () => {
-  const {activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit} = useDeathLists();
-  const {socket, emitMessage} = useSocketContext();
+  const { activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit } = useDeathLists();
+  const { socket, emitMessage } = useSocketContext();
 
   const [id, setID] = React.useState<number>(-1);
   const [name, setName] = React.useState("");
@@ -89,16 +89,29 @@ const EntityForm = () => {
       clearForm();
     };
 
+    const handleDeathSet = (event: WsMessage) => {
+      if (!checkGameToken(event.gameToken)) return;
+      if (typeof event.data === "number") setDeaths(event.data);
+    };
+
+    const handleBossNameSet = (event: WsMessage) => {
+      if (!checkGameToken(event.gameToken)) return;
+      if (typeof event.data === "string") setName(event.data);
+    };
+
     socket.on("bossDeathIncrement", handleIncrement);
     socket.on("bossDeathDecrement", handleDecrement);
     socket.on("bossDefeated", handleBossDefeated);
-
+    socket.on("bossDeathSet", handleDeathSet);
+    socket.on("bossNameSet", handleBossNameSet);
     return () => {
       socket.off("bossDeathIncrement", handleIncrement);
       socket.off("bossDeathDecrement", handleDecrement);
       socket.off("bossDefeated", handleBossDefeated);
+      socket.off("bossDeathSet", handleDeathSet);
+      socket.off("bossNameSet", handleBossNameSet);
     };
-  }, [socket, checkGameToken, processSubmit]);
+  }, [socket, checkGameToken, clearForm]);
 
   const canProcess = () => {
     const now = new Date();
@@ -127,6 +140,28 @@ const EntityForm = () => {
     clearForm();
   };
 
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+    if (error) setError("");
+  };
+
+  const handleDeathsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value, 10);
+    setDeaths(isNaN(value) ? 0 : value);
+  };
+
+  const applyBossName = () => {
+    emitMessage("bossNameSet", name);
+  };
+
+  const applyBossDeaths = () => {
+    if (deaths < 0) {
+      setError("Deaths cannot be negative");
+      return;
+    }
+    emitMessage("bossDeathSet", deaths);
+  };
+
   return (
     <Paper
       sx={{
@@ -153,18 +188,18 @@ const EntityForm = () => {
                 label="Name"
                 value={name}
                 error={Boolean(error)}
-                onChange={(e) => setName(e.target.value)}
+                onChange={handleNameChange}
+                onBlur={applyBossName} // Emit only on loss of focus
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 4 }}>
               <TextField
                 fullWidth
                 label="Deaths"
+                type="number"
                 value={deaths}
-                onChange={(e) => {
-                  if (/^\d*$/.test(e.target.value))
-                    setDeaths(Number(e.target.value));
-                }}
+                onChange={handleDeathsChange}
+                onBlur={applyBossDeaths} // Emit only on loss of focus
               />
             </Grid>
           </Grid>
