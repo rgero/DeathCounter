@@ -16,16 +16,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const queryClient = useQueryClient();
   const { user } = useAuthenticationContext();
 
-  const {
-    data: deathLists = [],
-    error,
-    isLoading,
-    isFetching,
-    refetch,
-  } = useQuery({
-    queryKey: ["death_counters"],
-    queryFn: () => getDeathLists(),
-  });
+  const {data: deathLists = [], error,isLoading, isFetching, refetch} = useQuery({queryKey: ["death_counters"], queryFn: () => getDeathLists()});
 
   const activeDeathList = deathLists.find((list) => list.currentlyActive);
 
@@ -149,7 +140,8 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setEntityInEdit,
         uploadDeathList,
         showDescription: showDescription?.isShown || false,
-        toggleDescription
+        toggleDescription,
+        refetch
       }}
     >
       {children}

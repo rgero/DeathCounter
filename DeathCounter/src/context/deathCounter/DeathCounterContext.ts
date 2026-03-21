@@ -19,6 +19,7 @@ export interface DeathListContextType {
   updateDeathList: (deathList: DeathList) => void;
   removeDeathList: (id: number) => void;
   removeEntityFromList: (id: number) => void;
+  refetch: () => void;
   isFetching: boolean;
   isLoading: boolean;
   error: Error | null;

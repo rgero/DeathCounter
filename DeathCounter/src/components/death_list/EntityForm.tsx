@@ -10,7 +10,7 @@ import { useIsMobile } from "@hooks/useIsMobile";
 import { useSocketContext } from "@context/webSocket/WebSocketContext";
 
 const EntityForm = () => {
-  const { activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit } = useDeathLists();
+  const { activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit, refetch } = useDeathLists();
   const { socket, emitMessage } = useSocketContext();
 
   const [id, setID] = React.useState<number>(-1);
@@ -87,6 +87,7 @@ const EntityForm = () => {
     const handleBossDefeated = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
       clearForm();
+      refetch();
     };
 
     const handleDeathSet = (event: WsMessage) => {
