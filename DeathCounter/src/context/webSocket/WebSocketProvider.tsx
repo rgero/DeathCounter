@@ -1,60 +1,100 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
-import { useCallback, useEffect, useState } from "react";
 
 import { SocketContext } from "../webSocket/WebSocketContext";
 import { encryptAuthToken } from "@utils/crypt";
 import { useDeathLists } from "../deathCounter/DeathCounterContext";
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [socket, setSocket] = useState<Socket | undefined>(undefined);
-  const [initializedId, setInitializedId] = useState<number | undefined>(undefined);
+  // Use a ref for the actual socket to avoid dependency loops in useEffect
+  const socketRef = useRef<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  
   const { activeDeathList } = useDeathLists();
 
-  const initializeSocket = useCallback((params: Record<string, string>) => {
-    const newSocket = io(import.meta.env.VITE_WSS_URL, { query: params });
-    setSocket(newSocket);
-  }, []);
-
+  // We only want to re-run this effect when the specific ID or Token changes
   useEffect(() => {
-    if (!activeDeathList?.id || activeDeathList.id === initializedId) return;
+    const listId = activeDeathList?.id;
+    const listToken = activeDeathList?.token;
 
-    if (socket) {
-      console.log("Disconnecting existing socket...");
-      socket.disconnect();
+    // 1. Validation: Don't connect if we don't have the required data
+    if (!listId || !listToken) {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+        setIsConnected(false);
+      }
+      return;
     }
 
-    console.log("Initializing new socket for ID:", activeDeathList.id);
-    initializeSocket({ token: activeDeathList.token || "" });
-    setInitializedId(activeDeathList.id);
+    // 2. Cleanup: If a socket already exists for a different ID, kill it
+    if (socketRef.current) {
+      console.log("Disconnecting existing socket for previous ID...");
+      socketRef.current.disconnect();
+    }
 
-    return () => {
-      if (socket) {
-        console.log("Cleaning up socket on unmount...");
-        socket.disconnect();
-      }
-    };
-  }, [activeDeathList, socket, initializeSocket, initializedId]);
+    console.log("Initializing new socket for ID:", listId);
 
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("message", (data: { event: string; payload: string }) => {
+    // 3. Initialization: Use production-ready settings
+    const newSocket = io(import.meta.env.VITE_WSS_URL, {
+      query: { token: listToken },
+      transports: ["websocket"], 
+      withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+    });
+
+    // 4. Event Listeners
+    newSocket.on("connect", () => {
+      console.log("Socket connected successfully:", newSocket.id);
+      setIsConnected(true);
+    });
+
+    newSocket.on("disconnect", (reason) => {
+      console.log("Socket disconnected:", reason);
+      setIsConnected(false);
+    });
+
+    newSocket.on("connect_error", (err) => {
+      console.error("Connection Error (Check Traefik/CORS):", err.message);
+    });
+
+    newSocket.on("message", (data: { event: string; payload: string }) => {
       console.log("Received message:", data.payload);
     });
-  }, [socket]);
 
-  const emitMessage = (event: string, data?: string | number) => {
-    if (!socket) return;
-    socket.emit(event, {
+    socketRef.current = newSocket;
+
+    // 5. Final Cleanup: Runs when the component unmounts or ID/Token changes
+    return () => {
+      if (newSocket) {
+        console.log("Cleaning up socket...");
+        newSocket.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, [activeDeathList?.id, activeDeathList?.token]); 
+
+  const emitMessage = useCallback((event: string, data?: string | number) => {
+    const currentSocket = socketRef.current;
+    
+    if (!currentSocket || !currentSocket.connected) {
+      console.warn("Attempted to emit message, but socket is not connected.");
+      return;
+    }
+
+    currentSocket.emit(event, {
       gameToken: activeDeathList?.token,
-      authToken: encryptAuthToken(activeDeathList?.token),
+      authToken: encryptAuthToken(activeDeathList?.token || ""),
       data
-    })
-  }
+    });
+  }, [activeDeathList?.token]);
 
   return (
     <SocketContext.Provider value={{ 
-      socket,
+      socket: socketRef.current || undefined, 
       emitMessage,
+      isConnected
     }}>
       {children}
     </SocketContext.Provider>

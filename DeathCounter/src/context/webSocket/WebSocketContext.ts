@@ -5,6 +5,7 @@ import { Socket } from "socket.io-client";
 interface SocketContextType {
   socket: Socket | undefined;
   emitMessage: (event: string, data?: string|number) => void;
+  isConnected: boolean;
 }
 
 export const SocketContext = createContext<SocketContextType | undefined>(undefined);
