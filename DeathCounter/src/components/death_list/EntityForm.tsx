@@ -2,6 +2,7 @@ import { Add, Remove } from "@mui/icons-material";
 import { Button, Container, Fade, FormControl, FormHelperText, Grid, Paper, TextField } from "@mui/material";
 import React, { useCallback, useEffect, useRef } from "react";
 
+import { BossData } from "@interfaces/BossData";
 import { Entity } from "@interfaces/Entity";
 import { WsMessage } from "@interfaces/WsMessage";
 import toast from "react-hot-toast";
@@ -74,16 +75,6 @@ const EntityForm = () => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleIncrement = (event: WsMessage) => {
-      if (!checkGameToken(event.gameToken)) return;
-      setDeaths((prev) => prev + 1);
-    };
-
-    const handleDecrement = (event: WsMessage) => {
-      if (!checkGameToken(event.gameToken)) return;
-      setDeaths((prev) => (prev > 0 ? prev - 1 : 0));
-    };
-
     const handleBossDefeated = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
       clearForm();
@@ -100,17 +91,36 @@ const EntityForm = () => {
       if (typeof event.data === "string") setName(event.data);
     };
 
-    socket.on("bossDeathIncrement", handleIncrement);
-    socket.on("bossDeathDecrement", handleDecrement);
+    const handleClientConnected = (event: WsMessage) => {
+      if (!checkGameToken(event.gameToken)) return;
+      
+      if (name.trim() !== "" || deaths > 0) {
+        emitMessage("clientBossData", { id, name, deaths });
+      }
+    };
+
+    const handleBossDataRecieved = (event: WsMessage) => {
+      if (!checkGameToken(event.gameToken)) return;
+      if (typeof event.data === "object")
+      {
+        const eventData = event.data as BossData;
+        setID(eventData.id ?? -1)
+        setName(eventData.name)
+        setDeaths(eventData.deaths);
+      }
+    }
+
     socket.on("bossDefeated", handleBossDefeated);
     socket.on("bossDeathSet", handleDeathSet);
     socket.on("bossNameSet", handleBossNameSet);
+    socket.on("clientConnected", handleClientConnected);
+    socket.on("clientBossData", handleBossDataRecieved);
     return () => {
-      socket.off("bossDeathIncrement", handleIncrement);
-      socket.off("bossDeathDecrement", handleDecrement);
       socket.off("bossDefeated", handleBossDefeated);
       socket.off("bossDeathSet", handleDeathSet);
       socket.off("bossNameSet", handleBossNameSet);
+      socket.off("clientConnected", handleClientConnected);
+      socket.off("clientBossData", handleBossDataRecieved);
     };
   }, [socket, checkGameToken, clearForm]);
 
@@ -125,11 +135,17 @@ const EntityForm = () => {
   };
 
   const processIncrement = () => {
-    if (canProcess()) emitMessage("bossDeathIncrement");
+    if (canProcess()) 
+    {
+      emitMessage("bossDeathSet", deaths+1);
+    }
   };
 
   const processDecrement = () => {
-    if (canProcess()) emitMessage("bossDeathDecrement");
+    if (canProcess()) 
+    {
+      emitMessage("bossDeathSet", deaths-1);
+    }
   };
 
   const removeEntity = () => {

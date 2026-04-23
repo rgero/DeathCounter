@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 
+import { BossData } from "@interfaces/BossData";
 import { SocketContext } from "../webSocket/WebSocketContext";
 import { encryptAuthToken } from "@utils/crypt";
 import { useDeathLists } from "../deathCounter/DeathCounterContext";
@@ -47,6 +48,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // 4. Event Listeners
     newSocket.on("connect", () => {
       console.log("Socket connected successfully:", newSocket.id);
+      emitMessage("clientConnected");
       setIsConnected(true);
     });
 
@@ -75,7 +77,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, [activeDeathList?.id, activeDeathList?.token]); 
 
-  const emitMessage = useCallback((event: string, data?: string | number) => {
+  const emitMessage = useCallback((event: string, data?: string | number | BossData) => {
     const currentSocket = socketRef.current;
     
     if (!currentSocket || !currentSocket.connected) {

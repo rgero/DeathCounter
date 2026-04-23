@@ -1,10 +1,11 @@
 import { createContext, useContext } from "react";
 
+import { BossData } from "@interfaces/BossData";
 import { Socket } from "socket.io-client";
 
 interface SocketContextType {
   socket: Socket | undefined;
-  emitMessage: (event: string, data?: string|number) => void;
+  emitMessage: (event: string, data?: string|number|BossData) => void;
   isConnected: boolean;
 }
 
