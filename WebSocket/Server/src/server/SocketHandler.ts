@@ -30,6 +30,8 @@ export class SocketHandler {
     socket.on('bossDeathSet', (data) => this.onSocketMessage(socket, { event: 'bossDeathSet', ...data }));
     socket.on('bossNameSet', (data) => this.onSocketMessage(socket, { event: 'bossNameSet', ...data }));
     socket.on('message', (data) => this.onSocketMessage(socket, { event: 'message', ...data }));
+    socket.on('clientConnected', (data) => this.onSocketMessage(socket, { event: 'clientConnected', ...data }));
+    socket.on('clientBossData', (data) => this.onSocketMessage(socket, { event: 'clientBossData', ...data }));
     
     socket.on('disconnect', (reason) => this.onSocketDisconnected(socket, reason));
     socket.on('error', (error) => {
