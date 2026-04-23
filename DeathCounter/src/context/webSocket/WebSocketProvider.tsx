@@ -67,7 +67,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     socketRef.current = newSocket;
 
-    // 5. Final Cleanup: Runs when the component unmounts or ID/Token changes
     return () => {
       if (newSocket) {
         console.log("Cleaning up socket...");

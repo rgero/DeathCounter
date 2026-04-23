@@ -93,28 +93,32 @@ const EntityForm = () => {
 
     const handleClientConnected = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
-      
-      if (name.trim() !== "" || deaths > 0) {
-        emitMessage("clientBossData", { id, name, deaths });
+
+      // Pull current values from Ref to avoid stale closure
+      const { name: currentName, deaths: currentDeaths, id: currentId } = stateRef.current;
+
+      if (currentName.trim() !== "" || currentDeaths > 0) {
+        emitMessage("clientBossData", { id: currentId, name: currentName, deaths: currentDeaths });
       }
     };
 
     const handleBossDataRecieved = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
-      if (typeof event.data === "object")
-      {
+
+      if (typeof event.data === "object" && event.data !== null) {
         const eventData = event.data as BossData;
-        setID(eventData.id ?? -1)
-        setName(eventData.name)
+        setID(eventData.id ?? -1);
+        setName(eventData.name);
         setDeaths(eventData.deaths);
       }
-    }
+    };
 
     socket.on("bossDefeated", handleBossDefeated);
     socket.on("bossDeathSet", handleDeathSet);
     socket.on("bossNameSet", handleBossNameSet);
     socket.on("clientConnected", handleClientConnected);
     socket.on("clientBossData", handleBossDataRecieved);
+
     return () => {
       socket.off("bossDefeated", handleBossDefeated);
       socket.off("bossDeathSet", handleDeathSet);
@@ -122,7 +126,7 @@ const EntityForm = () => {
       socket.off("clientConnected", handleClientConnected);
       socket.off("clientBossData", handleBossDataRecieved);
     };
-  }, [socket, checkGameToken, clearForm]);
+  }, [socket, checkGameToken, clearForm, emitMessage, refetch]);
 
   const canProcess = () => {
     const now = new Date();
@@ -135,16 +139,14 @@ const EntityForm = () => {
   };
 
   const processIncrement = () => {
-    if (canProcess()) 
-    {
-      emitMessage("bossDeathSet", deaths+1);
+    if (canProcess()) {
+      emitMessage("bossDeathSet", deaths + 1);
     }
   };
 
   const processDecrement = () => {
-    if (canProcess()) 
-    {
-      emitMessage("bossDeathSet", deaths-1);
+    if (canProcess()) {
+      emitMessage("bossDeathSet", deaths - 1);
     }
   };
 
@@ -206,7 +208,7 @@ const EntityForm = () => {
                 value={name}
                 error={Boolean(error)}
                 onChange={handleNameChange}
-                onBlur={applyBossName} // Emit only on loss of focus
+                onBlur={applyBossName}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6, md: 4 }}>
@@ -216,7 +218,7 @@ const EntityForm = () => {
                 type="number"
                 value={deaths}
                 onChange={handleDeathsChange}
-                onBlur={applyBossDeaths} // Emit only on loss of focus
+                onBlur={applyBossDeaths}
               />
             </Grid>
           </Grid>
@@ -250,12 +252,7 @@ const EntityForm = () => {
             </Grid>
           </Grid>
 
-          <Grid
-            container
-            justifyContent="flex-end"
-            alignItems="center"
-            spacing={2}
-          >
+          <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
             <Fade in={id !== -1} unmountOnExit>
               <Grid>
                 <Button variant="outlined" color="error" onClick={removeEntity}>
