@@ -15,6 +15,9 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "overrides": {
+    "ws": "8.21.0"
+  },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
     "@types/dotenv": "^6.1.1",
@@ -34,7 +37,6 @@
     "express": "^5.1.0",
     "nodemon": "^3.1.10",
     "socket.io": "^4.8.1",
-    "ws": "^8.21.0",
     "zod": "^3.25.67"
   }
 }

@@ -23,7 +23,7 @@ const HeaderBar = () => {
         }}
         elevation={0}
       >
-        <Grid container justifyContent="space-between" alignItems="center" padding="0.25rem 0">
+        <Grid container sx={{ py: "0.25rem", justifyContent: "space-between", alignItems: "center" }}>
           <Grid>
             <Link to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", color: "inherit" }}>
               <Box sx={{

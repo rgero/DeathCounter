@@ -10,10 +10,10 @@ const DeathEntity = ({ index, data }: { index: number; data: Entity }) => {
   return (
     <Grid
       container
-      direction="row"
-      justifyContent="space-between"
       onClick={() => setEntityInEdit(data)}
       sx={{
+        flexDirection: "row",
+        justifyContent: "space-between",
         px: 1,
         py: 0.5,
         backgroundColor: index % 2 === 0 ? "transparent" : theme.palette.grey[900],
@@ -28,7 +28,7 @@ const DeathEntity = ({ index, data }: { index: number; data: Entity }) => {
         <Typography>{data.name}</Typography>
       </Grid>
       <Grid size={2}>
-        <Typography align="right">{data.deaths}</Typography>
+        <Typography sx={{ textAlign: "right" }}>{data.deaths}</Typography>
       </Grid>
     </Grid>
   );

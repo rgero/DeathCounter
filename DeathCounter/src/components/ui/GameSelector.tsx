@@ -9,7 +9,7 @@ const GameSelector = () => {
     return null;
   }
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChange = (event: SelectChangeEvent<string>) => {
     const selectedGameId = event.target.value;
     if (selectedGameId) {
       updateActiveStatus(Number(selectedGameId));

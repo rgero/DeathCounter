@@ -38,7 +38,7 @@ const FeedbackForm = () => {
   return (
     <Container>
       <SpinnerModal isOpen={isAdding}/>
-      <Grid container direction="column" spacing={2}>
+      <Grid container spacing={2} sx={{ flexDirection: "column" }}>
         <Grid>
           <TextField
             id="outlined-controlled suggestion"
@@ -62,15 +62,17 @@ const FeedbackForm = () => {
             multiline
             rows={5}
             value={details}
-            inputProps={{
-              maxLength: 10000,
+            slotProps={{
+              htmlInput: {
+                maxLength: 10000,
+              },
             }}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setDetails(event.target.value);
             }}
             disabled={isAdding}
           />
-          <Grid container justifyContent="flex-end">
+          <Grid container sx={{ justifyContent: "flex-end" }}>
             <Grid>
               <Typography variant="caption">
                 {formatNumber(details.length)} / {formatNumber(maxLength)}
@@ -78,7 +80,7 @@ const FeedbackForm = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container justifyContent={"space-evenly"} sx={{paddingTop: 4}}>
+        <Grid container sx={{ justifyContent: "space-evenly", paddingTop: 4 }}>
           <Grid>
             <Button onClick={clearFeedback} icon={<DoNotDisturb color="error"/>} title="Clear"/>
           </Grid>

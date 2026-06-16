@@ -26,7 +26,7 @@ const DeathListTable = () => {
         {activeDeathList.entityList
           .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
           .map((item, index) => (
-            <DeathEntity key={index} data={item} index={index} />
+            <DeathEntity key={item.id ?? index} data={item} index={index} />
           ))
         }
       </Paper>

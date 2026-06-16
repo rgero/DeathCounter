@@ -17,12 +17,7 @@ const Button: React.FC<ButtonProps> = ({icon, onClick, title}) => {
       }}
       onClick={onClick}
     >
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-
-      >
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {icon}
         <Typography variant="caption">{title}</Typography>
       </Box>

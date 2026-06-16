@@ -7,49 +7,57 @@ import { encryptAuthToken } from "@utils/crypt";
 import { useDeathLists } from "../deathCounter/DeathCounterContext";
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Use a ref for the actual socket to avoid dependency loops in useEffect
-  const socketRef = useRef<Socket | null>(null);
+  const [socket, setSocket] = useState<Socket | undefined>(undefined);
   const [isConnected, setIsConnected] = useState(false);
-  
+  const socketRef = useRef<Socket | null>(null);
+
   const { activeDeathList } = useDeathLists();
+  const listToken = activeDeathList?.token;
 
-  // We only want to re-run this effect when the specific ID or Token changes
-  useEffect(() => {
-    const listId = activeDeathList?.id;
-    const listToken = activeDeathList?.token;
+  const emitMessage = useCallback((event: string, data?: string | number | BossData) => {
+    const currentSocket = socketRef.current;
 
-    // 1. Validation: Don't connect if we don't have the required data
-    if (!listId || !listToken) {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-        setIsConnected(false);
-      }
+    if (!currentSocket?.connected) {
+      console.warn("Attempted to emit message, but socket is not connected.");
       return;
     }
 
-    // 2. Cleanup: If a socket already exists for a different ID, kill it
-    if (socketRef.current) {
-      console.log("Disconnecting existing socket for previous ID...");
-      socketRef.current.disconnect();
+    currentSocket.emit(event, {
+      gameToken: listToken,
+      authToken: encryptAuthToken(listToken || ""),
+      data,
+    });
+  }, [listToken]);
+
+  useEffect(() => {
+    const listId = activeDeathList?.id;
+
+    if (!listId || !listToken) {
+      socketRef.current?.disconnect();
+      socketRef.current = null;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- clearing state when disconnecting external socket
+      setSocket(undefined);
+      setIsConnected(false);
+      return;
     }
 
-    console.log("Initializing new socket for ID:", listId);
+    socketRef.current?.disconnect();
 
-    // 3. Initialization: Use production-ready settings
     const newSocket = io(import.meta.env.VITE_WSS_URL, {
       query: { token: listToken },
-      transports: ["websocket"], 
+      transports: ["websocket"],
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
     });
 
-    // 4. Event Listeners
     newSocket.on("connect", () => {
       console.log("Socket connected successfully:", newSocket.id);
-      emitMessage("clientConnected");
       setIsConnected(true);
+      newSocket.emit("clientConnected", {
+        gameToken: listToken,
+        authToken: encryptAuthToken(listToken),
+      });
     });
 
     newSocket.on("disconnect", (reason) => {
@@ -66,37 +74,18 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
 
     socketRef.current = newSocket;
+    setSocket(newSocket);
 
     return () => {
-      if (newSocket) {
-        console.log("Cleaning up socket...");
-        newSocket.disconnect();
-        socketRef.current = null;
-      }
+      newSocket.disconnect();
+      socketRef.current = null;
+      setSocket(undefined);
+      setIsConnected(false);
     };
-  }, [activeDeathList?.id, activeDeathList?.token]); 
-
-  const emitMessage = useCallback((event: string, data?: string | number | BossData) => {
-    const currentSocket = socketRef.current;
-    
-    if (!currentSocket || !currentSocket.connected) {
-      console.warn("Attempted to emit message, but socket is not connected.");
-      return;
-    }
-
-    currentSocket.emit(event, {
-      gameToken: activeDeathList?.token,
-      authToken: encryptAuthToken(activeDeathList?.token || ""),
-      data
-    });
-  }, [activeDeathList?.token]);
+  }, [activeDeathList?.id, listToken]);
 
   return (
-    <SocketContext.Provider value={{ 
-      socket: socketRef.current || undefined, 
-      emitMessage,
-      isConnected
-    }}>
+    <SocketContext.Provider value={{ socket, emitMessage, isConnected }}>
       {children}
     </SocketContext.Provider>
   );

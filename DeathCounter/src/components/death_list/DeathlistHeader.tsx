@@ -1,32 +1,30 @@
 import { Grid, IconButton, TextField } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import GameMenuButton from "../game_menu/GameMenuButton";
 import { Info } from "@mui/icons-material";
+import { DeathList } from "@interfaces/DeathList";
 import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
 
-const DeathlistHeader = () => {
-  const {
-    activeDeathList,
-    isLoading,
-    updateDeathList,
-    showDescription,
-    toggleDescription,
-  } = useDeathLists();
+interface DeathlistHeaderFormProps {
+  activeDeathList: DeathList;
+  showDescription: boolean;
+  toggleDescription: () => void;
+  updateDeathList: (deathList: DeathList) => Promise<void>;
+}
 
-  const [name, setName] = useState("");
+const DeathlistHeaderForm = ({
+  activeDeathList,
+  showDescription,
+  toggleDescription,
+  updateDeathList,
+}: DeathlistHeaderFormProps) => {
+  const [name, setName] = useState(activeDeathList.name);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (activeDeathList) {
-      setName(activeDeathList.name);
-    }
-  }, [activeDeathList]);
-
   const handleSubmit = async () => {
-    if (!activeDeathList || name === activeDeathList.name) return;
-    activeDeathList.name = name;
-    await updateDeathList(activeDeathList);
+    if (name === activeDeathList.name) return;
+    await updateDeathList({ ...activeDeathList, name });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -36,16 +34,16 @@ const DeathlistHeader = () => {
     }
   };
 
-  if (isLoading || !activeDeathList) return null;
-
   return (
     <Grid
       container
-      direction="row"
-      justifyContent="space-between"
-      alignItems="center"
-      wrap="nowrap"
-      sx={{paddingBottom: 2}}
+      sx={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexWrap: "nowrap",
+        paddingBottom: 2,
+      }}
     >
       <Grid sx={{ flexGrow: 1, minWidth: 0 }}>
         <TextField
@@ -68,9 +66,9 @@ const DeathlistHeader = () => {
           }}
         />
       </Grid>
-      
+
       <Grid sx={{ flexShrink: 0, ml: 1 }}>
-        <Grid container wrap="nowrap">
+        <Grid container sx={{ flexWrap: "nowrap" }}>
           <Grid>
             <IconButton onClick={toggleDescription}>
               <Info color={showDescription ? "primary" : undefined} />
@@ -82,6 +80,28 @@ const DeathlistHeader = () => {
         </Grid>
       </Grid>
     </Grid>
+  );
+};
+
+const DeathlistHeader = () => {
+  const {
+    activeDeathList,
+    isLoading,
+    updateDeathList,
+    showDescription,
+    toggleDescription,
+  } = useDeathLists();
+
+  if (isLoading || !activeDeathList) return null;
+
+  return (
+    <DeathlistHeaderForm
+      key={activeDeathList.id}
+      activeDeathList={activeDeathList}
+      showDescription={showDescription}
+      toggleDescription={toggleDescription}
+      updateDeathList={updateDeathList}
+    />
   );
 };
 

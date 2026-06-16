@@ -13,7 +13,7 @@ const HeaderOptionsPanel = () => {
 
   return (
 
-    <Grid container alignItems="center" justifyContent="center" spacing={1} sx={{backgroundColor: alpha(grey[900], 0.9), borderRadius: "8px", padding: "0.25rem 0.5rem"}}>
+    <Grid container spacing={1} sx={{ alignItems: "center", justifyContent: "center", backgroundColor: alpha(grey[900], 0.9), borderRadius: "8px", padding: "0.25rem 0.5rem" }}>
       {!isMobile && (
         <>
           <Grid>

@@ -24,16 +24,13 @@ const DeleteListModal = () => {
     >
       <Grid
         container
-        direction="column"
-        justifyItems="center"
-        alignItems="center"
         spacing={5}
-        sx={{ pt: 2 }}
+        sx={{ pt: 2, flexDirection: "column", justifyItems: "center", alignItems: "center" }}
       >
         <Grid>
           <Typography>Delete {activeDeathList?.name}?</Typography>
         </Grid>
-        <Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+        <Grid container spacing={2} sx={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
           <Grid>
             <IconButton onClick={toggleDeleteModal}>
               <Cancel/>

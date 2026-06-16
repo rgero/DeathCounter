@@ -1,29 +1,26 @@
 import { Box, Grid, IconButton, InputAdornment, OutlinedInput, Typography } from "@mui/material"
 import { CopyAll, Visibility, VisibilityOff } from "@mui/icons-material"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import BaseModal from "./BaseModal"
-import { encryptAuthToken } from "../../utils/crypt"
+import { encryptAuthToken } from "@utils/crypt"
 import toast from "react-hot-toast"
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext"
-import { useModalProvider } from "../../context/modal/ModalContext"
+import { useDeathLists } from "@context/deathCounter/DeathCounterContext"
+import { useModalProvider } from "@context/modal/ModalContext"
 
 const TokenModal = () => {
-  const {tokenModalOpen, toggleTokenModal} = useModalProvider()
-  const {activeDeathList, regenerateToken, isLoading} = useDeathLists()
+  const { tokenModalOpen, toggleTokenModal } = useModalProvider()
+  const { activeDeathList, regenerateToken, isLoading } = useDeathLists()
   const [showToken, setShowToken] = useState(false);
   const [showAuthToken, setShowAuthToken] = useState(false);
-  const [encryptedAuthToken, setEncryptedAuthToken] = useState("");
-
-  useEffect(() => {
-    if (activeDeathList?.token) {
-      setEncryptedAuthToken(encryptAuthToken(activeDeathList.token));
-    }
-  }, [activeDeathList?.token]);
 
   if (isLoading || !activeDeathList) {
     return null;
   }
+
+  const encryptedAuthToken = activeDeathList.token
+    ? encryptAuthToken(activeDeathList.token)
+    : "";
 
   const handleClickShowToken = () => setShowToken((show) => !show);
   const handleClickShowAuthToken = () => setShowAuthToken((show) => !show);
@@ -56,11 +53,11 @@ const TokenModal = () => {
       handleClose={toggleTokenModal}
       label="token-modal"
     >
-      <Grid container direction="column" justifyContent="center" alignItems="center" spacing={2}>
+      <Grid container spacing={2} sx={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
         <Grid>
           <Typography variant="h6">{activeDeathList.name} - Token</Typography>
         </Grid>
-        <Grid container direction="column" justifyContent="center" alignItems="center" spacing={2}>
+        <Grid container spacing={2} sx={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
           <Grid>
             <Typography>Game Token</Typography>
             <OutlinedInput
@@ -69,7 +66,7 @@ const TokenModal = () => {
               value={activeDeathList.token}
               endAdornment={
                 <InputAdornment position="end">
-                  <Box display="flex" alignItems="center" gap="4px">
+                  <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
                         <IconButton
                           aria-label={
                             showToken ? 'hide the token' : 'display the token'
@@ -90,12 +87,12 @@ const TokenModal = () => {
             <Grid>
               <Typography>Websocket Auth Token</Typography>
               <OutlinedInput
-                id="outlined-adornment-token"
+                id="outlined-adornment-auth-token"
                 type={showAuthToken ? 'text' : 'password'}
                 value={encryptedAuthToken}
                 endAdornment={
                   <InputAdornment position="end">
-                    <Box display="flex" alignItems="center" gap="4px">
+                    <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
                           <IconButton
                             aria-label={
                               showAuthToken ? 'hide the token' : 'display the token'

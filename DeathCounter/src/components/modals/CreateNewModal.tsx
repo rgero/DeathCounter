@@ -23,7 +23,7 @@ const CreateNewModal = () => {
       currentlyActive: false,
       entityList: []
     }
-    addDeathList(newDeathList);
+    await addDeathList(newDeathList);
     setName("");
     toggleCreateNewModal();
   };
@@ -36,11 +36,8 @@ const CreateNewModal = () => {
     >
       <Grid
         container
-        direction="column"
-        justifyItems="center"
-        alignItems="center"
         spacing={5}
-        sx={{ pt: 2 }}
+        sx={{ pt: 2, flexDirection: "column", justifyItems: "center", alignItems: "center" }}
       >
         <Grid>
           <Typography variant={isMobile ? "h5" : "h4"}>Create new Death Counter?</Typography>
@@ -63,7 +60,7 @@ const CreateNewModal = () => {
             }}
           />
         </Grid>
-        <Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+        <Grid container spacing={2} sx={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
           <Grid>
             <Button
               icon={<Cancel />}

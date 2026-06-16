@@ -2,7 +2,7 @@ import { Grid, Typography } from "@mui/material"
 
 const DeathListTableHeader = () => {
   return (
-    <Grid container direction="row" justifyContent="space-between">
+    <Grid container sx={{ flexDirection: "row", justifyContent: "space-between" }}>
       <Grid>
         <Typography variant="h5">Name</Typography>
       </Grid>

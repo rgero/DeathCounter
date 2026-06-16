@@ -12,7 +12,7 @@ const SwitchGameModal = () => {
       handleClose={toggleSwitchGameModal}
       label="switch-game"
     >
-      <Grid container justifyContent="center" alignItems="center" sx={{ mb: 2 }} direction="column" spacing={4}>
+      <Grid container spacing={4} sx={{ mb: 2, flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
         <Grid>
           <Typography variant="h5">Switch Game</Typography></Grid>
         <Grid>

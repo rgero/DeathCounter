@@ -50,11 +50,8 @@ const ImportModal = ( ) => {
     >
       <Grid
         container
-        direction="column"
-        justifyItems="center"
-        alignItems="center"
         spacing={5}
-        sx={{ pt: 2 }}
+        sx={{ pt: 2, flexDirection: "column", justifyItems: "center", alignItems: "center" }}
       >
         <Grid>
           <Typography>Please select a file</Typography>
@@ -72,7 +69,7 @@ const ImportModal = ( ) => {
           </Button>
         </Grid>
 
-        <Grid container justifyContent="flex-end">
+        <Grid container sx={{ justifyContent: "flex-end" }}>
           <Grid>
             <Button
               onClick={processUpload}

@@ -1,6 +1,6 @@
 import { Add, Remove } from "@mui/icons-material";
 import { Button, Container, Fade, FormControl, FormHelperText, Grid, Paper, TextField } from "@mui/material";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { BossData } from "@interfaces/BossData";
 import { Entity } from "@interfaces/Entity";
@@ -10,17 +10,34 @@ import { useDeathLists } from "@context/deathCounter/DeathCounterContext";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { useSocketContext } from "@context/webSocket/WebSocketContext";
 
-const EntityForm = () => {
-  const { activeDeathList, addToList, entityInEdit, removeEntityFromList, setEntityInEdit, refetch } = useDeathLists();
-  const { socket, emitMessage } = useSocketContext();
+interface EntityFormFieldsProps {
+  initialEntity?: Entity | null;
+  activeDeathListToken: string | undefined;
+  addToList: (entity: Entity) => Promise<void>;
+  removeEntityFromList: (id: number) => Promise<void>;
+  setEntityInEdit: (entity: Entity | null) => void;
+  refetch: () => Promise<unknown>;
+  socket: ReturnType<typeof useSocketContext>["socket"];
+  emitMessage: ReturnType<typeof useSocketContext>["emitMessage"];
+}
 
-  const [id, setID] = React.useState<number>(-1);
-  const [name, setName] = React.useState("");
-  const [deaths, setDeaths] = React.useState(0);
-  const [error, setError] = React.useState("");
-  const [lastClick, setLastClick] = React.useState(new Date());
+const EntityFormFields = ({
+  initialEntity,
+  activeDeathListToken,
+  addToList,
+  removeEntityFromList,
+  setEntityInEdit,
+  refetch,
+  socket,
+  emitMessage,
+}: EntityFormFieldsProps) => {
+  const [id, setID] = useState(initialEntity?.id ?? -1);
+  const [name, setName] = useState(initialEntity?.name ?? "");
+  const [deaths, setDeaths] = useState(initialEntity?.deaths ?? 0);
+  const [error, setError] = useState("");
+  const [lastClick, setLastClick] = useState(new Date());
 
-  const timeDelay: number = 1000;
+  const timeDelay = 1000;
   const isMobile = useIsMobile();
 
   const stateRef = useRef({ name, deaths, id });
@@ -30,19 +47,9 @@ const EntityForm = () => {
   }, [name, deaths, id]);
 
   const checkGameToken = useCallback(
-    (gameToken: string | undefined) => {
-      return gameToken === activeDeathList?.token;
-    },
-    [activeDeathList?.token],
+    (gameToken: string | undefined) => gameToken === activeDeathListToken,
+    [activeDeathListToken],
   );
-
-  useEffect(() => {
-    if (!entityInEdit || !entityInEdit.id) return;
-    setID(entityInEdit.id);
-    setName(entityInEdit.name);
-    setDeaths(entityInEdit.deaths);
-    setError("");
-  }, [entityInEdit]);
 
   const clearForm = useCallback(() => {
     setID(-1);
@@ -94,7 +101,6 @@ const EntityForm = () => {
     const handleClientConnected = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
 
-      // Pull current values from Ref to avoid stale closure
       const { name: currentName, deaths: currentDeaths, id: currentId } = stateRef.current;
 
       if (currentName.trim() !== "" || currentDeaths > 0) {
@@ -182,6 +188,114 @@ const EntityForm = () => {
   };
 
   return (
+    <FormControl fullWidth error={Boolean(error)}>
+      <Container>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: { xs: "column", md: "row" },
+            paddingBottom: 2,
+          }}
+        >
+          <Grid size={{ xs: 12, sm: 6, md: 8 }}>
+            <TextField
+              fullWidth
+              label="Name"
+              value={name}
+              error={Boolean(error)}
+              onChange={handleNameChange}
+              onBlur={applyBossName}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <TextField
+              fullWidth
+              label="Deaths"
+              type="number"
+              value={deaths}
+              onChange={handleDeathsChange}
+              onBlur={applyBossDeaths}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid
+          container
+          spacing={2}
+          sx={{ justifyContent: "center", alignItems: "center", py: isMobile ? 1 : 2 }}
+        >
+          <Grid>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={processDecrement}
+              sx={{ minWidth: 128, minHeight: 48 }}
+            >
+              <Remove />
+            </Button>
+          </Grid>
+          <Grid>
+            <Button
+              variant="outlined"
+              color="success"
+              onClick={processIncrement}
+              sx={{ minWidth: 128, minHeight: 48 }}
+            >
+              <Add />
+            </Button>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2} sx={{ justifyContent: "flex-end", alignItems: "center" }}>
+          <Fade in={id !== -1} unmountOnExit>
+            <Grid>
+              <Button variant="outlined" color="error" onClick={removeEntity}>
+                Delete
+              </Button>
+            </Grid>
+          </Fade>
+          <Fade in={Boolean(name) || deaths > 0} unmountOnExit>
+            <Grid>
+              <Button variant="outlined" onClick={clearForm}>
+                Clear
+              </Button>
+            </Grid>
+          </Fade>
+          <Grid>
+            <Button variant="contained" onClick={processSubmit}>
+              {id !== -1 ? "Update" : "Add"}
+            </Button>
+          </Grid>
+        </Grid>
+
+        {error && (
+          <Grid container sx={{ justifyContent: "center", pt: 2 }}>
+            <FormHelperText>{error}</FormHelperText>
+          </Grid>
+        )}
+      </Container>
+    </FormControl>
+  );
+};
+
+const EntityForm = () => {
+  const {
+    activeDeathList,
+    addToList,
+    entityInEdit,
+    removeEntityFromList,
+    setEntityInEdit,
+    refetch,
+  } = useDeathLists();
+  const { socket, emitMessage } = useSocketContext();
+  const isMobile = useIsMobile();
+
+  const formKey = entityInEdit?.id != null ? `edit-${entityInEdit.id}` : "new";
+
+  return (
     <Paper
       sx={{
         marginTop: 2,
@@ -191,96 +305,17 @@ const EntityForm = () => {
         mx: "auto",
       }}
     >
-      <FormControl fullWidth error={Boolean(error)}>
-        <Container>
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-            spacing={2}
-            direction={{ xs: "column", md: "row" }}
-            sx={{ paddingBottom: 2 }}
-          >
-            <Grid size={{ xs: 12, sm: 6, md: 8 }}>
-              <TextField
-                fullWidth
-                label="Name"
-                value={name}
-                error={Boolean(error)}
-                onChange={handleNameChange}
-                onBlur={applyBossName}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-              <TextField
-                fullWidth
-                label="Deaths"
-                type="number"
-                value={deaths}
-                onChange={handleDeathsChange}
-                onBlur={applyBossDeaths}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-            paddingY={isMobile ? 1 : 2}
-            spacing={2}
-          >
-            <Grid>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={processDecrement}
-                sx={{ minWidth: 128, minHeight: 48 }}
-              >
-                <Remove />
-              </Button>
-            </Grid>
-            <Grid>
-              <Button
-                variant="outlined"
-                color="success"
-                onClick={processIncrement}
-                sx={{ minWidth: 128, minHeight: 48 }}
-              >
-                <Add />
-              </Button>
-            </Grid>
-          </Grid>
-
-          <Grid container justifyContent="flex-end" alignItems="center" spacing={2}>
-            <Fade in={id !== -1} unmountOnExit>
-              <Grid>
-                <Button variant="outlined" color="error" onClick={removeEntity}>
-                  Delete
-                </Button>
-              </Grid>
-            </Fade>
-            <Fade in={Boolean(name) || deaths > 0} unmountOnExit>
-              <Grid>
-                <Button variant="outlined" onClick={clearForm}>
-                  Clear
-                </Button>
-              </Grid>
-            </Fade>
-            <Grid>
-              <Button variant="contained" onClick={processSubmit}>
-                {id !== -1 ? "Update" : "Add"}
-              </Button>
-            </Grid>
-          </Grid>
-
-          {error && (
-            <Grid container justifyContent="center" paddingTop={2}>
-              <FormHelperText>{error}</FormHelperText>
-            </Grid>
-          )}
-        </Container>
-      </FormControl>
+      <EntityFormFields
+        key={formKey}
+        initialEntity={entityInEdit}
+        activeDeathListToken={activeDeathList?.token}
+        addToList={addToList}
+        removeEntityFromList={removeEntityFromList}
+        setEntityInEdit={setEntityInEdit}
+        refetch={refetch}
+        socket={socket}
+        emitMessage={emitMessage}
+      />
     </Paper>
   );
 };

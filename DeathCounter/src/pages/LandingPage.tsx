@@ -25,23 +25,23 @@ const LandingPage = () => {
   return (
     <Grid
       container
-      sx={{ 
-        height: "100vh"
+      sx={{
+        height: "100vh",
+        pl: isMobile ? 0 : "15%",
+        alignItems: "center",
+        justifyContent: isMobile ? "center" : "flex-start",
       }}
-      alignItems="center"
-      justifyContent={isMobile ? "center" : "flex-start"}
-      paddingLeft={isMobile ? 0 : "15%"}
     >
       <Card sx={{padding: "10px"}}>
         <CardContent>
-          <Grid container direction="column" spacing={2}>
+          <Grid container spacing={2} sx={{ flexDirection: "column" }}>
             <Grid>
               <Typography variant="h5">The Death Counter</Typography>
             </Grid>
-            <Grid alignItems="center">
+            <Grid sx={{ alignItems: "center" }}>
               <Typography>Want to keep track of how often you die in games? Use this!</Typography>
             </Grid>
-            <Grid container justifyContent="flex-end">
+            <Grid container sx={{ justifyContent: "flex-end" }}>
               <Button variant="contained" color="primary" onClick={loginWithGoogle}>Login</Button>
             </Grid>
           </Grid>

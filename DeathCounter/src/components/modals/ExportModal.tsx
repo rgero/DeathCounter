@@ -62,11 +62,8 @@ const ExportModal = () => {
     >
       <Grid
         container
-        direction="column"
-        justifyItems="center"
-        alignItems="center"
         spacing={5}
-        sx={{ pt: 2 }}
+        sx={{ pt: 2, flexDirection: "column", justifyItems: "center", alignItems: "center" }}
       >
         <Grid>
           <Typography>
@@ -74,7 +71,7 @@ const ExportModal = () => {
           </Typography>
         </Grid>
 
-        <Grid container justifyContent="flex-end">
+        <Grid container sx={{ justifyContent: "flex-end" }}>
           <Grid>
             <Button
               onClick={handleExport}

@@ -39,27 +39,29 @@ const App = () => {
     components: {
       MuiButton: {
         styleOverrides: {
-          containedPrimary: {
-            backgroundColor: grey[700],
-            color: "#FFFFFF",
-            "&:hover": {
-              backgroundColor: grey[600],
-            },
-          },
-          outlinedPrimary: {
-            borderColor: grey[500],
-            color: "#FFFFFF",
-            "&:hover": {
-              borderColor: grey[400],
-              backgroundColor: "rgba(255, 255, 255, 0.08)",
-            },
-          },
-          textPrimary: {
-            color: "#FFFFFF",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.08)",
-            },
-          },
+          root: ({ ownerState }) => ({
+            ...(ownerState.variant === "contained" && ownerState.color === "primary" && {
+              backgroundColor: grey[700],
+              color: "#FFFFFF",
+              "&:hover": {
+                backgroundColor: grey[600],
+              },
+            }),
+            ...(ownerState.variant === "outlined" && ownerState.color === "primary" && {
+              borderColor: grey[500],
+              color: "#FFFFFF",
+              "&:hover": {
+                borderColor: grey[400],
+                backgroundColor: "rgba(255, 255, 255, 0.08)",
+              },
+            }),
+            ...(ownerState.variant === "text" && ownerState.color === "primary" && {
+              color: "#FFFFFF",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.08)",
+              },
+            }),
+          }),
         },
       },
     },
