@@ -8,6 +8,8 @@ import ImportModal from '@components/modals/ImportModal';
 import { ModalContext } from "./ModalContext";
 import SwitchGameModal from '@components/modals/SwitchGameModal';
 import TokenModal from '@components/modals/TokenModal';
+import ShareListModal from '@components/modals/ShareListModal';
+import { useDeathLists } from '../deathCounter/DeathCounterContext';
 
 export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [createNewModalOpen, setCreateNewModalOpen] = useState(false);
@@ -17,6 +19,9 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [importModalOpen, setImportModal] = useState(false);
   const [tokenModalOpen, setTokenModalOpen] = useState(false);
   const [switchGameModalOpen, setSwitchGameModalOpen] = useState(false);
+  const [shareListModalOpen, setShareListModalOpen] = useState(false);
+  
+  const { activeDeathList } = useDeathLists();
 
   const toggleTokenModal = () => setTokenModalOpen((prev) => !prev);
   const toggleDeleteModal = () => setDeleteModalOpen((prev) => !prev);
@@ -25,6 +30,7 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const toggleFeedbackOpen = () => setFeedbackModalOpen((prev) => !prev);
   const toggleCreateNewModal = () => setCreateNewModalOpen((prev) => !prev);
   const toggleSwitchGameModal = () => setSwitchGameModalOpen((prev) => !prev);
+  const toggleShareListModal = () => setShareListModalOpen((prev) => !prev);
 
 
   return (
@@ -37,6 +43,7 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         importModalOpen,
         switchGameModalOpen,
         tokenModalOpen,
+        shareListModalOpen,
         toggleCreateNewModal,
         toggleDeleteModal,
         toggleExportModal,
@@ -44,7 +51,7 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         toggleImportModal,
         toggleSwitchGameModal,
         toggleTokenModal,
-
+        toggleShareListModal,
       }}
     >
       <CreateNewModal />
@@ -54,6 +61,7 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       <ExportModal />
       <FeedbackModal/>
       <SwitchGameModal />
+      <ShareListModal open={shareListModalOpen} onClose={toggleShareListModal} shareToken={activeDeathList?.token} />
       {children}
     </ModalContext.Provider>
   );

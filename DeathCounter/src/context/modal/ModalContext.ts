@@ -8,6 +8,7 @@ export interface ModalContextProps {
   importModalOpen: boolean;
   tokenModalOpen: boolean;
   switchGameModalOpen: boolean;
+  shareListModalOpen: boolean;
   toggleCreateNewModal: () => void;
   toggleDeleteModal: () => void;
   toggleExportModal: () => void;
@@ -15,6 +16,7 @@ export interface ModalContextProps {
   toggleImportModal: () => void;
   toggleTokenModal: () => void;
   toggleSwitchGameModal: () => void;
+  toggleShareListModal: () => void;
 }
 
 export const ModalContext = createContext<ModalContextProps | undefined>(undefined);

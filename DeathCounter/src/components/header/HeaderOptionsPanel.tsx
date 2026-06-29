@@ -1,14 +1,16 @@
 import { Grid, IconButton, alpha } from "@mui/material"
 
-import { Add } from "@mui/icons-material"
+import { Add, Share } from "@mui/icons-material"
 import GameSelector from "../ui/GameSelector"
 import UserAvatar from "./UserAvatar"
 import { grey } from "@mui/material/colors"
 import { useIsMobile } from "../../hooks/useIsMobile"
 import { useModalProvider } from "../../context/modal/ModalContext"
+import { useDeathLists } from "../../context/deathCounter/DeathCounterContext"
 
 const HeaderOptionsPanel = () => {
-  const {toggleCreateNewModal} = useModalProvider();
+  const {toggleCreateNewModal, toggleShareListModal} = useModalProvider();
+  const { activeDeathList } = useDeathLists();
   const isMobile = useIsMobile();
 
   return (
@@ -24,6 +26,13 @@ const HeaderOptionsPanel = () => {
               <Add/>
             </IconButton>
           </Grid>
+          {activeDeathList && (
+            <Grid>
+              <IconButton onClick={toggleShareListModal} size="small" sx={{color: "white"}} title="Share Death List">
+                <Share/>
+              </IconButton>
+            </Grid>
+          )}
         </>
       )}
       <Grid>

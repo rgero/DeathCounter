@@ -129,3 +129,18 @@ export const removeDeathList = async (id: number) => {
     throw new Error("Failed to remove Death List");
   }
 }
+
+export const getDeathListByToken = async (token: string) => {
+  const { data, error } = await supabase
+    .from("death_counters")
+    .select("*")
+    .eq("token", token)
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Shared Death List not found");
+  }
+
+  return decryptData(data as DeathList);
+};

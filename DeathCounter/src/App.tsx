@@ -17,6 +17,7 @@ import StatsPage from '@pages/StatsPage';
 import { StatsProvider } from '@context/stats/StatsProvider';
 import { Toaster } from "react-hot-toast";
 import { grey } from "@mui/material/colors";
+import SharedDeathListPage from '@pages/SharedDeathListPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -90,6 +91,9 @@ const App = () => {
                           <Route path="download" element={<DownloadPage />} />
                         </Route>
                         <Route path='landing' element={<LandingPage/>} />
+                        <Route path='share/:token' element={<AppLayout/>}>
+                          <Route index element={<SharedDeathListPage />} />
+                        </Route>
                         <Route element={<AppLayout/>}>
                           <Route path="*" element={<PageNotFound />} />
                         </Route>
