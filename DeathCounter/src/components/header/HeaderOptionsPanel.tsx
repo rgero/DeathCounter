@@ -5,13 +5,20 @@ import GameSelector from "../ui/GameSelector"
 import UserAvatar from "./UserAvatar"
 import { grey } from "@mui/material/colors"
 import { useIsMobile } from "../../hooks/useIsMobile"
-import { useModalProvider } from "../../context/modal/ModalContext"
-import { useDeathLists } from "../../context/deathCounter/DeathCounterContext"
+import { useOptionalModalProvider } from "../../context/modal/ModalContext"
+import { useOptionalDeathLists } from "../../context/deathCounter/DeathCounterContext"
 
 const HeaderOptionsPanel = () => {
-  const {toggleCreateNewModal, toggleShareListModal} = useModalProvider();
-  const { activeDeathList } = useDeathLists();
+  const modalContext = useOptionalModalProvider();
+  const deathListContext = useOptionalDeathLists();
   const isMobile = useIsMobile();
+
+  if (!modalContext || !deathListContext) {
+    return null;
+  }
+
+  const { toggleCreateNewModal, toggleShareListModal } = modalContext;
+  const { activeDeathList } = deathListContext;
 
   return (
 

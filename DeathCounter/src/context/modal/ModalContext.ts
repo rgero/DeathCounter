@@ -28,3 +28,5 @@ export const useModalProvider = () => {
   }
   return context;
 };
+
+export const useOptionalModalProvider = () => useContext(ModalContext);

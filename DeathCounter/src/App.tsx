@@ -108,13 +108,13 @@ const App = () => {
                     <Route path="download" element={<RouteFallback><DownloadPage /></RouteFallback>} />
                   </Route>
                   <Route path='landing' element={<RouteFallback><LandingPage/></RouteFallback>} />
-                  <Route path='share/:token' element={<AppLayout/>}>
+                  <Route path='share/:token' element={<AppLayout />}>
                     <Route
                       index
                       element={<RouteFallback><SharedDeathListPage /></RouteFallback>}
                     />
                   </Route>
-                  <Route element={<AppLayout/>}>
+                  <Route element={<AppLayout />}>
                     <Route path="*" element={<RouteFallback><PageNotFound /></RouteFallback>} />
                   </Route>
                 </Routes>

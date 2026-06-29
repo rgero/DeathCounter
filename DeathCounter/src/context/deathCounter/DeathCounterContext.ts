@@ -31,3 +31,5 @@ export const useDeathLists = () => {
   }
   return context;
 };
+
+export const useOptionalDeathLists = () => useContext(DeathListContext);
