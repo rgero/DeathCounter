@@ -1,30 +1,26 @@
 import { Container } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { getDeathListByToken } from "@services/apiDeathCounter";
-import Loading from "@components/ui/Loading";
 import PageNotFound from "@pages/PageNotFound";
 import SharedListHeader from "@components/death_list/SharedListHeader";
 import SharedListStats from "@components/death_list/SharedListStats";
 import SharedEntityTable from "@components/death_list/SharedEntityTable";
 
-const SharedDeathListPage = () => {
-  const { token } = useParams<{ token: string }>();
-
-  const { data: deathList, isLoading, error } = useQuery({
+const SharedDeathListContent = ({ token }: { token: string }) => {
+  const { data: deathList } = useSuspenseQuery({
     queryKey: ["sharedDeathList", token],
-    queryFn: () => {
-      return getDeathListByToken(token!);
+    queryFn: async () => {
+      try {
+        return await getDeathListByToken(token);
+      } catch (error) {
+        console.error("Failed to load death list:", error);
+        return null;
+      }
     },
-    enabled: !!token,
   });
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (error || !deathList) {
-    console.error("Failed to load death list:", error);
+  if (!deathList) {
     return <PageNotFound />;
   }
 
@@ -47,6 +43,16 @@ const SharedDeathListPage = () => {
       )}
     </Container>
   );
+};
+
+const SharedDeathListPage = () => {
+  const { token } = useParams<{ token: string }>();
+
+  if (!token) {
+    return <PageNotFound />;
+  }
+
+  return <SharedDeathListContent token={token} />;
 };
 
 export default SharedDeathListPage;

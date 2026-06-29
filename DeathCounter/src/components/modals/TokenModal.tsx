@@ -10,11 +10,11 @@ import { useModalProvider } from "@context/modal/ModalContext"
 
 const TokenModal = () => {
   const { tokenModalOpen, toggleTokenModal } = useModalProvider()
-  const { activeDeathList, regenerateToken, isLoading } = useDeathLists()
+  const { activeDeathList, regenerateToken } = useDeathLists()
   const [showToken, setShowToken] = useState(false);
   const [showAuthToken, setShowAuthToken] = useState(false);
 
-  if (isLoading || !activeDeathList) {
+  if (!activeDeathList) {
     return null;
   }
 

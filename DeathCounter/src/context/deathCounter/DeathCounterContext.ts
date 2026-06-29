@@ -20,9 +20,6 @@ export interface DeathListContextType {
   removeDeathList: (id: number) => Promise<void>;
   removeEntityFromList: (id: number) => Promise<void>;
   refetch: () => Promise<unknown>;
-  isFetching: boolean;
-  isLoading: boolean;
-  error: Error | null;
 }
 
 export const DeathListContext = createContext<DeathListContextType | undefined>(undefined);

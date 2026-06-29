@@ -4,8 +4,6 @@ import { User } from "@supabase/supabase-js";
 
 export interface AuthContextType {
   user: User | null;
-  isLoading: boolean;
-  isFetching: boolean;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
 }

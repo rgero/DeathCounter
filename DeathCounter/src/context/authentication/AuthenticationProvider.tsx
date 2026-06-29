@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { getCurrentUser, logout, signInWithGoogle } from '@services/apiAuthentication';
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 
 import { AuthContext } from "./AuthenticationContext";
 import supabase from '@services/supabase';
@@ -8,7 +8,7 @@ import supabase from '@services/supabase';
 export const AuthenticationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = useQueryClient();
 
-  const { data, isFetching, isLoading } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["authUser"],
     queryFn: getCurrentUser,
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
@@ -25,8 +25,6 @@ export const AuthenticationProvider: React.FC<{ children: React.ReactNode }> = (
     <AuthContext.Provider
       value={{
         user: data ?? null,
-        isFetching,
-        isLoading,
         loginWithGoogle: signInWithGoogle,
         logout,
       }}

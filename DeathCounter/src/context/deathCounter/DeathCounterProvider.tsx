@@ -1,5 +1,5 @@
 import {createDeathList, getDeathLists, removeDeathList as removeDeathListAPI, updateActiveDeathList, updateDeathList as updateDeathListAPI, updateDeathListToken, uploadDeathList as uploadDeathListAPI} from '@services/apiDeathCounter';
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 
 import { DeathList } from '@interfaces/DeathList';
 import { DeathListContext } from "./DeathCounterContext";
@@ -16,7 +16,10 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const queryClient = useQueryClient();
   const { user } = useAuthenticationContext();
 
-  const {data: deathLists = [], error,isLoading, isFetching, refetch} = useQuery({queryKey: ["death_counters"], queryFn: () => getDeathLists()});
+  const { data: deathLists, refetch } = useSuspenseQuery({
+    queryKey: ["death_counters"],
+    queryFn: getDeathLists,
+  });
 
   const activeDeathList = deathLists.find((list) => list.currentlyActive);
 
@@ -127,10 +130,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         addDeathList: addNewDeathList,
         addToList,
         deathLists,
-        error,
         getCurrentlyActiveDeathList,
-        isFetching,
-        isLoading,
         entityInEdit,
         regenerateToken,
         removeDeathList,

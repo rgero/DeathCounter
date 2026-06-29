@@ -49,8 +49,10 @@ const ShareListModal = ({
           fullWidth
           label="Share Link"
           value={shareUrl}
-          InputProps={{
-            readOnly: true,
+          slotProps={{
+            input: {
+              readOnly: true,
+            },
           }}
           variant="outlined"
         />

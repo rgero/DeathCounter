@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 
-import CreateNewModal from '@components/modals/CreateNewModal';
-import DeleteListModal from '@components/modals/DeleteListModal';
-import ExportModal from '@components/modals/ExportModal';
-import FeedbackModal from '@components/modals/FeedbackModal';
-import ImportModal from '@components/modals/ImportModal';
 import { ModalContext } from "./ModalContext";
-import SwitchGameModal from '@components/modals/SwitchGameModal';
-import TokenModal from '@components/modals/TokenModal';
-import ShareListModal from '@components/modals/ShareListModal';
 import { useDeathLists } from '../deathCounter/DeathCounterContext';
+
+const CreateNewModal = lazy(() => import('@components/modals/CreateNewModal'));
+const DeleteListModal = lazy(() => import('@components/modals/DeleteListModal'));
+const ExportModal = lazy(() => import('@components/modals/ExportModal'));
+const FeedbackModal = lazy(() => import('@components/modals/FeedbackModal'));
+const ImportModal = lazy(() => import('@components/modals/ImportModal'));
+const SwitchGameModal = lazy(() => import('@components/modals/SwitchGameModal'));
+const TokenModal = lazy(() => import('@components/modals/TokenModal'));
+const ShareListModal = lazy(() => import('@components/modals/ShareListModal'));
+
+const ModalSlot = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={null}>{children}</Suspense>
+);
 
 export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [createNewModalOpen, setCreateNewModalOpen] = useState(false);
@@ -54,14 +59,46 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         toggleShareListModal,
       }}
     >
-      <CreateNewModal />
-      <ImportModal />
-      <TokenModal />
-      <DeleteListModal />
-      <ExportModal />
-      <FeedbackModal/>
-      <SwitchGameModal />
-      <ShareListModal open={shareListModalOpen} onClose={toggleShareListModal} shareToken={activeDeathList?.token} />
+      {createNewModalOpen && (
+        <ModalSlot>
+          <CreateNewModal />
+        </ModalSlot>
+      )}
+      {importModalOpen && (
+        <ModalSlot>
+          <ImportModal />
+        </ModalSlot>
+      )}
+      {tokenModalOpen && (
+        <ModalSlot>
+          <TokenModal />
+        </ModalSlot>
+      )}
+      {deleteModalOpen && (
+        <ModalSlot>
+          <DeleteListModal />
+        </ModalSlot>
+      )}
+      {exportModalOpen && (
+        <ModalSlot>
+          <ExportModal />
+        </ModalSlot>
+      )}
+      {feedbackModalOpen && (
+        <ModalSlot>
+          <FeedbackModal/>
+        </ModalSlot>
+      )}
+      {switchGameModalOpen && (
+        <ModalSlot>
+          <SwitchGameModal />
+        </ModalSlot>
+      )}
+      {shareListModalOpen && (
+        <ModalSlot>
+          <ShareListModal open={shareListModalOpen} onClose={toggleShareListModal} shareToken={activeDeathList?.token} />
+        </ModalSlot>
+      )}
       {children}
     </ModalContext.Provider>
   );

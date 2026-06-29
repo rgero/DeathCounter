@@ -86,13 +86,12 @@ const DeathlistHeaderForm = ({
 const DeathlistHeader = () => {
   const {
     activeDeathList,
-    isLoading,
     updateDeathList,
     showDescription,
     toggleDescription,
   } = useDeathLists();
 
-  if (isLoading || !activeDeathList) return null;
+  if (!activeDeathList) return null;
 
   return (
     <DeathlistHeaderForm

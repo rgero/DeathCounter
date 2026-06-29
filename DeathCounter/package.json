@@ -7,6 +7,8 @@
     "dev": "vite --host --port 6200",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "vite preview --host --port 6200"
   },
   "dependencies": {
@@ -21,6 +23,7 @@
     "react-dom": "^19.2.7",
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.17.0",
+    "react-transition-group": "^4.4.5",
     "socket.io-client": "^4.2.0",
     "uuid": "^14.0.0"
   },
@@ -30,6 +33,8 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@tanstack/react-query-devtools": "^5.101.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^25.9.3",
     "@types/react": "^19.2.17",
@@ -39,8 +44,10 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.6.0",
+    "jsdom": "^29.1.1",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.61.1",
-    "vite": "^8.0.16"
+    "vite": "^8.0.16",
+    "vitest": "^4.1.9"
   }
 }

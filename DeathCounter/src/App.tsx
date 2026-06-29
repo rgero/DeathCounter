@@ -1,23 +1,33 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import AsyncBoundary from '@components/ui/AsyncBoundary';
 import AppLayout from '@components/ui/AppLayout';
 import AuthenticatedRoute from '@components/AuthenicatedRoute';
 import { AuthenticationProvider } from '@context/authentication/AuthenticationProvider';
-import DashboardPage from '@pages/DashboardPage';
 import { DeathListProvider } from '@context/deathCounter/DeathCounterProvider';
-import DownloadPage from '@pages/DownloadPage';
-import LandingPage from '@pages/LandingPage';
 import { ModalProvider } from '@context/modal/ModalProvider';
-import PageNotFound from '@pages/PageNotFound';
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SocketProvider } from '@context/webSocket/WebSocketProvider';
-import StatsPage from '@pages/StatsPage';
 import { StatsProvider } from '@context/stats/StatsProvider';
 import { Toaster } from "react-hot-toast";
 import { grey } from "@mui/material/colors";
-import SharedDeathListPage from '@pages/SharedDeathListPage';
+import Loading from '@components/ui/Loading';
+
+const DashboardPage = lazy(() => import('@pages/DashboardPage'));
+const DownloadPage = lazy(() => import('@pages/DownloadPage'));
+const LandingPage = lazy(() => import('@pages/LandingPage'));
+const PageNotFound = lazy(() => import('@pages/PageNotFound'));
+const SharedDeathListPage = lazy(() => import('@pages/SharedDeathListPage'));
+const StatsPage = lazy(() => import('@pages/StatsPage'));
+
+const RouteFallback = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<Loading />}>
+    {children}
+  </Suspense>
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -72,38 +82,45 @@ const App = () => {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline/>
         <QueryClientProvider client={queryClient}>
-          <AuthenticationProvider>
-            <DeathListProvider>
-              <StatsProvider>
-                <SocketProvider>
-                  <ModalProvider>
-                    <BrowserRouter>
-                      <Routes>
-                        <Route
-                          element={
-                            <AuthenticatedRoute>
-                              <AppLayout />
-                            </AuthenticatedRoute>
-                          }
-                        >
-                          <Route index element={<DashboardPage/>}/>
-                          <Route path="stats" element={<StatsPage />} />
-                          <Route path="download" element={<DownloadPage />} />
-                        </Route>
-                        <Route path='landing' element={<LandingPage/>} />
-                        <Route path='share/:token' element={<AppLayout/>}>
-                          <Route index element={<SharedDeathListPage />} />
-                        </Route>
-                        <Route element={<AppLayout/>}>
-                          <Route path="*" element={<PageNotFound />} />
-                        </Route>
-                      </Routes>
-                    </BrowserRouter>
-                  </ModalProvider>
-                </SocketProvider>
-              </StatsProvider>
-            </DeathListProvider>
-          </AuthenticationProvider>
+          <AsyncBoundary fallback={<Loading />}>
+            <AuthenticationProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route
+                    element={
+                      <AuthenticatedRoute>
+                        <AsyncBoundary fallback={<Loading />}>
+                          <DeathListProvider>
+                            <StatsProvider>
+                              <SocketProvider>
+                                <ModalProvider>
+                                  <AppLayout />
+                                </ModalProvider>
+                              </SocketProvider>
+                            </StatsProvider>
+                          </DeathListProvider>
+                        </AsyncBoundary>
+                      </AuthenticatedRoute>
+                    }
+                  >
+                    <Route index element={<RouteFallback><DashboardPage/></RouteFallback>}/>
+                    <Route path="stats" element={<RouteFallback><StatsPage /></RouteFallback>} />
+                    <Route path="download" element={<RouteFallback><DownloadPage /></RouteFallback>} />
+                  </Route>
+                  <Route path='landing' element={<RouteFallback><LandingPage/></RouteFallback>} />
+                  <Route path='share/:token' element={<AppLayout/>}>
+                    <Route
+                      index
+                      element={<RouteFallback><SharedDeathListPage /></RouteFallback>}
+                    />
+                  </Route>
+                  <Route element={<AppLayout/>}>
+                    <Route path="*" element={<RouteFallback><PageNotFound /></RouteFallback>} />
+                  </Route>
+                </Routes>
+              </BrowserRouter>
+            </AuthenticationProvider>
+          </AsyncBoundary>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
         <Toaster 
