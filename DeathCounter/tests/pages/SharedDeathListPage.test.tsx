@@ -21,9 +21,11 @@ vi.mock('@components/death_list/SharedListHeader', () => ({
 }));
 
 vi.mock('@components/death_list/SharedListStats', () => ({
-  default: ({ totalDeaths, totalEntities }: { totalDeaths: number; totalEntities: number }) => (
-    <div>{`${totalDeaths}:${totalEntities}`}</div>
-  ),
+  default: ({ deathList }: { deathList: DeathList }) => {
+    const totalDeaths = deathList?.entityList.reduce((acc, e) => acc + (e.deaths || 0), 0) ?? 0;
+    const totalEntities = deathList?.entityList.length ?? 0;
+    return <div>{`${totalDeaths}:${totalEntities}`}</div>;
+  },
 }));
 
 vi.mock('@components/death_list/SharedEntityTable', () => ({
