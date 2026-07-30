@@ -24,16 +24,13 @@ const SharedDeathListContent = ({ token }: { token: string }) => {
     return <PageNotFound />;
   }
 
-  const totalDeaths = deathList.entityList?.reduce((acc, entity) => acc + (entity.deaths || 0), 0) || 0;
-  const totalEntities = deathList.entityList?.length || 0;
-
   return (
     <Container sx={{ pb: 4 }}>
       <SharedListHeader deathList={deathList} />
       
       {deathList.entityList && deathList.entityList.length > 0 && (
         <>
-          <SharedListStats totalDeaths={totalDeaths} totalEntities={totalEntities} />
+          <SharedListStats deathList={deathList} />
           <SharedEntityTable entities={deathList.entityList} />
         </>
       )}

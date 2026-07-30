@@ -1,7 +1,7 @@
 import { Box, Collapse, TextField } from "@mui/material";
 import { useState } from "react";
 
-import GameStats from "../stats/GameStats";
+import StatsCard from "@components/stats/StatsCard";
 import { grey } from "@mui/material/colors";
 import { DeathList } from "@interfaces/DeathList";
 import { useDeathLists } from '@context/deathCounter/DeathCounterContext';
@@ -13,11 +13,7 @@ interface DescriptionEditorProps {
   isMobile: boolean;
 }
 
-const DescriptionEditor = ({
-  activeDeathList,
-  updateDeathList,
-  isMobile,
-}: DescriptionEditorProps) => {
+const DescriptionEditor = ({activeDeathList, updateDeathList, isMobile}: DescriptionEditorProps) => {
   const [localDescription, setLocalDescription] = useState(activeDeathList.description || "");
 
   const handleBlur = () => {
@@ -48,7 +44,7 @@ const DescriptionEditor = ({
         onBlur={handleBlur}
         sx={{ marginY: "20px" }}
       />
-      <GameStats />
+      <StatsCard deathList={activeDeathList} />
     </Box>
   );
 };
