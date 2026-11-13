@@ -54,7 +54,7 @@ export const DeathListProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       if (existingEntity) {
         // Replace entity immutably
         const updatedEntities = activeDeathList.entityList.map((e) =>
-          e.id === entity.id ? { ...e, name: entity.name, deaths: entity.deaths } : e
+          e.id === entity.id ? { ...e, name: entity.name, deaths: entity.deaths, description: entity.description ?? "" } : e
         );
         updatedList = { ...activeDeathList, entityList: updatedEntities };
       } else {

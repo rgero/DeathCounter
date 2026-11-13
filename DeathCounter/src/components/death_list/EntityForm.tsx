@@ -2,7 +2,6 @@ import { Add, Remove } from "@mui/icons-material";
 import { Button, Container, Fade, FormControl, FormHelperText, Grid, Paper, TextField } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { BossData } from "@interfaces/BossData";
 import { Entity } from "@interfaces/Entity";
 import { WsMessage } from "@interfaces/WsMessage";
 import toast from "react-hot-toast";
@@ -34,17 +33,18 @@ const EntityFormFields = ({
   const [id, setID] = useState(initialEntity?.id ?? -1);
   const [name, setName] = useState(initialEntity?.name ?? "");
   const [deaths, setDeaths] = useState(initialEntity?.deaths ?? 0);
+  const [description, setDescription] = useState(initialEntity?.description ?? "");
   const [error, setError] = useState("");
   const [lastClick, setLastClick] = useState(new Date());
 
   const timeDelay = 1000;
   const isMobile = useIsMobile();
 
-  const stateRef = useRef({ name, deaths, id });
+  const stateRef = useRef({ name, deaths, id, description });
 
   useEffect(() => {
-    stateRef.current = { name, deaths, id };
-  }, [name, deaths, id]);
+    stateRef.current = { name, deaths, id, description };
+  }, [name, deaths, id, description]);
 
   const checkGameToken = useCallback(
     (gameToken: string | undefined) => gameToken === activeDeathListToken,
@@ -55,6 +55,7 @@ const EntityFormFields = ({
     setID(-1);
     setName("");
     setDeaths(0);
+    setDescription("");
     setError("");
     setEntityInEdit(null);
   }, [setEntityInEdit]);
@@ -69,6 +70,7 @@ const EntityFormFields = ({
     const itemToSubmit: Entity = {
       name: current.name.trim(),
       deaths: current.deaths,
+      description: current.description ?? "",
     };
 
     if (current.id !== -1) {
@@ -101,10 +103,24 @@ const EntityFormFields = ({
     const handleClientConnected = (event: WsMessage) => {
       if (!checkGameToken(event.gameToken)) return;
 
-      const { name: currentName, deaths: currentDeaths, id: currentId } = stateRef.current;
+      const {
+        name: currentName,
+        deaths: currentDeaths,
+        id: currentId,
+        description: currentDescription,
+      } = stateRef.current;
 
-      if (currentName.trim() !== "" || currentDeaths > 0) {
-        emitMessage("clientBossData", { id: currentId, name: currentName, deaths: currentDeaths });
+      if (
+        currentName.trim() !== "" ||
+        currentDeaths > 0 ||
+        (currentDescription ?? "").trim() !== ""
+      ) {
+        emitMessage("clientBossData", {
+          id: currentId,
+          name: currentName,
+          deaths: currentDeaths,
+          description: currentDescription ?? "",
+        });
       }
     };
 
@@ -112,10 +128,11 @@ const EntityFormFields = ({
       if (!checkGameToken(event.gameToken)) return;
 
       if (typeof event.data === "object" && event.data !== null) {
-        const eventData = event.data as BossData;
+        const eventData = event.data as Entity;
         setID(eventData.id ?? -1);
         setName(eventData.name);
         setDeaths(eventData.deaths);
+        setDescription(eventData.description ?? "");
       }
     };
 
@@ -175,6 +192,11 @@ const EntityFormFields = ({
     setDeaths(isNaN(value) ? 0 : value);
   };
 
+  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDescription(event.target.value);
+    if (error) setError("");
+  };
+
   const applyBossName = () => {
     emitMessage("bossNameSet", name);
   };
@@ -220,6 +242,16 @@ const EntityFormFields = ({
               onBlur={applyBossDeaths}
             />
           </Grid>
+          <Grid size={12}>
+            <TextField
+              fullWidth
+              label="Description"
+              value={description}
+              multiline
+              minRows={2}
+              onChange={handleDescriptionChange}
+            />
+          </Grid>
         </Grid>
 
         <Grid
@@ -257,7 +289,7 @@ const EntityFormFields = ({
               </Button>
             </Grid>
           </Fade>
-          <Fade in={Boolean(name) || deaths > 0} unmountOnExit>
+          <Fade in={Boolean(name) || deaths > 0 || Boolean(description)} unmountOnExit>
             <Grid>
               <Button variant="outlined" onClick={clearForm}>
                 Clear

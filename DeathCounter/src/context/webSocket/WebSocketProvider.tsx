@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 
-import { BossData } from "@interfaces/BossData";
+import { Entity } from "@interfaces/Entity";
 import { SocketContext } from "../webSocket/WebSocketContext";
 import { encryptAuthToken } from "@utils/crypt";
 import { useDeathLists } from "../deathCounter/DeathCounterContext";
@@ -14,7 +14,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const { activeDeathList } = useDeathLists();
   const listToken = activeDeathList?.token;
 
-  const emitMessage = useCallback((event: string, data?: string | number | BossData) => {
+  const emitMessage = useCallback((event: string, data?: string | number | Entity) => {
     const currentSocket = socketRef.current;
 
     if (!currentSocket?.connected) {
