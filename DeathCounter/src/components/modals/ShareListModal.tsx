@@ -1,12 +1,5 @@
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Stack,
-  Alert,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+import {Alert, Box, Button, Stack, TextField, Typography} from "@mui/material";
+
 import BaseModal from "./BaseModal";
 import toast from "react-hot-toast";
 
@@ -16,19 +9,8 @@ interface ShareListModalProps {
   shareToken: string | undefined;
 }
 
-const ShareListModal = ({
-  open,
-  onClose,
-  shareToken,
-}: ShareListModalProps) => {
-  const [shareUrl, setShareUrl] = useState("");
-
-  useEffect(() => {
-    if (shareToken) {
-      const url = `${window.location.origin}/share/${shareToken}`;
-      setShareUrl(url);
-    }
-  }, [shareToken]);
+const ShareListModal = ({open, onClose, shareToken}: ShareListModalProps) => {
+  const shareUrl = shareToken ? `${window.location.origin}/share/${shareToken}` : "";
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(shareUrl);
