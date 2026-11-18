@@ -27,7 +27,6 @@ export default defineConfig({
           if (
             id.includes('node_modules/@supabase/supabase-js/') ||
             id.includes('node_modules/axios/') ||
-            id.includes('node_modules/crypto-js/') ||
             id.includes('node_modules/socket.io-client/') ||
             id.includes('node_modules/uuid/')
           ) {

@@ -4,3 +4,5 @@ DeathCounter/.env
 WebSocket/Server/.env.production
 WebSocket/Server/dist/
 KeyListener/node_modules/
+.env.migration*
+migration-backup-*.jsonl

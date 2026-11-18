@@ -39,21 +39,20 @@ export class SocketHandler {
     });
   }
   
-  onSocketMessage(socket: Socket, data: any): void {
-    console.log(data);
+  async onSocketMessage(socket: Socket, data: unknown): Promise<void> {
     try {
       const message: WsMessage = MessageSchema.parse(data) as WsMessage;
-      const correctAuthToken = decryptField(message.authToken);
+      const correctAuthToken = await decryptField(message.authToken);
 
-      if (correctAuthToken !== message.gameToken) {
+      if (!socket.connected || correctAuthToken !== message.gameToken) {
         console.log("Not correct token");
         return;
       }
 
       this.broadcastToAll(message);
     }
-    catch (error) {
-      console.error("Error parsing message:", error);
+    catch {
+      console.error("Message validation failed.");
       socket.emit('error', { message: 'Invalid message format' });
     }
   }

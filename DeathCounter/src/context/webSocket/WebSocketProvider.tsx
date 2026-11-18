@@ -22,10 +22,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return;
     }
 
-    currentSocket.emit(event, {
-      gameToken: listToken,
-      authToken: encryptAuthToken(listToken || ""),
-      data,
+    if (!listToken) return;
+    void encryptAuthToken(listToken).then(authToken => {
+      if (socketRef.current !== currentSocket || !currentSocket.connected) return;
+      currentSocket.emit(event, { gameToken: listToken, authToken, data });
+    }).catch(() => {
+      console.error('Unable to encrypt socket auth token.');
     });
   }, [listToken]);
 
@@ -54,9 +56,11 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     newSocket.on("connect", () => {
       console.log("Socket connected successfully:", newSocket.id);
       setIsConnected(true);
-      newSocket.emit("clientConnected", {
-        gameToken: listToken,
-        authToken: encryptAuthToken(listToken),
+      void encryptAuthToken(listToken).then(authToken => {
+        if (socketRef.current !== newSocket || !newSocket.connected) return;
+        newSocket.emit("clientConnected", { gameToken: listToken, authToken });
+      }).catch(() => {
+        console.error('Unable to encrypt socket auth token.');
       });
     });
 

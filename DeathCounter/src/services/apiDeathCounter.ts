@@ -14,9 +14,7 @@ export const getDeathLists = async () => {
     throw new Error("Game Lists not found");
   }
 
-  return data.map((item: DeathList) => {
-    return decryptData(item);
-  });
+  return Promise.all(data.map((item: DeathList) => decryptData(item)));
 };
 
 export const getDeathListById = async (id: number) => {
@@ -35,6 +33,7 @@ export const getDeathListById = async (id: number) => {
 };
 
 export const createDeathList = async (deathList: DeathList) => {
+  const encryptedDeathList = await encryptData(deathList);
   const { error } = await supabase
     .from("death_counters")
     .update({ currentlyActive: false })
@@ -45,7 +44,6 @@ export const createDeathList = async (deathList: DeathList) => {
     throw new Error("Failed to update currently active Death List");
   }
 
-  const encryptedDeathList = encryptData(deathList);
   encryptedDeathList.token = uuidv4();
   encryptedDeathList.currentlyActive = true;
 
@@ -64,7 +62,7 @@ export const createDeathList = async (deathList: DeathList) => {
 };
 
 export const updateDeathList = async (deathList: DeathList) => {
-  const updatedDeathList = encryptData(deathList);
+  const updatedDeathList = await encryptData(deathList);
 
   const { error } = await supabase
     .from("death_counters")
@@ -104,9 +102,10 @@ export const updateDeathListToken = async (id: number, token: string) => {
 export const uploadDeathList = async (deathList: DeathList) => {
   const existingList = deathList.id ?  await getDeathListById(deathList.id) : null;
   if (existingList) {
+    const encryptedDeathList = await encryptData(deathList);
     const { error } = await supabase
       .from("death_counters")
-      .update(encryptData(deathList))
+      .update(encryptedDeathList)
       .eq("id", deathList.id);
 
     if (error) {

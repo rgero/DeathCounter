@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:crypto": "node --test scripts/tests/*.node.mjs",
     "test:watch": "vitest",
     "preview": "vite preview --host --port 6200"
   },
@@ -18,7 +19,6 @@
     "@supabase/supabase-js": "^2.117.3",
     "@tanstack/react-query": "^5.104.2",
     "axios": "^1.20.0",
-    "crypto-js": "^4.2.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-hot-toast": "^2.6.1",
@@ -36,7 +36,6 @@
     "@tanstack/react-query-devtools": "^5.104.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
-    "@types/crypto-js": "^4.2.2",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
